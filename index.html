@@ -1,340 +1,942 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-  <title>Storage Vault</title>
-  <style>
-    :root{
-      --bg:#fff7fb;--card:rgba(255,255,255,.93);--text:#2d1630;--muted:#7e607f;
-      --accent:#ff6fb1;--accent2:#b66bff;--border:rgba(182,107,255,.2);
-      --shadow:0 8px 32px rgba(0,0,0,.08);--r:14px;
-    }
-    *{box-sizing:border-box;margin:0;padding:0}
-    body{font-family:Inter,Arial,sans-serif;background:linear-gradient(160deg,#fff7fb,#fdfcff);color:var(--text);min-height:100vh}
-    .hidden{display:none!important}
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Storage Vault</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+/* ── Variables ──────────────────────────────────────────────────────────────── */
+:root{
+  --bg:#0b0b14;
+  --s0:#11111e;
+  --s1:#181827;
+  --s2:#1f1f32;
+  --s3:#27273f;
+  --border:rgba(255,255,255,.07);
+  --border2:rgba(255,255,255,.12);
+  --text:#eceaf8;
+  --muted:#7c7998;
+  --dim:#4a4765;
+  --a1:#a78bfa;
+  --a2:#f472b6;
+  --a1d:#7c3aed;
+  --a2d:#be185d;
+  --ok:#34d399;
+  --warn:#fbbf24;
+  --bad:#f87171;
+  --r:12px;
+  --shadow:0 8px 40px rgba(0,0,0,.45);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5}
+.hidden{display:none!important}
 
-    /* ── Inputs / buttons ── */
-    input,select,textarea{width:100%;padding:11px 14px;border-radius:10px;border:1px solid var(--border);font:inherit;font-size:14px;background:#fff;color:var(--text);outline:none}
-    input:focus,select:focus{border-color:var(--accent)}
-    button{cursor:pointer;padding:11px 20px;border-radius:10px;border:1px solid var(--border);font:inherit;font-size:13px;font-weight:600;background:#fff;color:var(--text);transition:.15s}
-    button:hover{border-color:var(--accent2)}
-    .btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none}
-    .btn-primary:hover{opacity:.9}
-    .btn-danger{background:#ffe7f0;color:#b4235d;border-color:#ffc0d5}
-    .btn-ghost{background:rgba(182,107,255,.07);border-color:transparent}
+/* ── Typography ─────────────────────────────────────────────────────────────── */
+.display{font-family:'Syne',sans-serif}
+h1,h2,h3{font-family:'Syne',sans-serif}
 
-    /* ── Login screen ── */
-    #loginScreen{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}
-    .login-card{background:var(--card);border:1px solid var(--border);border-radius:24px;padding:44px 36px;width:100%;max-width:400px;box-shadow:var(--shadow)}
-    .vault-logo{font-size:32px;font-weight:900;letter-spacing:-.04em;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:6px}
-    .login-sub{color:var(--muted);font-size:14px;margin-bottom:28px}
-    .login-card input{margin-bottom:12px}
-    .login-card button{width:100%;margin-top:4px}
-    #loginErr{margin-top:14px;color:#b4235d;font-size:13px;min-height:18px}
+/* ── Scrollbar ───────────────────────────────────────────────────────────────── */
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--s3);border-radius:99px}
 
-    /* ── App shell ── */
-    #appScreen{display:flex;flex-direction:column;min-height:100vh}
-    header{background:var(--card);border-bottom:1px solid var(--border);padding:13px 24px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:50}
-    .app-logo{font-size:18px;font-weight:900;letter-spacing:-.03em;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;white-space:nowrap}
-    #headerEmail{flex:1;font-size:13px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-    header button{padding:8px 16px;font-size:13px;width:auto}
+/* ── Inputs & buttons ────────────────────────────────────────────────────────── */
+input,select,textarea{
+  width:100%;padding:11px 14px;border-radius:10px;
+  border:1px solid var(--border2);background:var(--s2);
+  color:var(--text);font:inherit;font-size:14px;outline:none;transition:.15s;
+}
+input::placeholder{color:var(--dim)}
+input:focus,select:focus{border-color:var(--a1);background:var(--s3)}
+select option{background:var(--s2)}
+button{
+  cursor:pointer;padding:10px 18px;border-radius:var(--r);
+  border:1px solid var(--border2);background:var(--s2);
+  color:var(--text);font:inherit;font-size:13px;font-weight:600;
+  transition:.15s;white-space:nowrap;
+}
+button:hover{border-color:var(--a1);color:var(--a1)}
+button:disabled{opacity:.4;cursor:not-allowed}
+.btn-grad{
+  background:linear-gradient(135deg,var(--a1d),var(--a2d));
+  color:#fff!important;border:none!important;
+}
+.btn-grad:hover{opacity:.88;color:#fff!important}
+.btn-ghost{background:transparent;border-color:transparent}
+.btn-ghost:hover{background:var(--s2)}
+.btn-danger{background:rgba(239,68,68,.12);color:var(--bad)!important;border-color:rgba(239,68,68,.25)}
+.btn-danger:hover{background:rgba(239,68,68,.2);border-color:var(--bad)}
+.btn-ok{background:rgba(52,211,153,.12);color:var(--ok)!important;border-color:rgba(52,211,153,.25)}
 
-    /* ── Vault layout ── */
-    .vault-layout{display:grid;grid-template-columns:240px 1fr;flex:1}
-    @media(max-width:768px){.vault-layout{grid-template-columns:1fr}}
+/* ── Cards ───────────────────────────────────────────────────────────────────── */
+.card{background:var(--s1);border:1px solid var(--border);border-radius:18px;padding:24px}
 
-    /* ── Sidebar ── */
-    aside{background:var(--card);border-right:1px solid var(--border);padding:18px;display:flex;flex-direction:column;gap:22px;min-height:0}
-    .section-label{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px}
-    .slot-item{padding:9px 12px;border-radius:10px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-size:13px;border:1px solid transparent;transition:.15s;user-select:none}
-    .slot-item:hover{background:rgba(182,107,255,.07)}
-    .slot-item.active{background:linear-gradient(135deg,rgba(255,111,177,.1),rgba(182,107,255,.1));border-color:var(--border);font-weight:700}
-    .slot-pill{font-size:11px;color:var(--muted);background:rgba(182,107,255,.12);padding:2px 8px;border-radius:999px;font-weight:600;min-width:28px;text-align:center}
-    .slot-item.active .slot-pill{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff}
+/* ── Chip / badge ────────────────────────────────────────────────────────────── */
+.chip{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:3px 10px;border-radius:99px;font-size:11px;font-weight:700;
+  background:rgba(255,255,255,.07);color:var(--muted);font-family:'DM Sans',sans-serif;
+}
+.chip.ok{background:rgba(52,211,153,.15);color:var(--ok)}
+.chip.warn{background:rgba(251,191,36,.15);color:var(--warn)}
+.chip.bad{background:rgba(248,113,113,.15);color:var(--bad)}
 
-    .upload-zone{border:1.5px dashed var(--border);border-radius:12px;padding:14px;text-align:center;cursor:pointer;transition:.15s;font-size:13px;color:var(--muted);background:rgba(255,255,255,.6)}
-    .upload-zone:hover{border-color:var(--accent);background:rgba(255,111,177,.04)}
-    .upload-zone input{display:none}
+/* ═══════════════════════════════════════════════════════════════════════════════
+   AUTH SCREEN
+═══════════════════════════════════════════════════════════════════════════════ */
+#screenAuth{
+  min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;
+  background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(124,58,237,.15),transparent 70%),var(--bg);
+}
+.auth-box{width:100%;max-width:400px}
+.auth-logo{
+  font-family:'Syne',sans-serif;font-size:28px;font-weight:800;letter-spacing:-.04em;
+  background:linear-gradient(135deg,var(--a1),var(--a2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  margin-bottom:6px;
+}
+.auth-sub{color:var(--muted);font-size:13px;margin-bottom:32px}
+.auth-card{background:var(--s1);border:1px solid var(--border);border-radius:20px;padding:28px;box-shadow:var(--shadow)}
+.auth-step{display:grid;gap:12px}
+.auth-label{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px}
+.auth-back{
+  background:none;border:none;padding:0;margin-bottom:16px;
+  color:var(--muted);font-size:13px;cursor:pointer;display:flex;align-items:center;gap:5px;
+}
+.auth-back:hover{color:var(--text)}
+.auth-err{font-size:13px;color:var(--bad);min-height:18px;margin-top:4px}
+.auth-hint{font-size:12px;color:var(--dim);line-height:1.5;margin-top:8px}
+.pw-wrap{position:relative}
+.pw-wrap input{padding-right:44px}
+.pw-eye{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;padding:4px;cursor:pointer;color:var(--muted);font-size:16px;line-height:1}
+.pw-eye:hover{color:var(--text)}
+.pw-strength{height:3px;border-radius:99px;background:var(--s3);margin-top:6px;overflow:hidden}
+.pw-strength-bar{height:100%;border-radius:99px;transition:width .3s,background .3s;width:0%}
 
-    /* ── Main content ── */
-    main{padding:20px;display:flex;flex-direction:column;gap:16px;overflow-y:auto}
-    .toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-    .toolbar input{flex:1;min-width:180px;margin:0}
-    .toolbar button{white-space:nowrap;padding:10px 16px}
-    .sel-info{font-size:13px;color:var(--muted);white-space:nowrap;padding:0 4px}
+/* ═══════════════════════════════════════════════════════════════════════════════
+   VAULT LAYOUT
+═══════════════════════════════════════════════════════════════════════════════ */
+#screenVault{display:flex;flex-direction:column;height:100vh;overflow:hidden}
 
-    /* ── File grid ── */
-    .file-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:13px}
-    .file-card{background:#fff;border:1px solid var(--border);border-radius:var(--r);overflow:hidden;cursor:pointer;transition:.18s;position:relative}
-    .file-card:hover{box-shadow:0 6px 24px rgba(182,107,255,.18);border-color:rgba(182,107,255,.45)}
-    .file-card.selected{border-color:var(--accent);box-shadow:0 0 0 2px rgba(255,111,177,.22)}
-    .file-thumb{aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;font-size:44px;position:relative;overflow:hidden}
-    .file-thumb.t-image{background:linear-gradient(135deg,#fff0f8,#f5e8ff)}
-    .file-thumb.t-video{background:linear-gradient(135deg,#f0f0ff,#e8f5ff)}
-    .file-thumb.t-audio{background:linear-gradient(135deg,#fff8e8,#fff0f5)}
-    .file-thumb.t-file {background:#f8f8fb}
-    .file-thumb img,.file-thumb video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-    .file-info{padding:10px 12px}
-    .file-name{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:4px}
-    .file-meta{font-size:11px;color:var(--muted);display:flex;justify-content:space-between;gap:6px}
-    .slot-tag{font-size:10px;padding:1px 6px;border-radius:999px;font-weight:700;color:#fff;background:linear-gradient(135deg,var(--accent),var(--accent2));flex-shrink:0}
-    .check-box{position:absolute;top:7px;left:7px;width:20px;height:20px;border-radius:6px;border:1.5px solid rgba(255,255,255,.85);background:rgba(255,255,255,.55);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;z-index:5;transition:.15s}
-    .file-card.selected .check-box{background:var(--accent);border-color:var(--accent)}
+/* ── Header ──────────────────────────────────────────────────────────────────── */
+#vaultHeader{
+  flex-shrink:0;background:var(--s0);border-bottom:1px solid var(--border);
+  padding:11px 20px;display:flex;align-items:center;gap:12px;z-index:30;
+}
+.hdr-logo{font-family:'Syne',sans-serif;font-size:16px;font-weight:800;letter-spacing:-.03em;
+  background:linear-gradient(135deg,var(--a1),var(--a2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  flex-shrink:0;
+}
+#hdrEmail{flex:1;font-size:12px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:0 4px}
+#vaultHeader button{padding:7px 14px;font-size:12px}
 
-    /* ── Empty / loading states ── */
-    .state-box{padding:56px 20px;text-align:center;color:var(--muted);border:1px dashed var(--border);border-radius:var(--r)}
-    .state-box .icon{font-size:48px;margin-bottom:14px}
-    .state-box p{font-size:14px;line-height:1.6}
+/* ── Body split ──────────────────────────────────────────────────────────────── */
+#vaultBody{flex:1;display:grid;grid-template-columns:220px 1fr;overflow:hidden}
+@media(max-width:700px){#vaultBody{grid-template-columns:1fr}}
 
-    /* ── Status bar ── */
-    .statusbar{background:var(--card);border-top:1px solid var(--border);padding:10px 24px;display:flex;align-items:center;gap:10px;font-size:13px;position:sticky;bottom:0;z-index:50}
-    .dot{width:8px;height:8px;border-radius:50%;background:#ccc;flex-shrink:0}
-    .dot.ok{background:#47c47c}.dot.warn{background:#f0ad4e}.dot.bad{background:#ef5c7d}
-    #statusSub{flex:1;color:var(--muted)}
-    #fileCount{color:var(--muted)}
+/* ── Sidebar ─────────────────────────────────────────────────────────────────── */
+#sidebar{
+  background:var(--s0);border-right:1px solid var(--border);
+  padding:16px 12px;overflow-y:auto;display:flex;flex-direction:column;gap:20px;
+}
+.sb-section-label{
+  font-size:10px;font-weight:700;color:var(--dim);
+  text-transform:uppercase;letter-spacing:.1em;padding:0 8px;margin-bottom:6px;
+}
+.slot-btn{
+  width:100%;display:flex;align-items:center;justify-content:space-between;
+  padding:9px 10px;border-radius:10px;border:1px solid transparent;
+  background:transparent;text-align:left;cursor:pointer;transition:.15s;
+  font-size:13px;color:var(--muted);
+}
+.slot-btn:hover{background:var(--s2);color:var(--text);border-color:transparent}
+.slot-btn.active{background:rgba(167,139,250,.1);border-color:rgba(167,139,250,.25);color:var(--a1)}
+.slot-btn .sname{font-weight:600}
+.slot-count{font-size:11px;font-weight:700;padding:2px 8px;border-radius:99px;background:rgba(255,255,255,.07);color:var(--muted)}
+.slot-btn.active .slot-count{background:rgba(167,139,250,.25);color:var(--a1)}
+.slot-btn.err .sname{color:var(--bad)}
+.slot-btn.err .slot-count{background:rgba(248,113,113,.15);color:var(--bad)}
 
-    /* ── Preview modal ── */
-    .modal-bg{position:fixed;inset:0;background:rgba(10,5,18,.75);display:flex;align-items:center;justify-content:center;padding:16px;z-index:200;backdrop-filter:blur(6px)}
-    .modal{background:#fff;border-radius:22px;width:min(860px,100%);max-height:92vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 40px 100px rgba(0,0,0,.35)}
-    .modal-head{padding:18px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:16px}
-    .modal-title{font-weight:700;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .modal-meta{font-size:12px;color:var(--muted);margin-top:2px}
-    .modal-head button{padding:8px 14px;font-size:12px;width:auto;flex-shrink:0}
-    .modal-body{flex:1;overflow:auto;background:#12101a;display:flex;align-items:center;justify-content:center;min-height:280px}
-    .modal-body img{max-width:100%;max-height:68vh;border-radius:10px;display:block}
-    .modal-body video,.modal-body audio{max-width:100%;max-height:68vh;border-radius:10px}
-    .modal-body audio{width:100%;max-height:none;padding:20px}
-    .modal-foot{padding:14px 22px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
-    .modal-foot button{width:auto;padding:9px 18px;font-size:13px}
-    .modal-slot{font-size:12px;color:var(--muted)}
+.upload-area{
+  border:1.5px dashed rgba(255,255,255,.1);border-radius:12px;
+  padding:16px 12px;text-align:center;cursor:pointer;transition:.2s;
+  font-size:13px;color:var(--dim);
+}
+.upload-area:hover{border-color:rgba(167,139,250,.4);color:var(--a1);background:rgba(167,139,250,.05)}
+.upload-area input{display:none}
+.upload-area select{margin-top:10px;font-size:12px}
 
-    /* ── Upload progress toast ── */
-    .toast{position:fixed;bottom:56px;right:18px;background:#fff;border:1px solid var(--border);border-radius:16px;padding:14px 18px;box-shadow:var(--shadow);z-index:300;min-width:240px;font-size:13px}
-    .toast strong{display:block;margin-bottom:4px}
-    .toast-sub{color:var(--muted);margin-bottom:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .bar{height:4px;background:#f0e8ff;border-radius:999px;overflow:hidden}
-    .bar-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:999px;transition:width .3s ease}
-  </style>
+/* ── Main content ────────────────────────────────────────────────────────────── */
+#vaultMain{padding:18px;overflow-y:auto;display:flex;flex-direction:column;gap:16px;background:var(--bg)}
+
+/* toolbar */
+.toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.toolbar input{flex:1;min-width:160px}
+.toolbar button{flex-shrink:0;padding:9px 14px;font-size:12px}
+.tb-divider{width:1px;height:24px;background:var(--border);flex-shrink:0}
+
+/* file grid */
+.file-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
+
+.fcard{
+  background:var(--s1);border:1px solid var(--border);border-radius:14px;
+  overflow:hidden;cursor:pointer;transition:.18s;position:relative;
+  display:flex;flex-direction:column;
+}
+.fcard:hover{border-color:rgba(167,139,250,.3);box-shadow:0 4px 20px rgba(0,0,0,.4)}
+.fcard.selected{border-color:rgba(167,139,250,.6);box-shadow:0 0 0 2px rgba(167,139,250,.2)}
+
+.fthumb{
+  aspect-ratio:4/3;position:relative;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;font-size:38px;
+}
+.fthumb.t-image{background:linear-gradient(135deg,#1a0e2e,#0e1a2e)}
+.fthumb.t-video{background:linear-gradient(135deg,#0e1a1e,#0a1828)}
+.fthumb.t-audio{background:linear-gradient(135deg,#1a1a0e,#1a0e18)}
+.fthumb.t-file {background:var(--s2)}
+.fthumb img,.fthumb video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+
+.fchk{
+  position:absolute;top:8px;left:8px;width:20px;height:20px;
+  border-radius:6px;border:1.5px solid rgba(255,255,255,.3);
+  background:rgba(0,0,0,.4);backdrop-filter:blur(6px);
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:800;color:#fff;z-index:5;transition:.15s;
+}
+.fcard.selected .fchk{background:var(--a1d);border-color:var(--a1)}
+.fslot{
+  position:absolute;bottom:7px;right:7px;
+  font-size:10px;font-weight:800;padding:2px 7px;border-radius:99px;
+  background:rgba(0,0,0,.55);color:rgba(255,255,255,.8);backdrop-filter:blur(4px);z-index:5;
+}
+
+.finfo{padding:10px 12px;flex:1}
+.fname{font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:4px}
+.fmeta{font-size:11px;color:var(--muted);display:flex;justify-content:space-between}
+
+/* empty / loading */
+.state-box{
+  padding:60px 20px;text-align:center;color:var(--muted);
+  border:1px dashed rgba(255,255,255,.07);border-radius:18px;margin:8px 0;
+}
+.state-icon{font-size:48px;margin-bottom:14px;opacity:.6}
+.state-text{font-size:14px;line-height:1.6}
+.state-text a,.state-text button.inline-link{
+  color:var(--a1);background:none;border:none;padding:0;font:inherit;
+  cursor:pointer;text-decoration:underline;
+}
+
+/* ── Statusbar ────────────────────────────────────────────────────────────────── */
+#statusBar{
+  flex-shrink:0;background:var(--s0);border-top:1px solid var(--border);
+  padding:8px 20px;display:flex;align-items:center;gap:10px;font-size:12px;
+}
+.sdot{width:7px;height:7px;border-radius:50%;background:var(--dim);flex-shrink:0;transition:background .3s}
+.sdot.ok{background:var(--ok)}.sdot.warn{background:var(--warn)}.sdot.bad{background:var(--bad)}
+#statusText{font-weight:600}
+#statusSub{flex:1;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#fileCount{color:var(--dim);white-space:nowrap}
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   MODALS (shared)
+═══════════════════════════════════════════════════════════════════════════════ */
+.modal-wrap{
+  position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);
+  display:flex;align-items:center;justify-content:center;padding:16px;z-index:100;
+}
+.modal{
+  background:var(--s1);border:1px solid var(--border);border-radius:22px;
+  width:min(680px,100%);max-height:90vh;display:flex;flex-direction:column;
+  box-shadow:var(--shadow);overflow:hidden;
+}
+.modal-wide{width:min(800px,100%)}
+.modal-head{
+  padding:18px 22px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;gap:14px;flex-shrink:0;
+}
+.modal-title{font-family:'Syne',sans-serif;font-weight:800;font-size:16px}
+.modal-head button{padding:7px 13px;font-size:12px}
+.modal-body{overflow-y:auto;padding:22px;display:flex;flex-direction:column;gap:18px}
+.modal-foot{
+  padding:14px 22px;border-top:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;flex-shrink:0;
+}
+.modal-foot button{font-size:12px}
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   PREVIEW MODAL
+═══════════════════════════════════════════════════════════════════════════════ */
+#previewModal .modal{width:min(900px,100%);max-height:95vh}
+#previewMedia{
+  background:#000;min-height:200px;max-height:65vh;
+  display:flex;align-items:center;justify-content:center;overflow:hidden;
+}
+#previewMedia img{max-width:100%;max-height:65vh;display:block}
+#previewMedia video{max-width:100%;max-height:65vh;display:block}
+#previewMedia audio{width:100%;padding:30px}
+.prev-name{font-family:'Syne',sans-serif;font-weight:700;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.prev-meta{font-size:12px;color:var(--muted);margin-top:2px}
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   MOVE MODAL
+═══════════════════════════════════════════════════════════════════════════════ */
+.move-info{
+  background:var(--s2);border-radius:12px;padding:14px 16px;
+  font-size:13px;line-height:1.6;color:var(--muted);
+}
+.move-info strong{color:var(--text)}
+.move-slot-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
+.move-slot-card{
+  border:1.5px solid var(--border2);border-radius:12px;padding:14px;
+  cursor:pointer;transition:.18s;text-align:center;
+}
+.move-slot-card:hover{border-color:var(--a1);background:rgba(167,139,250,.07)}
+.move-slot-card.selected{border-color:var(--a1);background:rgba(167,139,250,.12)}
+.move-slot-card .ms-slot{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--a1)}
+.move-slot-card .ms-email{font-size:11px;color:var(--muted);margin-top:4px;word-break:break-all}
+.move-slot-card .ms-n{font-size:11px;color:var(--dim);margin-top:3px}
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   SETTINGS MODAL
+═══════════════════════════════════════════════════════════════════════════════ */
+.settings-tabs{display:flex;gap:4px;border-bottom:1px solid var(--border);padding:0 22px;flex-shrink:0}
+.stab{
+  padding:12px 16px;font-size:13px;font-weight:600;
+  border:none;background:none;color:var(--muted);border-bottom:2px solid transparent;
+  margin-bottom:-1px;cursor:pointer;transition:.15s;
+}
+.stab:hover{color:var(--text)}
+.stab.active{color:var(--a1);border-bottom-color:var(--a1)}
+.stab-panel{display:none;flex-direction:column;gap:16px}
+.stab-panel.active{display:flex}
+
+/* storage slot cards in settings */
+.acct-card{
+  background:var(--s2);border:1px solid var(--border);border-radius:14px;
+  padding:14px 16px;display:grid;gap:10px;
+}
+.acct-header{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.acct-slot-badge{
+  font-family:'Syne',sans-serif;font-size:22px;font-weight:800;
+  background:linear-gradient(135deg,var(--a1),var(--a2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.acct-email{font-size:13px;font-weight:600;word-break:break-all}
+.acct-actions{display:flex;gap:8px;flex-wrap:wrap}
+.acct-actions button{padding:6px 12px;font-size:12px}
+
+/* edit pw inline */
+.acct-edit-pw{display:none;flex-direction:column;gap:10px;padding-top:12px;border-top:1px solid var(--border)}
+.acct-edit-pw.open{display:flex}
+
+/* add storage form */
+.add-storage-form{
+  background:var(--s2);border:1px dashed rgba(167,139,250,.25);border-radius:14px;
+  padding:18px;display:none;flex-direction:column;gap:12px;
+}
+.add-storage-form.open{display:flex}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:480px){.form-grid{grid-template-columns:1fr}}
+.field label{font-size:12px;font-weight:600;color:var(--muted);display:block;margin-bottom:5px}
+
+/* change password form */
+.cpw-form{display:flex;flex-direction:column;gap:12px}
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   UPLOAD TOAST
+═══════════════════════════════════════════════════════════════════════════════ */
+#uploadToast{
+  position:fixed;bottom:20px;right:20px;z-index:200;
+  background:var(--s1);border:1px solid var(--border);border-radius:16px;
+  padding:14px 18px;min-width:260px;max-width:340px;box-shadow:var(--shadow);
+}
+.toast-title{font-weight:700;font-size:13px;margin-bottom:4px}
+.toast-sub{font-size:12px;color:var(--muted);margin-bottom:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.prog-bar{height:4px;background:var(--s3);border-radius:99px;overflow:hidden}
+.prog-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--a1d),var(--a2d));transition:width .25s}
+
+</style>
 </head>
 <body>
 
-<!-- ═══════════════════════════════ LOGIN ═══════════════════════════════════ -->
-<div id="loginScreen">
-  <div class="login-card">
-    <div class="vault-logo">Storage Vault</div>
-    <div class="login-sub">Authorized accounts only</div>
-    <input id="loginEmail" type="email" placeholder="Email address" autocomplete="email"/>
-    <input id="loginPass"  type="password" placeholder="Password" autocomplete="current-password"/>
-    <button id="btnLogin" class="btn-primary">Sign in</button>
-    <div id="loginErr"></div>
+<!-- ══════════════════ AUTH SCREEN ══════════════════════════════════════════ -->
+<div id="screenAuth">
+  <div class="auth-box">
+    <div class="auth-logo display">Storage Vault</div>
+    <div class="auth-sub">Secure private media storage</div>
+
+    <div class="auth-card">
+
+      <!-- Step 1: Email -->
+      <div id="authEmail" class="auth-step">
+        <div>
+          <div class="auth-label">Email address</div>
+          <input id="inEmail" type="email" placeholder="you@example.com" autocomplete="email"/>
+        </div>
+        <button id="btnEmailNext" class="btn-grad">Continue →</button>
+        <div class="auth-err" id="authEmailErr"></div>
+      </div>
+
+      <!-- Step 2a: Register -->
+      <div id="authRegister" class="auth-step hidden">
+        <button class="auth-back" id="btnRegBack">← Back</button>
+        <div style="margin-bottom:4px">
+          <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:18px">Create your password</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:4px" id="regEmailShow"></div>
+        </div>
+        <div class="field">
+          <label>New password</label>
+          <div class="pw-wrap">
+            <input id="inRegPw1" type="password" placeholder="Choose a strong password" autocomplete="new-password"/>
+            <button class="pw-eye" data-target="inRegPw1">👁</button>
+          </div>
+          <div class="pw-strength"><div class="pw-strength-bar" id="pwStrBar"></div></div>
+        </div>
+        <div class="field">
+          <label>Confirm password</label>
+          <div class="pw-wrap">
+            <input id="inRegPw2" type="password" placeholder="Repeat password" autocomplete="new-password"/>
+            <button class="pw-eye" data-target="inRegPw2">👁</button>
+          </div>
+        </div>
+        <button id="btnRegister" class="btn-grad">Create account</button>
+        <div class="auth-err" id="authRegErr"></div>
+        <div class="auth-hint">Your password is hashed in the browser before sending. The server never sees the raw password.</div>
+      </div>
+
+      <!-- Step 2b: Login -->
+      <div id="authLogin" class="auth-step hidden">
+        <button class="auth-back" id="btnLoginBack">← Back</button>
+        <div style="margin-bottom:4px">
+          <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:18px">Welcome back</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:4px" id="loginEmailShow"></div>
+        </div>
+        <div class="field">
+          <label>Password</label>
+          <div class="pw-wrap">
+            <input id="inLoginPw" type="password" placeholder="Your vault password" autocomplete="current-password"/>
+            <button class="pw-eye" data-target="inLoginPw">👁</button>
+          </div>
+        </div>
+        <button id="btnLogin" class="btn-grad">Sign in →</button>
+        <div class="auth-err" id="authLoginErr"></div>
+      </div>
+
+    </div>
   </div>
 </div>
 
-<!-- ═════════════════════════════════ APP ═══════════════════════════════════ -->
-<div id="appScreen" class="hidden">
+<!-- ══════════════════ VAULT SCREEN ═════════════════════════════════════════ -->
+<div id="screenVault" class="hidden">
 
-  <header>
-    <div class="app-logo">Storage Vault</div>
-    <div id="headerEmail"></div>
-    <button id="btnRefresh" class="btn-ghost">↻ Refresh</button>
+  <div id="vaultHeader">
+    <div class="hdr-logo">Storage Vault</div>
+    <div id="hdrEmail"></div>
+    <button id="btnSettings" class="btn-ghost">⚙ Settings</button>
+    <button id="btnRefresh"  class="btn-ghost">↻</button>
     <button id="btnSignOut">Sign out</button>
-  </header>
+  </div>
 
-  <div class="vault-layout">
+  <div id="vaultBody">
 
     <!-- ── Sidebar ── -->
-    <aside>
+    <div id="sidebar">
+
       <div>
-        <div class="section-label">Storage Slots</div>
-        <div id="slotFilters"></div>
+        <div class="sb-section-label">Storage Slots</div>
+        <div id="slotList"></div>
       </div>
+
       <div>
-        <div class="section-label">Upload to slot</div>
-        <select id="uploadSlot" style="margin-bottom:10px"></select>
-        <label class="upload-zone">
+        <div class="sb-section-label">Upload files</div>
+        <label class="upload-area">
           <input id="uploadInput" type="file" multiple accept="image/*,video/*,audio/*"/>
-          📎 Choose files to upload
+          📎 Choose files
+          <select id="uploadSlot" onclick="event.stopPropagation()"></select>
         </label>
       </div>
-    </aside>
+
+    </div>
 
     <!-- ── Main ── -->
-    <main>
+    <div id="vaultMain">
+
       <div class="toolbar">
-        <input id="searchInput" type="search" placeholder="🔍  Search files by name…"/>
+        <input id="searchInput" type="search" placeholder="Search files…"/>
         <button id="btnSelectAll" class="btn-ghost">Select all</button>
-        <span id="selInfo" class="sel-info hidden"></span>
-        <button id="btnDeleteSelected" class="btn-danger hidden">🗑 Delete selected</button>
+        <div class="tb-divider" id="selDivider" style="display:none"></div>
+        <button id="btnMoveSelected"   class="hidden" style="color:var(--a1)">⇄ Move</button>
+        <button id="btnDeleteSelected" class="btn-danger hidden">🗑 Delete</button>
       </div>
 
       <div id="fileGrid" class="file-grid"></div>
-      <div id="emptyState"  class="state-box hidden"><div class="icon">🗂️</div><p>No files found.</p></div>
-      <div id="loadingState" class="state-box">
-        <div class="icon">⏳</div>
-        <p id="loadingMsg">Connecting to storage…</p>
+      <div id="emptyState"   class="state-box hidden">
+        <div class="state-icon">🗂️</div>
+        <div class="state-text" id="emptyMsg">No files here yet.</div>
       </div>
-    </main>
+      <div id="loadingState" class="state-box">
+        <div class="state-icon">⏳</div>
+        <div class="state-text" id="loadingMsg">Connecting to storage…</div>
+      </div>
+
+    </div>
   </div>
 
-  <div class="statusbar">
-    <div class="dot warn" id="statusDot"></div>
+  <div id="statusBar">
+    <div class="sdot warn" id="sdot"></div>
     <span id="statusText">Not connected</span>
     <span id="statusSub"></span>
     <span id="fileCount"></span>
   </div>
+
 </div>
 
-<!-- ════════════════════════════ PREVIEW MODAL ═════════════════════════════ -->
-<div id="previewModal" class="modal-bg hidden">
-  <div class="modal">
+<!-- ══════════════════ PREVIEW MODAL ════════════════════════════════════════ -->
+<div id="previewModal" class="modal-wrap hidden">
+  <div class="modal modal-wide">
     <div class="modal-head">
-      <div style="min-width:0">
-        <div class="modal-title" id="pName"></div>
-        <div class="modal-meta"  id="pMeta"></div>
+      <div style="min-width:0;flex:1">
+        <div class="prev-name" id="pName">—</div>
+        <div class="prev-meta" id="pMeta"></div>
       </div>
-      <button id="btnClosePreview">✕ Close</button>
+      <button id="btnClosePreview" class="btn-ghost">✕</button>
     </div>
-    <div class="modal-body" id="pBody">
-      <span style="color:rgba(255,255,255,.4);font-size:20px">Loading…</span>
+    <div id="previewMedia">
+      <span style="color:rgba(255,255,255,.3)">Loading…</span>
     </div>
     <div class="modal-foot">
-      <span class="modal-slot" id="pSlot"></span>
-      <div style="display:flex;gap:10px">
-        <button id="btnDownload" class="btn-ghost">⬇ Download</button>
-        <button id="btnDeletePreview" class="btn-danger">🗑 Delete</button>
+      <span style="font-size:12px;color:var(--muted)" id="pSlot"></span>
+      <div style="display:flex;gap:8px">
+        <button id="btnPreviewMove"   style="font-size:12px;color:var(--a1)">⇄ Move</button>
+        <button id="btnPreviewDl"     class="btn-ok" style="font-size:12px">⬇ Download</button>
+        <button id="btnPreviewDelete" class="btn-danger" style="font-size:12px">🗑 Delete</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ════════════════════════════ UPLOAD TOAST ══════════════════════════════ -->
-<div id="uploadToast" class="toast hidden">
-  <strong>Uploading…</strong>
-  <div class="toast-sub" id="toastSub">Preparing…</div>
-  <div class="bar"><div class="bar-fill" id="toastBar" style="width:0%"></div></div>
+<!-- ══════════════════ MOVE MODAL ════════════════════════════════════════════ -->
+<div id="moveModal" class="modal-wrap hidden">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title">Move files to slot</div>
+      <button id="btnCloseMoveModal" class="btn-ghost">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="move-info" id="moveInfo"></div>
+      <div>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em">Select destination</div>
+        <div class="move-slot-grid" id="moveSlotGrid"></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <span style="font-size:12px;color:var(--dim)">Files already on the target slot are skipped.</span>
+      <button id="btnDoMove" class="btn-grad" disabled>Move files →</button>
+    </div>
+  </div>
 </div>
 
-<!-- ═════════════════════════════ SCRIPT ═══════════════════════════════════ -->
+<!-- ══════════════════ SETTINGS MODAL ════════════════════════════════════════ -->
+<div id="settingsModal" class="modal-wrap hidden">
+  <div class="modal modal-wide">
+    <div class="modal-head">
+      <div class="modal-title">⚙ Settings</div>
+      <button id="btnCloseSettings" class="btn-ghost">✕</button>
+    </div>
+
+    <!-- Tabs -->
+    <div class="settings-tabs">
+      <button class="stab active" data-tab="storage">Storage Accounts</button>
+      <button class="stab"        data-tab="security">Security</button>
+    </div>
+
+    <div class="modal-body" style="padding:22px">
+
+      <!-- ── Storage tab ── -->
+      <div id="tabStorage" class="stab-panel active">
+
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+          <div>
+            <div style="font-weight:700;font-size:14px">Your MEGA storage slots</div>
+            <div style="font-size:12px;color:var(--muted);margin-top:2px">Up to 5 slots. Passwords are stored encrypted — only you can decrypt them.</div>
+          </div>
+          <button id="btnOpenAddStorage" style="font-size:12px;flex-shrink:0">+ Add slot</button>
+        </div>
+
+        <div id="acctList"></div>
+
+        <!-- Add storage form -->
+        <div class="add-storage-form" id="addStorageForm">
+          <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:14px">Add MEGA storage slot</div>
+          <div class="form-grid">
+            <div class="field">
+              <label>Slot number</label>
+              <select id="addSlot"></select>
+            </div>
+            <div class="field">
+              <label>MEGA email</label>
+              <input id="addMegaEmail" type="email" placeholder="your+slot1@gmail.com"/>
+            </div>
+          </div>
+          <div class="field">
+            <label>MEGA password</label>
+            <div class="pw-wrap">
+              <input id="addMegaPw" type="password" placeholder="MEGA account password"/>
+              <button class="pw-eye" data-target="addMegaPw">👁</button>
+            </div>
+          </div>
+          <div style="display:flex;gap:10px;justify-content:flex-end">
+            <button id="btnCancelAddStorage">Cancel</button>
+            <button id="btnSaveAddStorage" class="btn-grad">Save slot</button>
+          </div>
+          <div class="auth-err" id="addStorageErr"></div>
+        </div>
+
+      </div>
+
+      <!-- ── Security tab ── -->
+      <div id="tabSecurity" class="stab-panel">
+        <div>
+          <div style="font-weight:700;font-size:14px">Change vault password</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:2px;margin-bottom:16px">
+            Your new password will re-encrypt all stored MEGA credentials. Other sessions will be signed out.
+          </div>
+          <div class="cpw-form">
+            <div class="field">
+              <label>Current password</label>
+              <div class="pw-wrap">
+                <input id="inCpwOld" type="password" placeholder="Current password"/>
+                <button class="pw-eye" data-target="inCpwOld">👁</button>
+              </div>
+            </div>
+            <div class="field">
+              <label>New password</label>
+              <div class="pw-wrap">
+                <input id="inCpwNew1" type="password" placeholder="New password"/>
+                <button class="pw-eye" data-target="inCpwNew1">👁</button>
+              </div>
+              <div class="pw-strength"><div class="pw-strength-bar" id="cpwStrBar"></div></div>
+            </div>
+            <div class="field">
+              <label>Confirm new password</label>
+              <div class="pw-wrap">
+                <input id="inCpwNew2" type="password" placeholder="Repeat new password"/>
+                <button class="pw-eye" data-target="inCpwNew2">👁</button>
+              </div>
+            </div>
+            <div style="display:flex;gap:10px;align-items:center">
+              <button id="btnChangePassword" class="btn-grad">Update password</button>
+              <div class="auth-err" id="cpwErr" style="margin:0"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ UPLOAD TOAST ══════════════════════════════════════════ -->
+<div id="uploadToast" class="hidden">
+  <div class="toast-title" id="toastTitle">Uploading…</div>
+  <div class="toast-sub"   id="toastSub">Preparing…</div>
+  <div class="prog-bar"><div class="prog-fill" id="toastFill" style="width:0%"></div></div>
+</div>
+
+<!-- ══════════════════ JAVASCRIPT ════════════════════════════════════════════ -->
 <script type="module">
 import { Storage } from 'https://unpkg.com/megajs/dist/main.browser-es.mjs';
 
 const BACKEND = 'https://script.google.com/macros/s/AKfycbzict1PB8A-nDDI0Rq44heHJcLoHwYLTUO7ckNcoeeHMdA5tm1dxmTgsUkW4CttOCWugQ/exec';
 
-// ─── State ────────────────────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════════════════════════
 const S = {
-  email:        null,
-  accounts:     [],   // [{slot, megaEmail, megaPassword}]
-  storages:     [],   // [{slot, storage, megaEmail}]
-  allFiles:     [],   // flat list of every file across all slots
-  currentSlot:  'all',
-  query:        '',
-  selected:     new Set(),
-  preview:      null, // current file being previewed
-  previewBlob:  null  // blob URL for preview
+  // Auth
+  email:       null,
+  passwordRaw: null,   // kept in memory for key derivation
+  salt:        null,   // hex — returned by server on login
+  cryptoKey:   null,   // CryptoKey (AES-GCM) — derived from password+salt
+  authHash:    null,   // hex — sent to server for verification
+  // Encrypted accounts as returned from server
+  encAccounts: [],     // [{slot, megaEmail, encryptedPassword, iv}]
+  // Decrypted, connected
+  accounts:    [],     // [{slot, megaEmail, megaPassword}]
+  storages:    [],     // [{slot, storage, megaEmail}]
+  // Files
+  allFiles:    [],     // flat list across all slots
+  currentSlot: 'all',
+  query:       '',
+  selected:    new Set(),
+  // Preview
+  preview:     null,
+  previewUrl:  null,
+  // Move modal
+  moveTarget:  null,
 };
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-const $    = id => document.getElementById(id);
-const esc  = s  => String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-const norm = s  => String(s ?? '').trim().toLowerCase();
-
-function fmtSize(b) {
-  if (!b) return '0 B';
-  const u = ['B','KB','MB','GB','TB']; let i = 0, n = b;
-  while (n >= 1024 && i < u.length - 1) { n /= 1024; i++; }
-  return n.toFixed(i === 0 ? 0 : 1) + ' ' + u[i];
+// ═══════════════════════════════════════════════════════════════════════════════
+// CRYPTO HELPERS
+// ═══════════════════════════════════════════════════════════════════════════════
+function hexToU8(hex) {
+  if (!hex || hex.length % 2) return new Uint8Array(0);
+  const a = new Uint8Array(hex.length / 2);
+  for (let i = 0; i < a.length; i++) a[i] = parseInt(hex.slice(i*2, i*2+2), 16);
+  return a;
 }
-function fmtDate(ts) { return new Date(ts).toLocaleDateString(undefined, { year:'numeric', month:'short', day:'numeric' }); }
-
-function guessMime(name = '') {
-  const ext = name.split('.').pop().toLowerCase();
-  if (['jpg','jpeg','png','gif','webp','avif','bmp','heic','svg'].includes(ext)) return 'image/' + ext;
-  if (['mp4','mov','webm','mkv','avi','m4v'].includes(ext)) return 'video/' + ext;
-  if (['mp3','ogg','wav','flac','aac','m4a','opus'].includes(ext)) return 'audio/' + ext;
-  return 'application/octet-stream';
+function u8ToHex(buf) {
+  return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2,'0')).join('');
 }
-function typeOf(file) {
-  const m = file.mime || '';
-  if (m.startsWith('image/')) return 'image';
-  if (m.startsWith('video/')) return 'video';
-  if (m.startsWith('audio/')) return 'audio';
-  return 'file';
-}
-const typeEmoji = { image:'🖼️', video:'🎬', audio:'🎵', file:'📄' };
+function genSalt() { return u8ToHex(crypto.getRandomValues(new Uint8Array(16))); }
+function genIV()   { return crypto.getRandomValues(new Uint8Array(12)); }
 
-function setStatus(kind, text, sub = '') {
-  $('statusDot').className  = 'dot ' + kind;
-  $('statusText').textContent = text;
-  $('statusSub').textContent  = sub;
+async function sha256hex(str) {
+  return u8ToHex(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str)));
 }
 
-// ─── Backend ──────────────────────────────────────────────────────────────────
-async function api(action, params = {}) {
+/** Derive AES-256-GCM key from password using PBKDF2 */
+async function deriveKey(password, saltHex) {
+  const keyMat = await crypto.subtle.importKey(
+    'raw', new TextEncoder().encode(password), 'PBKDF2', false, ['deriveKey']
+  );
+  return crypto.subtle.deriveKey(
+    { name:'PBKDF2', salt:hexToU8(saltHex), iterations:100000, hash:'SHA-256' },
+    keyMat,
+    { name:'AES-GCM', length:256 },
+    false,
+    ['encrypt','decrypt']
+  );
+}
+
+/** Encrypt a string; returns {ciphertext:hex, iv:hex} */
+async function encryptStr(key, plaintext) {
+  const iv  = genIV();
+  const enc = await crypto.subtle.encrypt(
+    { name:'AES-GCM', iv },
+    key,
+    new TextEncoder().encode(plaintext)
+  );
+  return { ciphertext: u8ToHex(new Uint8Array(enc)), iv: u8ToHex(iv) };
+}
+
+/** Decrypt a ciphertext hex string */
+async function decryptStr(key, ciphertextHex, ivHex) {
+  const dec = await crypto.subtle.decrypt(
+    { name:'AES-GCM', iv:hexToU8(ivHex) },
+    key,
+    hexToU8(ciphertextHex)
+  );
+  return new TextDecoder().decode(dec);
+}
+
+/** Compute auth hash: SHA-256(password + salt) */
+async function computeAuthHash(password, salt) {
+  return sha256hex(password + salt);
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// API
+// ═══════════════════════════════════════════════════════════════════════════════
+async function api(action, payload = {}, method = 'POST') {
   const url = new URL(BACKEND);
   url.searchParams.set('action', action);
-  for (const [k, v] of Object.entries(params)) url.searchParams.set(k, v);
-  const res  = await fetch(url.toString(), { redirect: 'follow' });
+  const opts = { redirect:'follow' };
+  if (method === 'GET') {
+    for (const [k,v] of Object.entries(payload)) url.searchParams.set(k, v);
+  } else {
+    opts.method  = 'POST';
+    opts.headers = { 'Content-Type':'application/json' };
+    opts.body    = JSON.stringify(payload);
+  }
+  const res  = await fetch(url.toString(), opts);
   const text = await res.text();
   let data;
   try { data = JSON.parse(text); }
-  catch { throw new Error('Server returned non-JSON. Check your Apps Script deployment.'); }
+  catch { throw new Error('Server returned non-JSON. Check Apps Script deployment.'); }
   if (data.ok === false) throw new Error(data.error || 'Server error');
   return data;
 }
 
-// ─── Login ────────────────────────────────────────────────────────────────────
-async function login() {
-  const email = norm($('loginEmail').value);
-  const pass  = $('loginPass').value.trim();
-  $('loginErr').textContent = '';
-  if (!email || !pass) { $('loginErr').textContent = 'Enter email and password.'; return; }
+// ═══════════════════════════════════════════════════════════════════════════════
+// UTILITIES
+// ═══════════════════════════════════════════════════════════════════════════════
+const $  = id => document.getElementById(id);
+const esc = s => String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const norm = s => String(s??'').trim().toLowerCase();
+function fmtSize(b) {
+  if (!b) return '0 B';
+  const u=['B','KB','MB','GB','TB']; let i=0,n=b;
+  while(n>=1024&&i<u.length-1){n/=1024;i++;} return n.toFixed(i?1:0)+' '+u[i];
+}
+function fmtDate(ts) { return new Date(ts).toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'}); }
+function guessMime(name=''){
+  const e=name.split('.').pop().toLowerCase();
+  const img=['jpg','jpeg','png','gif','webp','avif','bmp','heic'];
+  const vid=['mp4','mov','webm','mkv','avi','m4v'];
+  const aud=['mp3','ogg','wav','flac','aac','m4a','opus'];
+  if(img.includes(e)) return 'image/'+e;
+  if(vid.includes(e)) return 'video/mp4';
+  if(aud.includes(e)) return 'audio/'+e;
+  return 'application/octet-stream';
+}
+function typeOf(f){ const m=f.mime||''; if(m.startsWith('image/')) return 'image'; if(m.startsWith('video/')) return 'video'; if(m.startsWith('audio/')) return 'audio'; return 'file'; }
+const typeIcon = { image:'🖼️', video:'🎬', audio:'🎵', file:'📄' };
 
+function setStatus(kind, text, sub=''){
+  $('sdot').className   = 'sdot '+kind;
+  $('statusText').textContent = text;
+  $('statusSub').textContent  = sub;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// AUTH
+// ═══════════════════════════════════════════════════════════════════════════════
+let pendingEmail = '';
+let pendingSalt  = '';  // salt returned by checkEmail (if registered)
+
+async function stepEmail() {
+  const email = $('inEmail').value.trim().toLowerCase();
+  $('authEmailErr').textContent = '';
+  if (!email) { $('authEmailErr').textContent = 'Enter your email.'; return; }
+  $('btnEmailNext').textContent = 'Checking…';
+  $('btnEmailNext').disabled = true;
+  try {
+    const res = await api('checkEmail', { email }, 'GET');
+    if (!res.allowed) throw new Error('This email is not on the access list.');
+    pendingEmail = email;
+    if (res.registered) {
+      pendingSalt = res.salt;
+      $('loginEmailShow').textContent = email;
+      show('authLogin');
+    } else {
+      $('regEmailShow').textContent = email;
+      show('authRegister');
+    }
+  } catch(err) {
+    $('authEmailErr').textContent = err.message;
+  } finally {
+    $('btnEmailNext').textContent = 'Continue →';
+    $('btnEmailNext').disabled = false;
+  }
+}
+
+async function doRegister() {
+  const pw1 = $('inRegPw1').value;
+  const pw2 = $('inRegPw2').value;
+  $('authRegErr').textContent = '';
+  if (pw1.length < 8)   { $('authRegErr').textContent = 'Password must be at least 8 characters.'; return; }
+  if (pw1 !== pw2)      { $('authRegErr').textContent = 'Passwords do not match.'; return; }
+  $('btnRegister').textContent = 'Creating…';
+  $('btnRegister').disabled = true;
+  try {
+    const salt         = genSalt();
+    const passwordHash = await computeAuthHash(pw1, salt);
+    await api('register', { email: pendingEmail, passwordHash, salt });
+    // Auto-login after registration
+    await finishLogin(pendingEmail, pw1, salt, []);
+  } catch(err) {
+    $('authRegErr').textContent = err.message;
+    $('btnRegister').textContent = 'Create account';
+    $('btnRegister').disabled = false;
+  }
+}
+
+async function doLogin() {
+  const pw = $('inLoginPw').value;
+  $('authLoginErr').textContent = '';
+  if (!pw) { $('authLoginErr').textContent = 'Enter your password.'; return; }
   $('btnLogin').textContent = 'Signing in…';
   $('btnLogin').disabled = true;
   try {
-    const res = await api('login', { email, password: pass });
-    S.email    = res.email;
-    S.accounts = res.accounts;
-    $('loginScreen').classList.add('hidden');
-    $('appScreen').classList.remove('hidden');
-    $('headerEmail').textContent = S.email;
-    await connectAndLoad();
+    const authHash = await computeAuthHash(pw, pendingSalt);
+    const res      = await api('login', { email: pendingEmail, passwordHash: authHash });
+    await finishLogin(pendingEmail, pw, res.salt, res.accounts || []);
   } catch(err) {
-    $('loginErr').textContent = err.message;
-    $('btnLogin').textContent = 'Sign in';
+    $('authLoginErr').textContent = err.message;
+    $('btnLogin').textContent = 'Sign in →';
     $('btnLogin').disabled = false;
   }
 }
 
-function signOut() {
-  Object.assign(S, { email:null, accounts:[], storages:[], allFiles:[], currentSlot:'all', query:'', selected:new Set(), preview:null });
-  if (S.previewBlob) { URL.revokeObjectURL(S.previewBlob); S.previewBlob = null; }
-  $('appScreen').classList.add('hidden');
-  $('loginScreen').classList.remove('hidden');
-  $('loginEmail').value = '';
-  $('loginPass').value  = '';
-  $('btnLogin').textContent = 'Sign in';
-  $('btnLogin').disabled = false;
-  $('loginErr').textContent = '';
+async function finishLogin(email, passwordRaw, salt, encAccounts) {
+  S.email       = email;
+  S.passwordRaw = passwordRaw;
+  S.salt        = salt;
+  S.cryptoKey   = await deriveKey(passwordRaw, salt);
+  S.authHash    = await computeAuthHash(passwordRaw, salt);
+  S.encAccounts = encAccounts;
+
+  // Decrypt MEGA passwords
+  S.accounts = [];
+  for (const a of encAccounts) {
+    try {
+      const megaPassword = await decryptStr(S.cryptoKey, a.encryptedPassword, a.iv);
+      S.accounts.push({ slot: a.slot, megaEmail: a.megaEmail, megaPassword });
+    } catch { /* skip bad entries */ }
+  }
+
+  $('hdrEmail').textContent = email;
+  $('screenAuth').classList.add('hidden');
+  $('screenVault').classList.remove('hidden');
+
+  if (!S.accounts.length) {
+    setStatus('warn', 'No storage configured', 'Open Settings to add your MEGA accounts');
+    $('loadingState').classList.remove('hidden');
+    $('loadingMsg').textContent = 'No storage slots yet. Open ⚙ Settings to add your MEGA accounts.';
+    buildSidebar();
+  } else {
+    await connectAndLoad();
+  }
 }
 
-// ─── MEGA connection & file tree ─────────────────────────────────────────────
+function doSignOut() {
+  if (S.previewUrl) { URL.revokeObjectURL(S.previewUrl); S.previewUrl = null; }
+  Object.assign(S, {
+    email:null, passwordRaw:null, salt:null, cryptoKey:null, authHash:null,
+    encAccounts:[], accounts:[], storages:[], allFiles:[], currentSlot:'all',
+    query:'', selected:new Set(), preview:null, previewUrl:null, moveTarget:null
+  });
+  $('screenVault').classList.add('hidden');
+  $('screenAuth').classList.remove('hidden');
+  show('authEmail');
+  $('inEmail').value=''; $('inLoginPw').value=''; $('inRegPw1').value=''; $('inRegPw2').value='';
+}
+
+// Auth screen navigation
+function show(stepId) {
+  ['authEmail','authRegister','authLogin'].forEach(id=>$( id).classList.toggle('hidden', id!==stepId));
+}
+$('btnEmailNext').addEventListener('click', stepEmail);
+$('inEmail').addEventListener('keydown', e=>{ if(e.key==='Enter') stepEmail(); });
+$('inLoginPw').addEventListener('keydown', e=>{ if(e.key==='Enter') doLogin(); });
+$('btnRegBack').addEventListener('click', ()=>show('authEmail'));
+$('btnLoginBack').addEventListener('click', ()=>show('authEmail'));
+$('btnRegister').addEventListener('click', doRegister);
+$('btnLogin').addEventListener('click', doLogin);
+$('btnSignOut').addEventListener('click', doSignOut);
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// MEGA CONNECTION & FILE TREE
+// ═══════════════════════════════════════════════════════════════════════════════
 async function connectAndLoad() {
-  setStatus('warn', 'Connecting…', 'Logging into MEGA accounts');
+  setStatus('warn','Connecting…','Logging into MEGA accounts');
   $('loadingState').classList.remove('hidden');
-  $('fileGrid').innerHTML = '';
   $('emptyState').classList.add('hidden');
+  $('fileGrid').innerHTML = '';
   S.storages = [];
   S.allFiles = [];
 
-  // Connect to each MEGA slot concurrently; don't fail if one slot is down
   const results = await Promise.allSettled(
     S.accounts.map(async acc => {
       const storage = await new Storage({
-        email:     acc.megaEmail,
-        password:  acc.megaPassword,
-        userAgent: 'StorageVault/1.0'
+        email:    acc.megaEmail,
+        password: acc.megaPassword,
+        userAgent:'StorageVault/1.0'
       }).ready;
       return { slot: acc.slot, storage, megaEmail: acc.megaEmail };
     })
@@ -342,18 +944,18 @@ async function connectAndLoad() {
 
   const failed = [];
   for (const r of results) {
-    if (r.status === 'fulfilled') S.storages.push(r.value);
+    if (r.status==='fulfilled') S.storages.push(r.value);
     else failed.push(r.reason?.message || String(r.reason));
   }
 
   if (!S.storages.length) {
-    setStatus('bad', 'No slots connected', failed.join(' | '));
-    $('loadingMsg').textContent = 'Failed to connect: ' + failed.join('; ');
+    setStatus('bad','No slots connected', failed.join(' | '));
+    $('loadingMsg').textContent = 'Failed to connect: '+(failed[0]||'Unknown error');
+    buildSidebar();
     return;
   }
 
-  // Walk file tree from each connected storage
-  setStatus('warn', 'Loading files…', `Connected to ${S.storages.length} of ${S.accounts.length} slot(s)`);
+  setStatus('warn','Loading files…',`${S.storages.length} of ${S.accounts.length} slot(s) connected`);
   for (const entry of S.storages) {
     $('loadingMsg').textContent = `Scanning slot ${entry.slot}…`;
     walkNode(entry.storage.root, entry.slot, '');
@@ -361,63 +963,81 @@ async function connectAndLoad() {
 
   $('loadingState').classList.add('hidden');
   buildSidebar();
+  buildUploadSlotDropdown();
   applyFilter();
 
-  const warn = failed.length ? ` (${failed.length} slot(s) failed)` : '';
-  setStatus(failed.length ? 'warn' : 'ok',
-    `${S.allFiles.length} files loaded`,
-    `${S.storages.length} storage slot(s) active${warn}`);
+  const warn = failed.length ? ` (${failed.length} slot(s) failed to connect)` : '';
+  setStatus(failed.length?'warn':'ok',
+    `${S.allFiles.length} files across ${S.storages.length} slot(s)`,
+    warn || `${S.accounts.length} storage slot(s) active`
+  );
 }
 
 function walkNode(node, slot, path) {
-  for (const child of (node.children || [])) {
-    if (child.directory) {
-      walkNode(child, slot, path ? `${path}/${child.name}` : child.name);
-    } else {
-      const mime = guessMime(child.name);
+  for (const child of (node.children||[])) {
+    if (child.directory) walkNode(child, slot, path ? `${path}/${child.name}` : child.name);
+    else {
+      const mime = child.mime || guessMime(child.name);
       S.allFiles.push({
-        id:        child.nodeId || child.handle || `${slot}-${Date.now()}-${Math.random()}`,
+        id:        child.nodeId || child.handle || `s${slot}-${Date.now()}-${Math.random()}`,
         name:      child.name  || 'unnamed',
         size:      child.size  || 0,
         mime,
         slot,
         path,
-        createdAt: child.timestamp ? child.timestamp * 1000 : Date.now(),
+        createdAt: child.timestamp ? child.timestamp*1000 : Date.now(),
         megaNode:  child
       });
     }
   }
 }
 
-// ─── Sidebar ──────────────────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════════════════════
+// SIDEBAR & SLOT FILTERS
+// ═══════════════════════════════════════════════════════════════════════════════
 function buildSidebar() {
   const counts = {};
-  for (const f of S.allFiles) counts[f.slot] = (counts[f.slot] || 0) + 1;
+  for (const f of S.allFiles) counts[f.slot]=(counts[f.slot]||0)+1;
 
-  let html = `<div class="slot-item ${S.currentSlot === 'all' ? 'active' : ''}" data-slot="all">
-    <span>All files</span><span class="slot-pill">${S.allFiles.length}</span>
-  </div>`;
-  for (const { slot } of S.storages) {
-    html += `<div class="slot-item ${S.currentSlot == slot ? 'active' : ''}" data-slot="${slot}">
-      <span>Slot ${slot}</span><span class="slot-pill">${counts[slot] || 0}</span>
-    </div>`;
+  const slotMap = {};
+  for (const a of S.accounts)  slotMap[a.slot] = a;
+  const failedSlots = S.accounts.filter(a => !S.storages.find(s=>s.slot===a.slot));
+
+  let html = `<button class="slot-btn ${S.currentSlot==='all'?'active':''}" data-slot="all">
+    <span class="sname">All files</span>
+    <span class="slot-count">${S.allFiles.length}</span>
+  </button>`;
+  for (const entry of S.storages) {
+    html += `<button class="slot-btn ${S.currentSlot==entry.slot?'active':''}" data-slot="${entry.slot}">
+      <span class="sname">Slot ${entry.slot}</span>
+      <span class="slot-count">${counts[entry.slot]||0}</span>
+    </button>`;
   }
-  $('slotFilters').innerHTML = html;
-  $('slotFilters').querySelectorAll('.slot-item').forEach(el => {
-    el.addEventListener('click', () => {
-      S.currentSlot = el.dataset.slot;
+  for (const a of failedSlots) {
+    html += `<button class="slot-btn err" data-slot="${a.slot}" title="Connection failed">
+      <span class="sname">Slot ${a.slot} ⚠</span>
+      <span class="slot-count">—</span>
+    </button>`;
+  }
+  $('slotList').innerHTML = html;
+  $('slotList').querySelectorAll('.slot-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      S.currentSlot = btn.dataset.slot;
       buildSidebar();
       applyFilter();
     });
   });
+}
 
-  // Upload slot selector
+function buildUploadSlotDropdown() {
   $('uploadSlot').innerHTML = S.storages
-    .map(s => `<option value="${s.slot}">Slot ${s.slot} — ${s.megaEmail}</option>`)
+    .map(s=>`<option value="${s.slot}">→ Slot ${s.slot} (${s.megaEmail.split('@')[0]}…)</option>`)
     .join('');
 }
 
-// ─── Filtering & rendering ────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════════════════════
+// FILE GRID
+// ═══════════════════════════════════════════════════════════════════════════════
 function applyFilter() {
   S.query = norm($('searchInput').value);
   let files = S.allFiles;
@@ -427,12 +1047,21 @@ function applyFilter() {
 }
 
 function renderGrid(files) {
-  const n = files.length;
-  $('fileCount').textContent = n ? `${n} file${n !== 1 ? 's' : ''}` : '';
+  $('fileCount').textContent = files.length ? `${files.length} file${files.length!==1?'s':''}` : '';
 
-  if (!n) {
+  if (!files.length) {
     $('fileGrid').innerHTML = '';
     $('emptyState').classList.remove('hidden');
+    if (!S.storages.length && S.accounts.length) {
+      $('emptyMsg').innerHTML = 'No slots connected. Check ⚙ Settings for credentials.';
+    } else if (!S.accounts.length) {
+      $('emptyMsg').innerHTML = 'No storage configured. <button class="inline-link" id="emptyOpenSettings">Open Settings</button> to add your MEGA accounts.';
+      setTimeout(()=>{
+        document.getElementById('emptyOpenSettings')?.addEventListener('click', openSettings);
+      }, 0);
+    } else {
+      $('emptyMsg').innerHTML = S.query ? `No files matching "${esc(S.query)}"` : 'No files in this slot yet. Upload something!';
+    }
     updateSelUI();
     return;
   }
@@ -441,30 +1070,29 @@ function renderGrid(files) {
   $('fileGrid').innerHTML = files.map(f => {
     const type = typeOf(f);
     const sel  = S.selected.has(f.id);
-    return `<div class="file-card${sel ? ' selected' : ''}" data-id="${esc(f.id)}">
-      <div class="file-thumb t-${type}">
-        <span style="position:relative;z-index:1">${typeEmoji[type] || '📄'}</span>
+    return `<div class="fcard${sel?' selected':''}" data-id="${esc(f.id)}">
+      <div class="fthumb t-${type}">
+        <span style="position:relative;z-index:1">${typeIcon[type]}</span>
+        <span class="fslot">S${f.slot}</span>
       </div>
-      <div class="check-box">${sel ? '✓' : ''}</div>
-      <div class="file-info">
-        <div class="file-name" title="${esc(f.name)}">${esc(f.name)}</div>
-        <div class="file-meta">
+      <div class="fchk">${sel?'✓':''}</div>
+      <div class="finfo">
+        <div class="fname" title="${esc(f.name)}">${esc(f.name)}</div>
+        <div class="fmeta">
           <span>${fmtSize(f.size)}</span>
-          <span class="slot-tag">S${f.slot}</span>
+          <span style="color:var(--dim)">${fmtDate(f.createdAt)}</span>
         </div>
-        <div style="font-size:11px;color:var(--muted);margin-top:3px">${fmtDate(f.createdAt)}</div>
       </div>
     </div>`;
   }).join('');
 
-  // Delegated event listeners
-  $('fileGrid').querySelectorAll('.file-card').forEach(card => {
+  $('fileGrid').querySelectorAll('.fcard').forEach(card => {
     card.addEventListener('click', e => {
-      if (e.target.closest('.check-box')) {
+      if (e.target.closest('.fchk')) {
         toggleSelect(card.dataset.id);
       } else {
-        const file = S.allFiles.find(f => f.id === card.dataset.id);
-        if (file) openPreview(file);
+        const f = S.allFiles.find(x=>x.id===card.dataset.id);
+        if (f) openPreview(f);
       }
     });
   });
@@ -477,188 +1105,551 @@ function toggleSelect(id) {
   const card = $('fileGrid').querySelector(`[data-id="${CSS.escape(id)}"]`);
   if (card) {
     card.classList.toggle('selected', S.selected.has(id));
-    card.querySelector('.check-box').textContent = S.selected.has(id) ? '✓' : '';
+    card.querySelector('.fchk').textContent = S.selected.has(id)?'✓':'';
   }
   updateSelUI();
 }
 
 function updateSelUI() {
   const n = S.selected.size;
-  $('selInfo').classList.toggle('hidden', !n);
   $('btnDeleteSelected').classList.toggle('hidden', !n);
-  if (n) $('selInfo').textContent = `${n} selected`;
+  $('btnMoveSelected').classList.toggle('hidden', !n || S.storages.length < 2);
+  $('selDivider').style.display = n ? '' : 'none';
 }
 
-// ─── Select all ───────────────────────────────────────────────────────────────
 $('btnSelectAll').addEventListener('click', () => {
   let files = S.allFiles;
-  if (S.currentSlot !== 'all') files = files.filter(f => f.slot == S.currentSlot);
-  if (S.query) files = files.filter(f => norm(f.name).includes(S.query));
-  files.forEach(f => S.selected.add(f.id));
+  if (S.currentSlot!=='all') files=files.filter(f=>f.slot==S.currentSlot);
+  if (S.query) files=files.filter(f=>norm(f.name).includes(S.query));
+  files.forEach(f=>S.selected.add(f.id));
   applyFilter();
 });
 
-// ─── Delete selected ──────────────────────────────────────────────────────────
-$('btnDeleteSelected').addEventListener('click', async () => {
-  const n = S.selected.size;
-  if (!n) return;
-  if (!confirm(`Permanently delete ${n} file${n !== 1 ? 's' : ''}? This cannot be undone.`)) return;
-
-  setStatus('warn', `Deleting ${n} file${n !== 1 ? 's' : ''}…`, '');
-  const ids = [...S.selected];
-  let done = 0;
-  for (const id of ids) {
-    const file = S.allFiles.find(f => f.id === id);
-    if (!file) continue;
-    try { await file.megaNode.delete(true); done++; }
-    catch(e) { console.warn('Delete failed:', file.name, e); }
-    S.allFiles = S.allFiles.filter(f => f.id !== id);
-  }
-  S.selected.clear();
-  buildSidebar();
-  applyFilter();
-  setStatus('ok', `Deleted ${done} file${done !== 1 ? 's' : ''}`, '');
-});
-
-// ─── Refresh ──────────────────────────────────────────────────────────────────
-$('btnRefresh').addEventListener('click', async () => {
-  S.allFiles = []; S.selected.clear(); S.currentSlot = 'all';
-  await connectAndLoad();
-});
-
-// ─── Search ───────────────────────────────────────────────────────────────────
 $('searchInput').addEventListener('input', applyFilter);
+$('btnRefresh').addEventListener('click', async()=>{ S.allFiles=[]; S.selected.clear(); S.currentSlot='all'; await connectAndLoad(); });
 
-// ─── Preview ──────────────────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════════════════════
+// PREVIEW MODAL
+// ═══════════════════════════════════════════════════════════════════════════════
 async function openPreview(file) {
   S.preview = file;
   $('pName').textContent = file.name;
-  $('pMeta').textContent = `${fmtSize(file.size)}  •  ${fmtDate(file.createdAt)}`;
-  $('pSlot').textContent  = `Slot ${file.slot}${file.path ? '  ›  ' + file.path : ''}`;
-  $('pBody').innerHTML    = '<span style="color:rgba(255,255,255,.4);font-size:20px">⏳ Loading…</span>';
+  $('pMeta').textContent = `${fmtSize(file.size)}  ·  ${fmtDate(file.createdAt)}`;
+  $('pSlot').textContent = `Slot ${file.slot}${file.path?' › '+file.path:''}`;
+  $('previewMedia').innerHTML = '<span style="color:rgba(255,255,255,.3);font-size:14px">⏳ Loading…</span>';
   $('previewModal').classList.remove('hidden');
-
   try {
     const buffer = await file.megaNode.downloadBuffer();
     const mime   = file.mime || guessMime(file.name);
-    if (S.previewBlob) URL.revokeObjectURL(S.previewBlob);
-    S.previewBlob = URL.createObjectURL(new Blob([buffer], { type: mime }));
-    const type = typeOf(file);
-
-    if (type === 'image') {
-      $('pBody').innerHTML = `<img src="${S.previewBlob}" alt="${esc(file.name)}"/>`;
-    } else if (type === 'video') {
-      $('pBody').innerHTML = `<video src="${S.previewBlob}" controls autoplay playsinline></video>`;
-    } else if (type === 'audio') {
-      $('pBody').innerHTML = `<audio src="${S.previewBlob}" controls autoplay></audio>`;
-    } else {
-      $('pBody').innerHTML = `<div style="color:rgba(255,255,255,.7);text-align:center;padding:40px">
-        <div style="font-size:64px">📄</div>
-        <div style="margin-top:14px;font-size:15px">${esc(file.name)}</div>
-        <div style="margin-top:6px;opacity:.55;font-size:13px">${fmtSize(file.size)}</div>
-        <div style="margin-top:20px"><a href="${S.previewBlob}" download="${esc(file.name)}" style="color:#ff6fb1">⬇ Download</a></div>
-      </div>`;
-    }
+    if (S.previewUrl) URL.revokeObjectURL(S.previewUrl);
+    S.previewUrl = URL.createObjectURL(new Blob([buffer],{type:mime}));
+    const type   = typeOf(file);
+    if (type==='image') $('previewMedia').innerHTML=`<img src="${S.previewUrl}" alt="${esc(file.name)}"/>`;
+    else if (type==='video') $('previewMedia').innerHTML=`<video src="${S.previewUrl}" controls autoplay playsinline></video>`;
+    else if (type==='audio') $('previewMedia').innerHTML=`<audio src="${S.previewUrl}" controls autoplay></audio>`;
+    else $('previewMedia').innerHTML=`<div style="padding:40px;text-align:center;color:rgba(255,255,255,.5)">
+      <div style="font-size:56px">📄</div>
+      <div style="margin-top:12px">${esc(file.name)}</div>
+      <div style="margin-top:6px;font-size:12px;opacity:.5">${fmtSize(file.size)}</div>
+    </div>`;
   } catch(err) {
-    $('pBody').innerHTML = `<div style="color:#ef5c7d;text-align:center;padding:40px">Failed to load: ${esc(err.message)}</div>`;
+    $('previewMedia').innerHTML=`<div style="padding:30px;color:var(--bad);text-align:center">${esc(err.message)}</div>`;
   }
 }
 
 function closePreview() {
   $('previewModal').classList.add('hidden');
-  if (S.previewBlob) { URL.revokeObjectURL(S.previewBlob); S.previewBlob = null; }
-  $('pBody').innerHTML = '';
-  S.preview = null;
+  if (S.previewUrl) { URL.revokeObjectURL(S.previewUrl); S.previewUrl=null; }
+  $('previewMedia').innerHTML='';
+  S.preview=null;
 }
 
 $('btnClosePreview').addEventListener('click', closePreview);
-$('previewModal').addEventListener('click', e => { if (e.target === $('previewModal')) closePreview(); });
+$('previewModal').addEventListener('click', e=>{ if(e.target===$('previewModal')) closePreview(); });
 
-$('btnDownload').addEventListener('click', async () => {
+$('btnPreviewDl').addEventListener('click', async()=>{
   if (!S.preview) return;
-  let blobUrl = S.previewBlob;
-  if (!blobUrl) {
-    try {
-      const buf = await S.preview.megaNode.downloadBuffer();
-      const mime = S.preview.mime || guessMime(S.preview.name);
-      blobUrl = URL.createObjectURL(new Blob([buf], { type: mime }));
-    } catch(e) { return alert('Download failed: ' + e.message); }
+  let url = S.previewUrl;
+  if (!url) {
+    const buf = await S.preview.megaNode.downloadBuffer();
+    url = URL.createObjectURL(new Blob([buf],{type:S.preview.mime||guessMime(S.preview.name)}));
   }
-  const a = Object.assign(document.createElement('a'), { href: blobUrl, download: S.preview.name || 'download' });
+  const a = Object.assign(document.createElement('a'),{href:url,download:S.preview.name||'download'});
   document.body.appendChild(a); a.click(); a.remove();
 });
 
-$('btnDeletePreview').addEventListener('click', async () => {
+$('btnPreviewDelete').addEventListener('click', async()=>{
   if (!S.preview) return;
   if (!confirm(`Permanently delete "${S.preview.name}"?`)) return;
   try {
     await S.preview.megaNode.delete(true);
     const id = S.preview.id;
-    S.allFiles = S.allFiles.filter(f => f.id !== id);
+    S.allFiles = S.allFiles.filter(f=>f.id!==id);
     S.selected.delete(id);
-    closePreview();
-    buildSidebar();
-    applyFilter();
-    setStatus('ok', 'File deleted', '');
-  } catch(e) { alert('Delete failed: ' + e.message); }
+    closePreview(); buildSidebar(); applyFilter();
+    setStatus('ok','File deleted','');
+  } catch(e){ alert('Delete failed: '+e.message); }
 });
 
-// ─── Upload ───────────────────────────────────────────────────────────────────
+$('btnPreviewMove').addEventListener('click', ()=>{
+  if (!S.preview) return;
+  openMoveModal([S.preview.id]);
+});
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// DELETE SELECTED
+// ═══════════════════════════════════════════════════════════════════════════════
+$('btnDeleteSelected').addEventListener('click', async()=>{
+  const n = S.selected.size;
+  if (!n) return;
+  if (!confirm(`Permanently delete ${n} file${n!==1?'s':''}? This cannot be undone.`)) return;
+  const ids = [...S.selected];
+  setStatus('warn',`Deleting ${n} file${n!==1?'s':''}…`,'');
+  let done=0;
+  for (const id of ids) {
+    const f=S.allFiles.find(x=>x.id===id);
+    if (!f) continue;
+    try { await f.megaNode.delete(true); done++; } catch(e){}
+    S.allFiles = S.allFiles.filter(x=>x.id!==id);
+  }
+  S.selected.clear();
+  buildSidebar(); applyFilter();
+  setStatus('ok',`Deleted ${done} file${done!==1?'s':''}`, '');
+});
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// MOVE FILES
+// ═══════════════════════════════════════════════════════════════════════════════
+let moveFileIds = [];
+
+function openMoveModal(ids) {
+  moveFileIds = ids;
+  S.moveTarget = null;
+  // Determine which files and from which slots
+  const files = S.allFiles.filter(f=>ids.includes(f.id));
+  const fromSlots = [...new Set(files.map(f=>f.slot))];
+  $('moveInfo').innerHTML = `<strong>${files.length}</strong> file${files.length!==1?'s':''} selected — from slot${fromSlots.length>1?'s':''} <strong>${fromSlots.join(', ')}</strong>`;
+
+  // Build destination slot cards (exclude slots that ALL files are already on if single file)
+  const grid = $('moveSlotGrid');
+  grid.innerHTML = '';
+  const fileCounts = {};
+  for (const f of S.allFiles) fileCounts[f.slot]=(fileCounts[f.slot]||0)+1;
+
+  for (const s of S.storages) {
+    const toMove = files.filter(f=>f.slot!==s.slot).length;
+    const div    = document.createElement('div');
+    div.className = 'move-slot-card';
+    div.dataset.slot = s.slot;
+    div.innerHTML = `<div class="ms-slot">S${s.slot}</div>
+      <div class="ms-email">${esc(s.megaEmail)}</div>
+      <div class="ms-n">${fileCounts[s.slot]||0} files · +${toMove} to move</div>`;
+    if (toMove===0) { div.style.opacity='.4'; div.style.cursor='default'; }
+    else {
+      div.addEventListener('click', ()=>{
+        S.moveTarget = s.slot;
+        grid.querySelectorAll('.move-slot-card').forEach(c=>c.classList.remove('selected'));
+        div.classList.add('selected');
+        $('btnDoMove').disabled = false;
+      });
+    }
+    grid.appendChild(div);
+  }
+  $('btnDoMove').disabled = true;
+  $('moveModal').classList.remove('hidden');
+  closePreview();
+}
+
+$('btnMoveSelected').addEventListener('click', ()=> openMoveModal([...S.selected]));
+$('btnCloseMoveModal').addEventListener('click', ()=>$('moveModal').classList.add('hidden'));
+$('moveModal').addEventListener('click', e=>{ if(e.target===$('moveModal')) $('moveModal').classList.add('hidden'); });
+
+$('btnDoMove').addEventListener('click', async()=>{
+  if (S.moveTarget===null) return;
+  $('moveModal').classList.add('hidden');
+  const target = S.storages.find(s=>s.slot===S.moveTarget);
+  if (!target) { alert('Target slot not available.'); return; }
+
+  const files = S.allFiles.filter(f=>moveFileIds.includes(f.id)&&f.slot!==S.moveTarget);
+  if (!files.length) { setStatus('ok','Nothing to move','All files already on target slot'); return; }
+
+  showToast('Moving…', `0/${files.length}`, 0);
+  let done=0;
+  for (let i=0; i<files.length; i++) {
+    const f = files[i];
+    updateToast(`Moving ${i+1}/${files.length}`, f.name, (i/files.length)*100);
+    try {
+      const buffer = await f.megaNode.downloadBuffer();
+      const up     = target.storage.root.upload({ name:f.name, size:f.size }, buffer);
+      const newNode = await up.complete;
+      await f.megaNode.delete(true);
+      const idx = S.allFiles.findIndex(x=>x.id===f.id);
+      if (idx>=0) S.allFiles[idx] = {
+        ...f,
+        slot:     S.moveTarget,
+        megaNode: newNode,
+        id:       newNode.nodeId || `mv-${Date.now()}-${Math.random()}`
+      };
+      S.selected.delete(f.id);
+      done++;
+    } catch(err){ console.error('Move failed:',f.name,err); }
+  }
+  hideToast(2500);
+  S.selected.clear();
+  buildSidebar(); applyFilter();
+  setStatus('ok',`Moved ${done} file${done!==1?'s':''} to Slot ${S.moveTarget}`,'');
+});
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// UPLOAD
+// ═══════════════════════════════════════════════════════════════════════════════
 $('uploadInput').addEventListener('change', async function() {
   const files = [...this.files];
   if (!files.length) return;
-
   const slotNum = Number($('uploadSlot').value);
-  const entry   = S.storages.find(s => s.slot === slotNum);
-  if (!entry) { alert('Selected slot not available.'); this.value = ''; return; }
+  const entry   = S.storages.find(s=>s.slot===slotNum);
+  if (!entry) { alert('Select a connected slot to upload to.'); this.value=''; return; }
 
-  const toast = $('uploadToast');
-  toast.classList.remove('hidden');
-  let uploaded = 0;
-
-  for (let i = 0; i < files.length; i++) {
+  showToast('Uploading…','Preparing…',0);
+  let done=0;
+  for (let i=0; i<files.length; i++) {
     const file = files[i];
-    $('toastSub').textContent = `(${i + 1}/${files.length})  ${file.name}`;
-    $('toastBar').style.width = Math.round((i / files.length) * 100) + '%';
-    setStatus('warn', `Uploading ${i + 1}/${files.length}…`, file.name);
-
+    updateToast(`Uploading ${i+1}/${files.length}`, file.name, (i/files.length)*100);
+    setStatus('warn',`Uploading ${i+1}/${files.length}…`,file.name);
     try {
-      const ab    = await file.arrayBuffer();
-      const up    = entry.storage.root.upload({ name: file.name, size: file.size }, ab);
-      const node  = await up.complete;
-      uploaded++;
-      const mime  = file.type || guessMime(file.name);
+      const ab   = await file.arrayBuffer();
+      const up   = entry.storage.root.upload({ name:file.name, size:file.size }, ab);
+      const node = await up.complete;
+      const mime = file.type || guessMime(file.name);
       S.allFiles.push({
-        id:        node.nodeId || node.handle || `up-${Date.now()}-${Math.random()}`,
-        name:      file.name,
-        size:      file.size,
-        mime,
-        slot:      slotNum,
-        path:      '',
+        id:       node.nodeId||`up-${Date.now()}-${Math.random()}`,
+        name:     file.name,
+        size:     file.size,
+        mime, slot:slotNum, path:'',
         createdAt: Date.now(),
-        megaNode:  node
+        megaNode: node
       });
-    } catch(err) {
-      console.error('Upload failed:', file.name, err);
-      alert(`Upload failed for "${file.name}":\n${err.message}`);
-    }
+      done++;
+    } catch(err){ console.error('Upload error:',file.name,err); alert(`Upload failed for "${file.name}":\n${err.message}`); }
   }
-
-  $('toastBar').style.width = '100%';
-  $('toastSub').textContent = `Done — ${uploaded} file${uploaded !== 1 ? 's' : ''} uploaded`;
-  setTimeout(() => toast.classList.add('hidden'), 2500);
-
-  this.value = '';
-  buildSidebar();
-  applyFilter();
-  setStatus('ok', `Uploaded ${uploaded} file${uploaded !== 1 ? 's' : ''} to Slot ${slotNum}`, '');
+  this.value='';
+  hideToast(2500);
+  buildSidebar(); applyFilter();
+  setStatus('ok',`Uploaded ${done} file${done!==1?'s':''} to Slot ${slotNum}`,'');
 });
 
-// ─── Boot ─────────────────────────────────────────────────────────────────────
-$('btnLogin').addEventListener('click', login);
-$('loginPass').addEventListener('keydown', e => { if (e.key === 'Enter') login(); });
-$('loginEmail').addEventListener('keydown', e => { if (e.key === 'Enter') $('loginPass').focus(); });
-$('btnSignOut').addEventListener('click', signOut);
+// ═══════════════════════════════════════════════════════════════════════════════
+// TOAST
+// ═══════════════════════════════════════════════════════════════════════════════
+let toastTimeout = null;
+function showToast(title, sub, pct) {
+  clearTimeout(toastTimeout);
+  $('toastTitle').textContent  = title;
+  $('toastSub').textContent    = sub;
+  $('toastFill').style.width   = pct+'%';
+  $('uploadToast').classList.remove('hidden');
+}
+function updateToast(title, sub, pct) { showToast(title, sub, pct); }
+function hideToast(delay=0) {
+  if (delay) {
+    $('toastFill').style.width='100%';
+    toastTimeout=setTimeout(()=>$('uploadToast').classList.add('hidden'),delay);
+  } else $('uploadToast').classList.add('hidden');
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// SETTINGS MODAL
+// ═══════════════════════════════════════════════════════════════════════════════
+function openSettings() {
+  renderStorageAccounts();
+  buildAddSlotDropdown();
+  $('settingsModal').classList.remove('hidden');
+}
+$('btnSettings').addEventListener('click', openSettings);
+$('btnCloseSettings').addEventListener('click', ()=>$('settingsModal').classList.add('hidden'));
+$('settingsModal').addEventListener('click', e=>{ if(e.target===$('settingsModal')) $('settingsModal').classList.add('hidden'); });
+
+// Tabs
+$('settingsModal').querySelectorAll('.stab').forEach(tab=>{
+  tab.addEventListener('click', ()=>{
+    $('settingsModal').querySelectorAll('.stab').forEach(t=>t.classList.remove('active'));
+    $('settingsModal').querySelectorAll('.stab-panel').forEach(p=>p.classList.remove('active'));
+    tab.classList.add('active');
+    $('tab'+tab.dataset.tab.charAt(0).toUpperCase()+tab.dataset.tab.slice(1)).classList.add('active');
+  });
+});
+
+// ── Storage accounts ─────────────────────────────────────────────────────────
+function renderStorageAccounts() {
+  const list = $('acctList');
+  if (!S.encAccounts.length) {
+    list.innerHTML = `<div style="font-size:13px;color:var(--muted);padding:10px 0">No storage slots yet. Add your first MEGA account below.</div>`;
+    return;
+  }
+  list.innerHTML = S.encAccounts.map(a=>`
+    <div class="acct-card" id="acct-${a.slot}">
+      <div class="acct-header">
+        <div>
+          <span class="acct-slot-badge">S${a.slot}</span>
+        </div>
+        <div style="flex:1;min-width:0">
+          <div class="acct-email">${esc(a.megaEmail)}</div>
+          <div style="font-size:11px;color:var(--dim);margin-top:2px">Password encrypted · Slot ${a.slot}</div>
+        </div>
+        <div class="acct-actions">
+          <button class="btn-ghost" data-editpw="${a.slot}" style="font-size:12px">✏️ Edit password</button>
+          <button class="btn-danger" data-delslot="${a.slot}" style="font-size:12px">Remove</button>
+        </div>
+      </div>
+      <div class="acct-edit-pw" id="editpw-${a.slot}">
+        <div class="field">
+          <label>New MEGA password for slot ${a.slot}</label>
+          <div class="pw-wrap">
+            <input type="password" id="epw-${a.slot}" placeholder="New MEGA password"/>
+            <button class="pw-eye" data-target="epw-${a.slot}">👁</button>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button class="btn-grad" data-savepw="${a.slot}" style="font-size:12px">Save</button>
+          <button class="btn-ghost" data-cancelpw="${a.slot}" style="font-size:12px">Cancel</button>
+          <span class="auth-err" id="epwerr-${a.slot}" style="margin:0"></span>
+        </div>
+      </div>
+    </div>
+  `).join('');
+
+  // Wire up eye toggle for dynamically rendered inputs
+  list.querySelectorAll('.pw-eye').forEach(attachEye);
+
+  list.querySelectorAll('[data-editpw]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const panel = $(`editpw-${btn.dataset.editpw}`);
+      panel.classList.toggle('open');
+    });
+  });
+  list.querySelectorAll('[data-cancelpw]').forEach(btn=>{
+    $(`editpw-${btn.dataset.cancelpw}`).classList.remove('open');
+  });
+  list.querySelectorAll('[data-savepw]').forEach(btn=>{
+    btn.addEventListener('click', ()=>saveSlotPassword(Number(btn.dataset.savepw)));
+  });
+  list.querySelectorAll('[data-delslot]').forEach(btn=>{
+    btn.addEventListener('click', ()=>deleteSlot(Number(btn.dataset.delslot)));
+  });
+}
+
+async function saveSlotPassword(slot) {
+  const newPw = $(`epw-${slot}`)?.value;
+  const errEl = $(`epwerr-${slot}`);
+  if (errEl) errEl.textContent='';
+  if (!newPw) { if(errEl) errEl.textContent='Enter a new password.'; return; }
+  try {
+    const { ciphertext, iv } = await encryptStr(S.cryptoKey, newPw);
+    await api('updateStorage',{
+      email:             S.email,
+      passwordHash:      S.authHash,
+      slot,
+      encryptedPassword: ciphertext,
+      iv
+    });
+    // Update local state
+    const ea = S.encAccounts.find(a=>a.slot===slot);
+    if (ea) { ea.encryptedPassword=ciphertext; ea.iv=iv; }
+    const a = S.accounts.find(a=>a.slot===slot);
+    if (a) a.megaPassword = newPw;
+    if (errEl) errEl.textContent='';
+    $(`editpw-${slot}`).classList.remove('open');
+    setStatus('ok',`Slot ${slot} password updated`,'');
+  } catch(err) {
+    if (errEl) errEl.textContent=err.message;
+  }
+}
+
+async function deleteSlot(slot) {
+  if (!confirm(`Remove Slot ${slot}? This does NOT delete your MEGA account — only the saved credentials.`)) return;
+  try {
+    await api('deleteStorage',{ email:S.email, passwordHash:S.authHash, slot });
+    S.encAccounts = S.encAccounts.filter(a=>a.slot!==slot);
+    S.accounts    = S.accounts.filter(a=>a.slot!==slot);
+    S.storages    = S.storages.filter(s=>s.slot!==slot);
+    S.allFiles    = S.allFiles.filter(f=>f.slot!==slot);
+    S.selected    = new Set([...S.selected].filter(id=>S.allFiles.some(f=>f.id===id)));
+    renderStorageAccounts();
+    buildAddSlotDropdown();
+    buildSidebar();
+    buildUploadSlotDropdown();
+    applyFilter();
+    setStatus('ok',`Slot ${slot} removed`,'');
+  } catch(err){ alert('Failed: '+err.message); }
+}
+
+// ── Add storage ───────────────────────────────────────────────────────────────
+$('btnOpenAddStorage').addEventListener('click', ()=>{
+  const form = $('addStorageForm');
+  form.classList.toggle('open');
+  if (form.classList.contains('open')) buildAddSlotDropdown();
+  $('addStorageErr').textContent='';
+});
+$('btnCancelAddStorage').addEventListener('click', ()=>{
+  $('addStorageForm').classList.remove('open');
+  $('addStorageErr').textContent='';
+});
+
+function buildAddSlotDropdown() {
+  const used = new Set(S.encAccounts.map(a=>a.slot));
+  const opts = [1,2,3,4,5].filter(n=>!used.has(n))
+    .map(n=>`<option value="${n}">Slot ${n}</option>`).join('');
+  $('addSlot').innerHTML = opts || '<option disabled>All 5 slots used</option>';
+}
+
+$('btnSaveAddStorage').addEventListener('click', async()=>{
+  const slot    = Number($('addSlot').value);
+  const memail  = $('addMegaEmail').value.trim();
+  const mpw     = $('addMegaPw').value;
+  const errEl   = $('addStorageErr');
+  errEl.textContent='';
+  if (!memail||!mpw) { errEl.textContent='All fields required.'; return; }
+  $('btnSaveAddStorage').disabled=true;
+  try {
+    const { ciphertext, iv } = await encryptStr(S.cryptoKey, mpw);
+    await api('addStorage',{
+      email:             S.email,
+      passwordHash:      S.authHash,
+      slot,
+      megaEmail:         memail,
+      encryptedPassword: ciphertext,
+      iv
+    });
+    S.encAccounts.push({ slot, megaEmail:memail, encryptedPassword:ciphertext, iv });
+    S.accounts.push({ slot, megaEmail:memail, megaPassword:mpw });
+    $('addMegaEmail').value=''; $('addMegaPw').value='';
+    $('addStorageForm').classList.remove('open');
+    renderStorageAccounts();
+    buildAddSlotDropdown();
+    setStatus('warn','New slot added — refresh to connect','');
+    // Attempt to connect the new slot live
+    try {
+      setStatus('warn',`Connecting slot ${slot}…`,'');
+      const storage = await new Storage({ email:memail, password:mpw, userAgent:'StorageVault/1.0' }).ready;
+      S.storages.push({ slot, storage, megaEmail:memail });
+      walkNode(storage.root, slot, '');
+      buildSidebar();
+      buildUploadSlotDropdown();
+      applyFilter();
+      setStatus('ok',`Slot ${slot} connected and loaded`,'');
+    } catch(connErr){
+      setStatus('warn',`Slot ${slot} saved but connection failed`,connErr.message);
+    }
+  } catch(err){
+    errEl.textContent=err.message;
+  } finally {
+    $('btnSaveAddStorage').disabled=false;
+  }
+});
+
+// ── Change password ───────────────────────────────────────────────────────────
+$('btnChangePassword').addEventListener('click', async()=>{
+  const oldPw = $('inCpwOld').value;
+  const newPw = $('inCpwNew1').value;
+  const conf  = $('inCpwNew2').value;
+  const errEl = $('cpwErr');
+  errEl.textContent='';
+  if (!oldPw||!newPw||!conf) { errEl.textContent='All fields required.'; return; }
+  if (newPw.length<8)         { errEl.textContent='New password must be at least 8 characters.'; return; }
+  if (newPw!==conf)           { errEl.textContent='New passwords do not match.'; return; }
+
+  const oldHash = await computeAuthHash(oldPw, S.salt);
+  if (oldHash !== S.authHash) { errEl.textContent='Current password is incorrect.'; return; }
+
+  $('btnChangePassword').disabled=true;
+  $('btnChangePassword').textContent='Updating…';
+  try {
+    const newSalt    = genSalt();
+    const newHash    = await computeAuthHash(newPw, newSalt);
+    const newKey     = await deriveKey(newPw, newSalt);
+
+    // Re-encrypt all MEGA passwords with the new key
+    const reencrypted = [];
+    for (const a of S.accounts) {
+      const { ciphertext, iv } = await encryptStr(newKey, a.megaPassword);
+      reencrypted.push({ slot:a.slot, megaEmail:a.megaEmail, encryptedPassword:ciphertext, iv });
+    }
+
+    await api('changePassword',{
+      email:          S.email,
+      oldPasswordHash: oldHash,
+      newPasswordHash: newHash,
+      newSalt,
+      accounts:        reencrypted
+    });
+
+    // Update local session state
+    S.salt        = newSalt;
+    S.cryptoKey   = newKey;
+    S.authHash    = newHash;
+    S.passwordRaw = newPw;
+    S.encAccounts = reencrypted;
+
+    $('inCpwOld').value=''; $('inCpwNew1').value=''; $('inCpwNew2').value='';
+    errEl.style.color='var(--ok)';
+    errEl.textContent='✓ Password changed.';
+    setStatus('ok','Password updated','');
+  } catch(err){
+    errEl.style.color='var(--bad)';
+    errEl.textContent=err.message;
+  } finally {
+    $('btnChangePassword').disabled=false;
+    $('btnChangePassword').textContent='Update password';
+  }
+});
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// PASSWORD STRENGTH METER
+// ═══════════════════════════════════════════════════════════════════════════════
+function pwStrength(pw) {
+  let s=0;
+  if(pw.length>=8)  s++;
+  if(pw.length>=12) s++;
+  if(/[A-Z]/.test(pw)) s++;
+  if(/[0-9]/.test(pw)) s++;
+  if(/[^A-Za-z0-9]/.test(pw)) s++;
+  return s;
+}
+function applyStrBar(barId, pw) {
+  const s   = pwStrength(pw);
+  const bar = $(barId);
+  if (!bar||!pw) { bar&&(bar.style.cssText='width:0%'); return; }
+  const cols=['#ef4444','#f97316','#eab308','#22c55e','#10b981'];
+  bar.style.width  = (s/5*100)+'%';
+  bar.style.background = cols[Math.min(s-1,4)];
+}
+$('inRegPw1').addEventListener('input',  e=>applyStrBar('pwStrBar',  e.target.value));
+$('inCpwNew1').addEventListener('input', e=>applyStrBar('cpwStrBar', e.target.value));
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// PASSWORD VISIBILITY TOGGLE
+// ═══════════════════════════════════════════════════════════════════════════════
+function attachEye(btn) {
+  btn.addEventListener('click', ()=>{
+    const inp = $(btn.dataset.target);
+    if (!inp) return;
+    inp.type = inp.type==='password' ? 'text' : 'password';
+    btn.textContent = inp.type==='password' ? '👁' : '🙈';
+  });
+}
+document.querySelectorAll('.pw-eye').forEach(attachEye);
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// GLOBAL KEYBOARD SHORTCUTS
+// ═══════════════════════════════════════════════════════════════════════════════
+document.addEventListener('keydown', e=>{
+  if (e.key==='Escape') {
+    $('previewModal').classList.add('hidden');
+    $('moveModal').classList.add('hidden');
+    $('settingsModal').classList.add('hidden');
+  }
+});
+
 </script>
 </body>
 </html>
