@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Private Media Vault</title>
+  <style>
+    :root{--bg:#fff7fb;--panel:rgba(255,255,255,.90);--text:#2d1630;--muted:#7e607f;--accent:#ff6fb1;--accent2:#b66bff;--border:rgba(182,107,255,.18);--shadow:0 12px 40px rgba(0,0,0,.08)}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter,Arial,sans-serif;background:linear-gradient(180deg,#fff7fb,#fdfcff);color:var(--text)}
+    .app{max-width:1480px;margin:auto;padding:20px}
+    .hero,.card{background:var(--panel);border:1px solid var(--border);border-radius:24px;padding:20px;box-shadow:var(--shadow)}
+    .hero{margin-bottom:20px}
+    h1,h2,h3{margin:0}
+    .sub{color:var(--muted);margin-top:6px}
+    .layout{display:grid;grid-template-columns:340px 1fr;gap:20px;align-items:start}
+    @media(max-width:1050px){.layout{grid-template-columns:1fr}}
+    .input,.btn,.select{width:100%;padding:12px 14px;border-radius:14px;border:1px solid var(--border);font:inherit}
+    .input,.select{background:#fff}
+    .btn{cursor:pointer;font-weight:700;background:#fff}
+    .btn.primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none}
+    .btn.danger{background:#ffe7f0;color:#b4235d}
+    .stack{display:grid;gap:12px}
+    .folders,.media-grid{display:grid;gap:12px}
+    .folder{padding:12px;border-radius:16px;border:1px solid var(--border);background:#fff;cursor:pointer;display:flex;justify-content:space-between;gap:10px;align-items:center}
+    .folder.active{border-color:var(--accent);background:linear-gradient(135deg,rgba(255,111,177,.07),rgba(182,107,255,.07))}
+    .media-grid{grid-template-columns:repeat(auto-fill,minmax(230px,1fr))}
+    .media{border:1px solid var(--border);border-radius:18px;overflow:hidden;background:#fff}
+    .preview{aspect-ratio:1/1;background:#f7e8ff}
+    .preview img,.preview video{width:100%;height:100%;object-fit:cover}
+    .meta{padding:12px;display:grid;gap:8px}
+    .row{display:flex;gap:10px;flex-wrap:wrap}
+    .name{font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .muted{color:var(--muted);font-size:13px}
+    .hidden{display:none}
+    .grid-actions{display:grid;grid-template-columns:1fr auto auto auto;gap:10px}
+    @media(max-width:760px){.grid-actions{grid-template-columns:1fr}}
+    .status{margin-top:16px;background:rgba(255,255,255,.92);border:1px solid var(--border);border-radius:18px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+    .dot{width:10px;height:10px;border-radius:50%;background:#bbb;display:inline-block;margin-right:8px}.ok{background:#47c47c}.warn{background:#f0ad4e}.bad{background:#ef5c7d}
+    .pill-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+    .pill{border:1px solid var(--border);background:#fff;border-radius:999px;padding:10px 14px;font-size:14px;cursor:pointer;transition:.2s ease;user-select:none}
+    .pill.active{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border-color:transparent}
+    .modal-backdrop{position:fixed;inset:0;background:rgba(28,10,24,.56);display:none;align-items:center;justify-content:center;padding:18px;z-index:1000}
+    .modal-backdrop.show{display:flex}
+    .modal{width:min(760px,100%);background:#fff;border-radius:26px;padding:18px;box-shadow:0 30px 90px rgba(0,0,0,.25);border:1px solid var(--border)}
+    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    @media(max-width:720px){.grid2{grid-template-columns:1fr}}
+    .help{font-size:13px;color:var(--muted);line-height:1.45}
+    .kbd{font-size:12px;padding:3px 8px;border-radius:999px;background:#f5ebff;border:1px solid var(--border);color:#6f3f9c}
+    .empty{padding:28px;border:1px dashed rgba(182,107,255,.25);border-radius:20px;color:var(--muted);text-align:center;background:rgba(255,255,255,.75)}
+  </style>
+</head>
+<body>
+<div class="app">
+  <section class="hero">
+    <div style="display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;">
+      <div>
+        <h1 style="font-size:clamp(24px,4vw,42px);line-height:1.05;letter-spacing:-.04em;">Private Media Vault</h1>
+        <p class="sub">One login. Five MEGA accounts. One merged library.</p>
+      </div>
+      <div class="row">
+        <button id="btnConfig" class="btn">Backend setup</button>
+        <button id="btnRefresh" class="btn">Refresh</button>
+        <button id="btnSignOut" class="btn danger hidden">Sign out</button>
+      </div>
+    </div>
+    <div class="pill-row" id="themePills">
+      <div class="pill active" data-role="soft">Soft glam</div>
+      <div class="pill" data-role="dream">Dreamy pink</div>
+      <div class="pill" data-role="glow">Neon spark</div>
+      <div class="pill" data-role="clean">Clean luxe</div>
+    </div>
+  </section>
+
+  <div class="layout">
+    <aside class="card">
+      <div class="stack" id="authBox">
+        <div>
+          <h2>Login</h2>
+          <div class="sub">Approved email only</div>
+        </div>
+        <input id="email" class="input" type="email" placeholder="your@email.com" autocomplete="email" />
+        <button id="btnLogin" class="btn primary">Enter vault</button>
+        <div class="help">The page asks Apps Script for access and then loads the MEGA account list from your private sheet.</div>
+      </div>
+
+      <div class="stack hidden" id="userBox">
+        <div>
+          <div class="muted">Signed in as</div>
+          <div id="userEmail" style="font-weight:800;font-size:16px;"></div>
+        </div>
+        <div>
+          <div class="muted">New folder</div>
+          <div class="row">
+            <input id="newFolderName" class="input" placeholder="Name this folder" />
+            <button id="btnCreateFolder" class="btn primary" style="width:auto;">Add</button>
+          </div>
+        </div>
+        <div style="height:1px;background:rgba(182,107,255,.12);margin:14px 0;"></div>
+        <div style="display:flex;justify-content:space-between;gap:10px;align-items:center;">
+          <div>
+            <div style="font-weight:800;">Folders</div>
+            <div class="muted">1–10 or custom names</div>
+          </div>
+          <span class="kbd" id="storageMode">demo</span>
+        </div>
+        <div class="folders" id="folders"></div>
+      </div>
+    </aside>
+
+    <main class="card">
+      <div class="stack" style="gap:16px;">
+        <div>
+          <h2 id="mainTitle">Select a folder</h2>
+          <div class="sub" id="mainSub">Upload images or videos into the chosen folder.</div>
+        </div>
+        <div class="grid-actions">
+          <input id="search" class="input" placeholder="Search media by name" />
+          <label class="btn" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;">
+            Upload
+            <input id="upload" type="file" accept="image/*,video/*" multiple hidden />
+          </label>
+          <button id="btnSelectAll" class="btn">Select all</button>
+          <button id="btnDeleteSelected" class="btn danger">Delete selected</button>
+        </div>
+        <div id="mediaGrid" class="media-grid"></div>
+        <div id="emptyState" class="empty hidden">No folder selected yet. Pick a folder on the left to see its content.</div>
+      </div>
+    </main>
+  </div>
+
+  <div class="status">
+    <div>
+      <span id="connDot" class="dot warn"></span>
+      <strong id="statusText">Not connected</strong>
+      <span class="muted" id="statusSub">Set your Apps Script URL or use demo mode.</span>
+    </div>
+    <div class="row">
+      <button id="btnPresetFolders" class="btn">Add 1–10 presets</button>
+      <button id="btnExportManifest" class="btn">Export manifest</button>
+    </div>
+  </div>
+</div>
+
+<div id="configModal" class="modal-backdrop">
+  <div class="modal">
+    <div style="display:flex;justify-content:space-between;gap:10px;align-items:center;">
+      <div>
+        <h3>Backend setup</h3>
+        <div class="help">Paste your Apps Script web app URL. The sheet-backed backend returns the MEGA account credentials and folder manifest after login.</div>
+      </div>
+      <button id="btnCloseConfig" class="btn" style="width:auto;">Close</button>
+    </div>
+    <div style="height:1px;background:rgba(182,107,255,.12);margin:14px 0;"></div>
+    <div class="grid2">
+      <div class="stack">
+        <label class="muted">Apps Script URL</label>
+        <input id="backendUrl" class="input" placeholder="https://script.google.com/macros/s/.../exec" />
+      </div>
+      <div class="stack">
+        <label class="muted">Mode</label>
+        <select id="backendMode" class="select">
+          <option value="demo">Demo (browser only)</option>
+          <option value="script">Apps Script + MEGA</option>
+        </select>
+      </div>
+    </div>
+    <div style="height:1px;background:rgba(182,107,255,.12);margin:14px 0;"></div>
+    <div class="help">Expected backend actions: <span class="kbd">login</span>, <span class="kbd">getVault</span>, <span class="kbd">listFolders</span>, <span class="kbd">createFolder</span>, <span class="kbd">renameFolder</span>, <span class="kbd">saveFolder</span>, <span class="kbd">exportManifest</span>.</div>
+    <div style="height:1px;background:rgba(182,107,255,.12);margin:14px 0;"></div>
+    <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;">
+      <button id="btnSaveConfig" class="btn primary" style="width:auto;">Save</button>
+      <button id="btnResetDemo" class="btn" style="width:auto;">Reset demo data</button>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import { Storage } from 'https://unpkg.com/megajs/dist/main.browser-es.mjs';
+
+const state = { mode: localStorage.getItem('pvm_mode') || 'demo', backendUrl: localStorage.getItem('pvm_backendUrl') || 'https://script.google.com/macros/s/AKfycbzict1PB8A-nDDI0Rq44heHJcLoHwYLTUO7ckNcoeeHMdA5tm1dxmTgsUkW4CttOCWugQ/exec', email: null, folders: [], currentFolderId: null, selected: new Set(), query: '', vault: null, accounts: [], storages: [], remoteFolders: {}, mediaByFolder: {}, demo: loadDemo() };
+
+function loadDemo(){ try{return JSON.parse(localStorage.getItem('pvm_demo')||'');}catch{} return { folders:[{id:'f1',name:'1',slot:0},{id:'f2',name:'2',slot:1},{id:'f3',name:'3',slot:2}], nextFolderId:4, mediaByFolder:{ f1:[{id:'m1',name:'Pink sunset.mp4',mime:'video/mp4',src:'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4',size:0,createdAt:Date.now()-100000,folderId:'f1',accountLabel:'demo'}], f2:[{id:'m2',name:'Rose portrait.jpg',mime:'image/jpeg',src:'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=800&q=80',size:0,createdAt:Date.now()-50000,folderId:'f2',accountLabel:'demo'}], f3:[] }, nextMediaId:3 }; }
+function saveDemo(){ localStorage.setItem('pvm_demo', JSON.stringify(state.demo)); }
+function setStatus(kind,title,sub){ document.getElementById('connDot').className=`dot ${kind}`; document.getElementById('statusText').textContent=title; document.getElementById('statusSub').textContent=sub; }
+function setSession(email){ state.email=email; document.getElementById('authBox').classList.toggle('hidden',!!email); document.getElementById('userBox').classList.toggle('hidden',!email); document.getElementById('btnSignOut').classList.toggle('hidden',!email); if(email) document.getElementById('userEmail').textContent=email; }
+function escapeHtml(str=''){ return String(str).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#39;'); }
+function extType(file){ if((file.mime||'').startsWith('video/')) return 'video'; if((file.mime||'').startsWith('image/')) return 'image'; return 'file'; }
+function fmtSize(bytes){ if(bytes==null) return ''; const units=['B','KB','MB','GB']; let n=bytes,u=0; while(n>=1024&&u<units.length-1){n/=1024;u++;} return `${n.toFixed(u===0?0:1)} ${units[u]}`; }
+async function api(action,payload={},method='POST'){ payload.email=state.email; if(state.mode==='demo') return demoApi(action,payload); if(!state.backendUrl||state.backendUrl.includes('PASTE_YOUR_GOOGLE_APPS_SCRIPT_URL_HERE')) throw new Error('Set your Apps Script URL first.'); const url=new URL(state.backendUrl); url.searchParams.set('action',action); const res=await fetch(url.toString(),{ method, headers:{'Content-Type':'application/json'}, body:method==='POST'?JSON.stringify(payload):undefined }); if(!res.ok) throw new Error(`Backend error ${res.status}`); const data=await res.json(); if(data&&data.ok===false) throw new Error(data.error||'Backend error'); return data; }
+async function demoApi(action,payload){ switch(action){ case 'login': return { ok:true, email:payload.email, folders:state.demo.folders }; case 'getVault': return { ok:true, accounts:[{ slot:0, label:'Account 1', email:'demo1@example.com', password:'demo' }], folders: state.demo.folders }; case 'listFolders': return { ok:true, folders: state.demo.folders }; case 'createFolder': { const id=`f${state.demo.nextFolderId++}`; state.demo.folders.push({ id, name: payload.name || `Folder ${state.demo.folders.length + 1}`, slot: state.demo.folders.length % 5 }); state.demo.mediaByFolder[id] = []; saveDemo(); return { ok:true, folder: { id, name: payload.name, slot: 0 } }; } case 'renameFolder': { const f=state.demo.folders.find(x=>x.id===payload.folderId); if(f) f.name=payload.name; saveDemo(); return { ok:true }; } case 'saveFolder': return { ok:true }; case 'listMedia': return { ok:true, media: state.demo.mediaByFolder[payload.folderId] || [] }; case 'upload': { const list=state.demo.mediaByFolder[payload.folderId] || (state.demo.mediaByFolder[payload.folderId]=[]); for(const item of payload.items||[]){ list.push({ id:`m${state.demo.nextMediaId++}`, name:item.name, mime:item.mime, src:item.src, size:item.size||0, createdAt:Date.now(), folderId: payload.folderId, accountLabel: 'demo' }); } saveDemo(); return { ok:true }; } case 'delete': { state.demo.mediaByFolder[payload.folderId] = (state.demo.mediaByFolder[payload.folderId] || []).filter(x => !(payload.ids || []).includes(x.id)); saveDemo(); return { ok:true }; } case 'exportManifest': return { ok:true, manifest: state.demo }; default: throw new Error(`Unsupported action: ${action}`); } }
+async function login(){ const email=document.getElementById('email').value.trim().toLowerCase(); if(!email) return; try{ setStatus('warn','Checking access…','Verifying allowlist and vault config'); const res=await api('login',{email}); if(!res.ok) throw new Error('Access denied'); setSession(email); state.folders=res.folders||[]; state.currentFolderId=state.folders[0]?.id||null; await refreshVault(); await loadAllMedia(); setStatus('ok','Ready',`Logged in as ${email}`); }catch(err){ setStatus('bad','Login failed',err.message||'Unable to sign in'); alert(err.message||'Login failed'); } }
+async function refreshVault(){ const res=await api('getVault',{},'GET'); state.vault=res; state.accounts=res.accounts||[]; state.folders=res.folders||[]; document.getElementById('storageMode').textContent=`${state.accounts.length} account(s)`; renderFolders(); if(!state.currentFolderId && state.folders[0]) state.currentFolderId=state.folders[0].id; }
+async function ensureMegaConnections(){ if(state.mode==='demo') return; if(!state.accounts.length) await refreshVault(); if(state.storages.length) return; setStatus('warn','Connecting to MEGA…','Logging into all configured accounts'); const logins=state.accounts.map(async(acc)=>{ const storage=await new Storage({ email:acc.email, password:acc.password, userAgent:'PrivateMediaVault/1.0' }).ready; return { ...acc, storage }; }); state.storages=await Promise.all(logins); state.storages.sort((a,b)=>(a.slot??0)-(b.slot??0)); }
+async function getRemoteFolder(folder){ if(state.mode==='demo') return null; const acc=state.storages.find(x=>Number(x.slot)===Number(folder.slot)); if(!acc) throw new Error(`No MEGA account mapped to slot ${folder.slot}`); const rootName=`PMV_SLOT_${Number(folder.slot)+1}`; let root=acc.storage.find(rootName); if(!root) root=await acc.storage.mkdir(rootName); let remote=root.find(folder.name); if(!remote) remote=await root.mkdir(folder.name); state.remoteFolders[folder.id]={ account:acc, root, remote }; return state.remoteFolders[folder.id]; }
+async function loadAllMedia(){ if(state.mode==='demo'){ state.mediaByFolder=state.demo.mediaByFolder||{}; renderMedia(); return; } await ensureMegaConnections(); const folderMap={}; for(const folder of state.folders){ const { account, remote } = await getRemoteFolder(folder); const items=[]; const walk=(node)=>{ const kids=node?.children||[]; for(const child of kids){ if(child.directory) walk(child); else items.push({ id: child.id || `${folder.id}-${child.name}-${child.timestamp || Date.now()}`, name: child.name || 'unnamed', mime: child.mime || (child.name && child.name.match(/\.(mp4|mov|webm)$/i) ? 'video/mp4' : 'image/jpeg'), size: child.size || 0, createdAt: child.timestamp || Date.now(), folderId: folder.id, accountLabel: account.label || account.email, megaFile: child }); } }; walk(remote); folderMap[folder.id]=items; } state.mediaByFolder=folderMap; renderMedia(); }
+function renderFolders(){ const list=document.getElementById('folders'); list.innerHTML=''; if(!state.folders.length){ list.innerHTML='<div class="empty">No folders yet.</div>'; return; } state.folders.forEach(folder=>{ const div=document.createElement('div'); div.className='folder'+(state.currentFolderId===folder.id?' active':''); const count=(state.mediaByFolder[folder.id]||[]).length; div.innerHTML=`<div><strong>${escapeHtml(folder.name)}</strong><div class="muted">Slot ${Number(folder.slot)+1} • ${count} items</div></div><button class="btn" data-rename="${folder.id}" style="width:auto;">Rename</button>`; div.addEventListener('click', async(e)=>{ if(e.target&&e.target.dataset&&e.target.dataset.rename) return; state.currentFolderId=folder.id; state.selected.clear(); document.getElementById('mainTitle').textContent=folder.name; document.getElementById('mainSub').textContent=`Folder on storage slot ${Number(folder.slot)+1}`; renderFolders(); renderMedia(); }); div.querySelector('[data-rename]')?.addEventListener('click', async(e)=>{ e.stopPropagation(); const name=prompt('New folder name', folder.name); if(!name) return; await api('renameFolder',{ folderId:folder.id, name }); folder.name=name; renderFolders(); }); list.appendChild(div); }); }
+function renderMedia(){ const grid=document.getElementById('mediaGrid'); const empty=document.getElementById('emptyState'); const files=(state.mediaByFolder[state.currentFolderId]||[]).filter(file=>!state.query||(file.name||'').toLowerCase().includes(state.query.toLowerCase())); grid.innerHTML=''; if(!state.currentFolderId){ empty.classList.remove('hidden'); empty.textContent='No folder selected yet. Pick a folder on the left to see its content.'; return; } if(!files.length){ empty.classList.remove('hidden'); empty.textContent='No media in this folder yet. Upload something pretty.'; return; } empty.classList.add('hidden'); files.forEach(file=>{ const card=document.createElement('div'); card.className='media'; const isVideo=extType(file)==='video'; card.innerHTML=`<div class="preview">${isVideo?`<video src="${file.src||''}" controls playsinline preload="metadata"></video>`:`<img src="${file.src||''}" alt="${escapeHtml(file.name)}">`}</div><div class="meta"><div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start;"><div style="min-width:0;"><div class="name" title="${escapeHtml(file.name)}">${escapeHtml(file.name)}</div><div class="muted">${file.accountLabel || ''}${file.accountLabel ? ' • ' : ''}${fmtSize(file.size)} ${file.size ? '•' : ''} ${new Date(file.createdAt || Date.now()).toLocaleString()}</div></div><input type="checkbox" ${state.selected.has(file.id) ? 'checked' : ''} data-select="${file.id}"></div><div class="row"><button class="btn" data-play="${file.id}">Play</button><button class="btn" data-download="${file.id}">Download</button><button class="btn danger" data-delete="${file.id}">Delete</button></div></div>`; card.querySelector('[data-select]')?.addEventListener('change', e=>{ if(e.target.checked) state.selected.add(file.id); else state.selected.delete(file.id); }); card.querySelector('[data-play]')?.addEventListener('click',()=>openViewer(file)); card.querySelector('[data-download]')?.addEventListener('click',()=>downloadFile(file)); card.querySelector('[data-delete]')?.addEventListener('click',()=>deleteFiles([file.id])); grid.appendChild(card); }); }
+async function openViewer(file){ if(state.mode==='demo'){ const win=window.open('','_blank','noopener,noreferrer,width=900,height=700'); if(!win) return alert('Pop-up blocked.'); const isVideo=extType(file)==='video'; win.document.write(`<html><head><title>${escapeHtml(file.name)}</title><meta name="viewport" content="width=device-width, initial-scale=1"></head><body style="font-family:system-ui;padding:20px;background:#fff7fb;"><div style="font-weight:800;font-size:18px;margin-bottom:12px;">${escapeHtml(file.name)}</div>${isVideo?`<video controls autoplay style="max-width:100%;border-radius:18px;background:#000;" src="${file.src}"></video>`:`<img src="${file.src}" style="max-width:100%;border-radius:18px;">`}</body></html>`); win.document.close(); return; } const blob=await file.megaFile.downloadBuffer(); const mime=file.megaFile.mime || file.mime || 'application/octet-stream'; const url=URL.createObjectURL(new Blob([blob],{type:mime})); const win=window.open('','_blank','noopener,noreferrer,width=900,height=700'); if(!win) return alert('Pop-up blocked.'); const isVideo=mime.startsWith('video/'); win.document.write(`<html><head><title>${escapeHtml(file.name)}</title><meta name="viewport" content="width=device-width, initial-scale=1"></head><body style="font-family:system-ui;padding:20px;background:#fff7fb;"><div style="font-weight:800;font-size:18px;margin-bottom:12px;">${escapeHtml(file.name)}</div>${isVideo?`<video controls autoplay style="max-width:100%;border-radius:18px;background:#000;" src="${url}"></video>`:`<img src="${url}" style="max-width:100%;border-radius:18px;">`}</body></html>`); win.document.close(); }
+async function downloadFile(file){ if(state.mode==='demo'){ const a=document.createElement('a'); a.href=file.src; a.download=file.name || 'file'; document.body.appendChild(a); a.click(); a.remove(); return; } const data=await file.megaFile.downloadBuffer(); const blob=new Blob([data],{ type:file.megaFile.mime || file.mime || 'application/octet-stream' }); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=file.name || 'download'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url); }
+async function deleteFiles(ids){ if(!state.currentFolderId||!ids.length) return; if(!confirm(`Delete ${ids.length} file(s)?`)) return; if(state.mode==='demo'){ state.demo.mediaByFolder[state.currentFolderId]=(state.demo.mediaByFolder[state.currentFolderId]||[]).filter(x=>!ids.includes(x.id)); saveDemo(); state.selected.clear(); await loadAllMedia(); setStatus('ok','Deleted','Selected files removed'); return; } const files=state.mediaByFolder[state.currentFolderId] || []; for(const id of ids){ const item=files.find(x=>x.id===id); if(item&&item.megaFile) await item.megaFile.delete(true); } state.selected.clear(); await loadAllMedia(); setStatus('ok','Deleted','Selected files removed'); }
+async function uploadFiles(files){ if(!state.currentFolderId) return alert('Pick a folder first.'); const folder=state.folders.find(f=>f.id===state.currentFolderId); const items=[]; for(const file of files){ const src=await new Promise((resolve,reject)=>{ const reader=new FileReader(); reader.onload=()=>resolve(reader.result); reader.onerror=reject; reader.readAsDataURL(file); }); items.push({ name:file.name, mime:file.type, size:file.size, src, file }); } setStatus('warn','Uploading…',`Sending ${items.length} file(s)`); if(state.mode==='demo'){ const list=state.demo.mediaByFolder[state.currentFolderId] || (state.demo.mediaByFolder[state.currentFolderId]=[]); for(const item of items){ list.push({ id:`m${state.demo.nextMediaId++}`, name:item.name, mime:item.mime, src:item.src, size:item.size || 0, createdAt:Date.now(), folderId: state.currentFolderId, accountLabel: 'demo' }); } saveDemo(); await loadAllMedia(); setStatus('ok','Uploaded',`${items.length} file(s) added`); return; } await ensureMegaConnections(); const { remote } = await getRemoteFolder(folder); for(const item of items){ const ab=await item.file.arrayBuffer(); await remote.upload(item.name, new Uint8Array(ab)).complete; } await loadAllMedia(); setStatus('ok','Uploaded',`${items.length} file(s) added to slot ${Number(folder.slot)+1}`); }
+async function createFolder(){ const name=document.getElementById('newFolderName').value.trim(); if(!name) return alert('Name the folder.'); const res=await api('createFolder',{name}); document.getElementById('newFolderName').value=''; if(res&&res.folder){ state.folders.push(res.folder); } await refreshVault(); setStatus('ok','Folder created',name); }
+async function addPresetFolders(){ const names=['1','2','3','4','5','6','7','8','9','10']; for(const name of names){ if(!state.folders.some(f=>f.name===name)) await api('createFolder',{name}); } await refreshVault(); if(state.mode==='demo') saveDemo(); setStatus('ok','Preset folders added','Folders 1 through 10 are ready'); }
+async function exportManifest(){ const res=await api('exportManifest',{},'POST'); const manifest=state.mode==='demo'?state.demo:res.manifest; const blob=new Blob([JSON.stringify(manifest,null,2)],{ type:'application/json' }); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='manifest.json'; a.click(); URL.revokeObjectURL(a.href); }
+function applyTheme(name){ const root=document.documentElement; const presets={ soft:['#fff7fb','#ff6fb1','#b66bff'], dream:['#fff1f8','#ff88c2','#9a6cff'], glow:['#f7fbff','#4d7cff','#c35cff'], clean:['#ffffff','#ff6fb1','#8b5cf6'] }; const [bg,a1,a2]=presets[name] || presets.soft; root.style.setProperty('--bg',bg); root.style.setProperty('--accent',a1); root.style.setProperty('--accent2',a2); document.querySelectorAll('#themePills .pill').forEach(p=>p.classList.toggle('active',p.dataset.role===name)); }
+
+document.getElementById('btnLogin').addEventListener('click', login);
+document.getElementById('btnRefresh').addEventListener('click', async()=>{ if(state.email){ await refreshVault(); await loadAllMedia(); } else { renderFolders(); renderMedia(); } });
+document.getElementById('btnSignOut').addEventListener('click', ()=>{ setSession(null); state.email=null; state.folders=[]; state.currentFolderId=null; state.storages=[]; state.accounts=[]; state.remoteFolders={}; state.mediaByFolder={}; document.getElementById('folders').innerHTML=''; document.getElementById('mediaGrid').innerHTML=''; setStatus('warn','Not connected','Signed out'); });
+document.getElementById('btnCreateFolder').addEventListener('click', createFolder);
+document.getElementById('btnPresetFolders').addEventListener('click', addPresetFolders);
+document.getElementById('btnExportManifest').addEventListener('click', exportManifest);
+document.getElementById('btnSelectAll').addEventListener('click', ()=>{ const files=(state.mediaByFolder[state.currentFolderId] || []).filter(file=>!state.query || (file.name||'').toLowerCase().includes(state.query.toLowerCase())); state.selected = new Set(files.map(file=>file.id)); renderMedia(); });
+document.getElementById('btnDeleteSelected').addEventListener('click', ()=>deleteFiles([...state.selected]));
+document.getElementById('search').addEventListener('input', e=>{ state.query=e.target.value; renderMedia(); });
+document.getElementById('upload').addEventListener('change', async e=>{ const files=[...(e.target.files || [])]; if(!files.length) return; await uploadFiles(files); e.target.value=''; });
+document.getElementById('btnConfig').addEventListener('click', ()=>{ document.getElementById('backendUrl').value = localStorage.getItem('pvm_backendUrl') || state.backendUrl; document.getElementById('backendMode').value = state.mode; document.getElementById('configModal').classList.add('show'); });
+document.getElementById('btnCloseConfig').addEventListener('click', ()=>document.getElementById('configModal').classList.remove('show'));
+document.getElementById('btnSaveConfig').addEventListener('click', ()=>{ const url=document.getElementById('backendUrl').value.trim(); const mode=document.getElementById('backendMode').value; state.backendUrl=url; state.mode=mode; localStorage.setItem('pvm_backendUrl',url); localStorage.setItem('pvm_mode',mode); document.getElementById('storageMode').textContent=mode; document.getElementById('configModal').classList.remove('show'); setStatus(mode==='demo' ? 'warn' : 'ok', mode==='demo' ? 'Demo mode' : 'Backend configured', url || 'No backend URL set'); });
+document.getElementById('btnResetDemo').addEventListener('click', ()=>{ if(!confirm('Reset demo data?')) return; localStorage.removeItem('pvm_demo'); state.demo=loadDemo(); state.folders=state.demo.folders; state.mediaByFolder=state.demo.mediaByFolder; state.currentFolderId=state.folders[0]?.id || null; renderFolders(); renderMedia(); });
+document.querySelectorAll('#themePills .pill').forEach(p=>p.addEventListener('click', ()=>applyTheme(p.dataset.role)));
+async function init(){ applyTheme('soft'); document.getElementById('storageMode').textContent=state.mode; if(state.mode==='demo') setStatus('warn','Demo mode','Local browser storage only'); else setStatus('ok','Backend mode',state.backendUrl || 'No backend URL set'); state.folders=state.demo.folders; state.mediaByFolder=state.demo.mediaByFolder; state.currentFolderId=state.folders[0]?.id || null; renderFolders(); renderMedia(); }
+init();
+</script>
+</body>
+</html>
