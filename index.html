@@ -7,483 +7,256 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
 <style>
-/* ── Variables ──────────────────────────────────────────────────────────────── */
 :root{
-  --bg:#0b0b14;
-  --s0:#11111e;
-  --s1:#181827;
-  --s2:#1f1f32;
-  --s3:#27273f;
-  --border:rgba(255,255,255,.07);
-  --border2:rgba(255,255,255,.12);
-  --text:#eceaf8;
-  --muted:#7c7998;
-  --dim:#4a4765;
-  --a1:#a78bfa;
-  --a2:#f472b6;
-  --a1d:#7c3aed;
-  --a2d:#be185d;
-  --ok:#34d399;
-  --warn:#fbbf24;
-  --bad:#f87171;
-  --r:12px;
+  --bg:#0b0b14;--s0:#11111e;--s1:#181827;--s2:#1f1f32;--s3:#27273f;
+  --border:rgba(255,255,255,.07);--border2:rgba(255,255,255,.12);
+  --text:#eceaf8;--muted:#7c7998;--dim:#4a4765;
+  --a1:#a78bfa;--a2:#f472b6;--a1d:#7c3aed;--a2d:#be185d;
+  --ok:#34d399;--warn:#fbbf24;--bad:#f87171;--r:12px;
   --shadow:0 8px 40px rgba(0,0,0,.45);
 }
-*{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%}
+*{box-sizing:border-box;margin:0;padding:0}html,body{height:100%}
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5}
 .hidden{display:none!important}
-
-/* ── Typography ─────────────────────────────────────────────────────────────── */
-.display{font-family:'Syne',sans-serif}
-h1,h2,h3{font-family:'Syne',sans-serif}
-
-/* ── Scrollbar ───────────────────────────────────────────────────────────────── */
-::-webkit-scrollbar{width:5px;height:5px}
-::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:var(--s3);border-radius:99px}
-
-/* ── Inputs & buttons ────────────────────────────────────────────────────────── */
-input,select,textarea{
-  width:100%;padding:11px 14px;border-radius:10px;
-  border:1px solid var(--border2);background:var(--s2);
-  color:var(--text);font:inherit;font-size:14px;outline:none;transition:.15s;
-}
-input::placeholder{color:var(--dim)}
-input:focus,select:focus{border-color:var(--a1);background:var(--s3)}
+::-webkit-scrollbar{width:5px;height:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--s3);border-radius:99px}
+input,select,textarea{width:100%;padding:11px 14px;border-radius:10px;border:1px solid var(--border2);background:var(--s2);color:var(--text);font:inherit;font-size:14px;outline:none;transition:.15s}
+input::placeholder{color:var(--dim)}input:focus,select:focus{border-color:var(--a1);background:var(--s3)}
 select option{background:var(--s2)}
-button{
-  cursor:pointer;padding:10px 18px;border-radius:var(--r);
-  border:1px solid var(--border2);background:var(--s2);
-  color:var(--text);font:inherit;font-size:13px;font-weight:600;
-  transition:.15s;white-space:nowrap;
-}
-button:hover{border-color:var(--a1);color:var(--a1)}
-button:disabled{opacity:.4;cursor:not-allowed}
-.btn-grad{
-  background:linear-gradient(135deg,var(--a1d),var(--a2d));
-  color:#fff!important;border:none!important;
-}
+button{cursor:pointer;padding:10px 18px;border-radius:var(--r);border:1px solid var(--border2);background:var(--s2);color:var(--text);font:inherit;font-size:13px;font-weight:600;transition:.15s;white-space:nowrap}
+button:hover{border-color:var(--a1);color:var(--a1)}button:disabled{opacity:.4;cursor:not-allowed}
+.btn-grad{background:linear-gradient(135deg,var(--a1d),var(--a2d));color:#fff!important;border:none!important}
 .btn-grad:hover{opacity:.88;color:#fff!important}
-.btn-ghost{background:transparent;border-color:transparent}
-.btn-ghost:hover{background:var(--s2)}
+.btn-ghost{background:transparent;border-color:transparent}.btn-ghost:hover{background:var(--s2)}
 .btn-danger{background:rgba(239,68,68,.12);color:var(--bad)!important;border-color:rgba(239,68,68,.25)}
 .btn-danger:hover{background:rgba(239,68,68,.2);border-color:var(--bad)}
 .btn-ok{background:rgba(52,211,153,.12);color:var(--ok)!important;border-color:rgba(52,211,153,.25)}
+.btn-warn{background:rgba(251,191,36,.12);color:var(--warn)!important;border-color:rgba(251,191,36,.25)}
 
-/* ── Cards ───────────────────────────────────────────────────────────────────── */
-.card{background:var(--s1);border:1px solid var(--border);border-radius:18px;padding:24px}
-
-/* ── Chip / badge ────────────────────────────────────────────────────────────── */
-.chip{
-  display:inline-flex;align-items:center;gap:5px;
-  padding:3px 10px;border-radius:99px;font-size:11px;font-weight:700;
-  background:rgba(255,255,255,.07);color:var(--muted);font-family:'DM Sans',sans-serif;
-}
-.chip.ok{background:rgba(52,211,153,.15);color:var(--ok)}
-.chip.warn{background:rgba(251,191,36,.15);color:var(--warn)}
-.chip.bad{background:rgba(248,113,113,.15);color:var(--bad)}
-
-/* ═══════════════════════════════════════════════════════════════════════════════
-   AUTH SCREEN
-═══════════════════════════════════════════════════════════════════════════════ */
-#screenAuth{
-  min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;
-  background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(124,58,237,.15),transparent 70%),var(--bg);
-}
+/* ── Auth ── */
+#screenAuth{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;
+  background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(124,58,237,.15),transparent 70%),var(--bg)}
 .auth-box{width:100%;max-width:400px}
-.auth-logo{
-  font-family:'Syne',sans-serif;font-size:28px;font-weight:800;letter-spacing:-.04em;
-  background:linear-gradient(135deg,var(--a1),var(--a2));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-  margin-bottom:6px;
-}
+.auth-logo{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;letter-spacing:-.04em;
+  background:linear-gradient(135deg,var(--a1),var(--a2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:6px}
 .auth-sub{color:var(--muted);font-size:13px;margin-bottom:32px}
 .auth-card{background:var(--s1);border:1px solid var(--border);border-radius:20px;padding:28px;box-shadow:var(--shadow)}
 .auth-step{display:grid;gap:12px}
-.auth-label{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px}
-.auth-back{
-  background:none;border:none;padding:0;margin-bottom:16px;
-  color:var(--muted);font-size:13px;cursor:pointer;display:flex;align-items:center;gap:5px;
-}
+.auth-back{background:none;border:none;padding:0;margin-bottom:16px;color:var(--muted);font-size:13px;cursor:pointer;display:flex;align-items:center;gap:5px}
 .auth-back:hover{color:var(--text)}
 .auth-err{font-size:13px;color:var(--bad);min-height:18px;margin-top:4px}
 .auth-hint{font-size:12px;color:var(--dim);line-height:1.5;margin-top:8px}
-.pw-wrap{position:relative}
-.pw-wrap input{padding-right:44px}
+.field label{font-size:12px;font-weight:600;color:var(--muted);display:block;margin-bottom:5px}
+.pw-wrap{position:relative}.pw-wrap input{padding-right:44px}
 .pw-eye{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;padding:4px;cursor:pointer;color:var(--muted);font-size:16px;line-height:1}
 .pw-eye:hover{color:var(--text)}
 .pw-strength{height:3px;border-radius:99px;background:var(--s3);margin-top:6px;overflow:hidden}
 .pw-strength-bar{height:100%;border-radius:99px;transition:width .3s,background .3s;width:0%}
 
-/* ═══════════════════════════════════════════════════════════════════════════════
-   VAULT LAYOUT
-═══════════════════════════════════════════════════════════════════════════════ */
+/* ── Vault Layout ── */
 #screenVault{display:flex;flex-direction:column;height:100vh;overflow:hidden}
-
-/* ── Header ──────────────────────────────────────────────────────────────────── */
-#vaultHeader{
-  flex-shrink:0;background:var(--s0);border-bottom:1px solid var(--border);
-  padding:11px 20px;display:flex;align-items:center;gap:12px;z-index:30;
-}
+#vaultHeader{flex-shrink:0;background:var(--s0);border-bottom:1px solid var(--border);padding:11px 20px;display:flex;align-items:center;gap:12px;z-index:30}
 .hdr-logo{font-family:'Syne',sans-serif;font-size:16px;font-weight:800;letter-spacing:-.03em;
-  background:linear-gradient(135deg,var(--a1),var(--a2));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-  flex-shrink:0;
-}
+  background:linear-gradient(135deg,var(--a1),var(--a2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;flex-shrink:0}
 #hdrEmail{flex:1;font-size:12px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:0 4px}
 #vaultHeader button{padding:7px 14px;font-size:12px}
-
-/* ── Body split ──────────────────────────────────────────────────────────────── */
 #vaultBody{flex:1;display:grid;grid-template-columns:220px 1fr;overflow:hidden}
 @media(max-width:700px){#vaultBody{grid-template-columns:1fr}}
 
-/* ── Sidebar ─────────────────────────────────────────────────────────────────── */
-#sidebar{
-  background:var(--s0);border-right:1px solid var(--border);
-  padding:16px 12px;overflow-y:auto;display:flex;flex-direction:column;gap:20px;
-}
-.sb-section-label{
-  font-size:10px;font-weight:700;color:var(--dim);
-  text-transform:uppercase;letter-spacing:.1em;padding:0 8px;margin-bottom:6px;
-}
-.slot-btn{
-  width:100%;display:flex;align-items:center;justify-content:space-between;
-  padding:9px 10px;border-radius:10px;border:1px solid transparent;
-  background:transparent;text-align:left;cursor:pointer;transition:.15s;
-  font-size:13px;color:var(--muted);
-}
-.slot-btn:hover{background:var(--s2);color:var(--text);border-color:transparent}
-.slot-btn.active{background:rgba(167,139,250,.1);border-color:rgba(167,139,250,.25);color:var(--a1)}
-.slot-btn .sname{font-weight:600}
-.slot-count{font-size:11px;font-weight:700;padding:2px 8px;border-radius:99px;background:rgba(255,255,255,.07);color:var(--muted)}
-.slot-btn.active .slot-count{background:rgba(167,139,250,.25);color:var(--a1)}
-.slot-btn.err .sname{color:var(--bad)}
-.slot-btn.err .slot-count{background:rgba(248,113,113,.15);color:var(--bad)}
-
-.upload-area{
-  border:1.5px dashed rgba(255,255,255,.1);border-radius:12px;
-  padding:14px 10px;text-align:center;cursor:pointer;transition:.2s;
-  font-size:12px;color:var(--dim);line-height:1.5;display:block;
-}
-.upload-area:hover,.upload-area.drag-over{
-  border-color:rgba(167,139,250,.5);color:var(--a1);
-  background:rgba(167,139,250,.07);
-}
-.upload-area.drag-over{ border-style:solid; }
-.upload-area input{display:none}
-.upload-slot-row{margin-top:8px}
-.upload-slot-row select{font-size:12px;padding:7px 10px}
-
-/* ── Drag-over overlay on main grid ── */
-#dropOverlay{
-  position:absolute;inset:0;z-index:20;border-radius:16px;
-  background:rgba(124,58,237,.13);border:2px solid var(--a1);
-  display:flex;align-items:center;justify-content:center;
-  pointer-events:none;opacity:0;transition:opacity .15s;
-}
-#dropOverlay.visible{opacity:1}
-#dropOverlayText{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--a1);text-align:center}
-#vaultMain{position:relative}
-
-/* ── Hover preview popover ── */
-.hover-pop{
-  position:fixed;z-index:90;
-  background:var(--s1);border:1px solid var(--border2);border-radius:14px;
-  box-shadow:0 16px 48px rgba(0,0,0,.6);overflow:hidden;
-  width:220px;pointer-events:none;
-  animation:popIn .15s ease;
-}
-@keyframes popIn{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:scale(1)}}
-.hover-pop img,.hover-pop video{width:100%;display:block;max-height:160px;object-fit:cover}
-.hover-pop-info{padding:10px 12px}
-.hover-pop-name{font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:4px}
-.hover-pop-meta{font-size:11px;color:var(--muted)}
-
-/* ── Slot rename inline ── */
+/* ── Sidebar ── */
+#sidebar{background:var(--s0);border-right:1px solid var(--border);padding:16px 12px;overflow-y:auto;display:flex;flex-direction:column;gap:20px}
+.sb-section-label{font-size:10px;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.1em;padding:0 8px;margin-bottom:6px}
 .slot-btn-wrap{position:relative;display:flex;align-items:center;gap:2px}
 .slot-btn-wrap .slot-btn{flex:1}
-.slot-rename-btn{
-  flex-shrink:0;background:none;border:none;padding:4px 5px;
-  color:var(--dim);font-size:12px;cursor:pointer;border-radius:6px;
-  opacity:0;transition:.15s;line-height:1;
-}
-.slot-btn-wrap:hover .slot-rename-btn{opacity:1}
-.slot-rename-btn:hover{color:var(--a1);background:var(--s2)}
-.slot-rename-input{
-  width:100%;padding:7px 10px;border-radius:8px;border:1px solid var(--a1);
-  background:var(--s2);color:var(--text);font:inherit;font-size:13px;font-weight:600;outline:none;
-}
+.slot-btn{width:100%;display:flex;align-items:center;justify-content:space-between;padding:9px 10px;border-radius:10px;border:1px solid transparent;background:transparent;text-align:left;cursor:pointer;transition:.15s;font-size:13px;color:var(--muted)}
+.slot-btn:hover{background:var(--s2);color:var(--text)}
+.slot-btn.active{background:rgba(167,139,250,.1);border-color:rgba(167,139,250,.25);color:var(--a1)}
+.slot-btn .sname{font-weight:600;display:flex;align-items:center;gap:6px;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.slot-btn .provider-badge{font-size:13px;flex-shrink:0}
+.slot-count{font-size:11px;font-weight:700;padding:2px 8px;border-radius:99px;background:rgba(255,255,255,.07);color:var(--muted);flex-shrink:0}
+.slot-btn.active .slot-count{background:rgba(167,139,250,.25);color:var(--a1)}
+.slot-btn.err .sname{color:var(--bad)}.slot-btn.err .slot-count{background:rgba(248,113,113,.15);color:var(--bad)}
+.slot-rename-btn{flex-shrink:0;background:none;border:none;padding:4px 5px;color:var(--dim);font-size:12px;cursor:pointer;border-radius:6px;opacity:0;transition:.15s;line-height:1}
+.slot-btn-wrap:hover .slot-rename-btn{opacity:1}.slot-rename-btn:hover{color:var(--a1);background:var(--s2)}
+.slot-rename-input{width:100%;padding:7px 10px;border-radius:8px;border:1px solid var(--a1);background:var(--s2);color:var(--text);font:inherit;font-size:13px;font-weight:600;outline:none}
+.upload-area{border:1.5px dashed rgba(255,255,255,.1);border-radius:12px;padding:14px 10px;text-align:center;cursor:pointer;transition:.2s;font-size:12px;color:var(--dim);line-height:1.5;display:block}
+.upload-area:hover,.upload-area.drag-over{border-color:rgba(167,139,250,.5);color:var(--a1);background:rgba(167,139,250,.07)}
+.upload-area.drag-over{border-style:solid}
+.upload-area input{display:none}
+.upload-slot-row{margin-top:8px}.upload-slot-row select{font-size:12px;padding:7px 10px}
 
-/* ── File rename in preview footer ── */
-#renameWrap{display:flex;gap:8px;align-items:center;flex:1;min-width:0}
-#renameInput{flex:1;font-size:14px;font-weight:700;padding:6px 10px;min-width:0}
-#btnRenameConfirm{padding:6px 12px;font-size:12px}
-#btnRenameConfirm.hidden,#renameWrap.hidden{display:none!important}
-
-/* ── Main content ────────────────────────────────────────────────────────────── */
-#vaultMain{padding:18px;overflow-y:auto;display:flex;flex-direction:column;gap:16px;background:var(--bg)}
-
-/* toolbar */
+/* ── Main ── */
+#vaultMain{padding:18px;overflow-y:auto;display:flex;flex-direction:column;gap:12px;background:var(--bg);position:relative}
 .toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.toolbar input{flex:1;min-width:160px}
-.toolbar button{flex-shrink:0;padding:9px 14px;font-size:12px}
+.toolbar input{flex:1;min-width:160px}.toolbar button{flex-shrink:0;padding:9px 14px;font-size:12px}
 .tb-divider{width:1px;height:24px;background:var(--border);flex-shrink:0}
+.view-btns{display:flex;gap:2px;background:var(--s2);border-radius:8px;padding:2px}
+.vbtn{background:none;border:none;padding:5px 8px;border-radius:6px;font-size:13px;cursor:pointer;color:var(--muted);transition:.12s;line-height:1}
+.vbtn:hover{color:var(--text)}.vbtn.active{background:var(--s3);color:var(--a1)}
+#breadcrumb{display:flex;align-items:center;gap:4px;flex-wrap:wrap;font-size:12px;padding:6px 2px;min-height:28px}
+#breadcrumb.hidden{display:none!important}
+.bc-seg{background:none;border:none;padding:3px 8px;border-radius:6px;font:inherit;font-size:12px;color:var(--muted);cursor:pointer;transition:.12s}
+.bc-seg:hover{color:var(--a1);background:rgba(167,139,250,.1)}.bc-seg.active{color:var(--text);font-weight:600;cursor:default}
+.bc-sep{color:var(--dim);font-size:11px;user-select:none}
 
-/* file grid */
-.file-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
-
-.fcard{
-  background:var(--s1);border:1px solid var(--border);border-radius:14px;
-  overflow:hidden;cursor:pointer;transition:.18s;position:relative;
-  display:flex;flex-direction:column;
-}
+/* ── File grid ── */
+.file-grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(180px,1fr))}
+.file-grid.sz-sm{grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px}
+.file-grid.sz-md{grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
+.file-grid.sz-lg{grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.fcard{background:var(--s1);border:1px solid var(--border);border-radius:14px;overflow:hidden;cursor:pointer;transition:.18s;position:relative;display:flex;flex-direction:column}
 .fcard:hover{border-color:rgba(167,139,250,.3);box-shadow:0 4px 20px rgba(0,0,0,.4)}
 .fcard.selected{border-color:rgba(167,139,250,.6);box-shadow:0 0 0 2px rgba(167,139,250,.2)}
-
-.fthumb{
-  aspect-ratio:4/3;position:relative;overflow:hidden;
-  display:flex;align-items:center;justify-content:center;font-size:38px;
-}
-.fthumb.t-image{background:linear-gradient(135deg,#1a0e2e,#0e1a2e)}
-.fthumb.t-video{background:linear-gradient(135deg,#0e1a1e,#0a1828)}
-.fthumb.t-audio{background:linear-gradient(135deg,#1a1a0e,#1a0e18)}
-.fthumb.t-file {background:var(--s2)}
+.fthumb{aspect-ratio:4/3;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:38px}
+.fthumb.t-image{background:linear-gradient(135deg,#1a0e2e,#0e1a2e)}.fthumb.t-video{background:linear-gradient(135deg,#0e1a1e,#0a1828)}
+.fthumb.t-audio{background:linear-gradient(135deg,#1a1a0e,#1a0e18)}.fthumb.t-file{background:var(--s2)}.fthumb.t-folder{background:linear-gradient(135deg,#1a150a,#201808)}
 .fthumb img,.fthumb video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-
-.fchk{
-  position:absolute;top:8px;left:8px;width:20px;height:20px;
-  border-radius:6px;border:1.5px solid rgba(255,255,255,.3);
-  background:rgba(0,0,0,.4);backdrop-filter:blur(6px);
-  display:flex;align-items:center;justify-content:center;
-  font-size:11px;font-weight:800;color:#fff;z-index:5;transition:.15s;
-}
+.sz-sm .fcard .fthumb{font-size:24px}.sz-sm .fcard .finfo{padding:6px 8px}.sz-sm .fcard .fname{font-size:11px}.sz-sm .fcard .fmeta{display:none}
+.sz-lg .fcard .fthumb{font-size:52px}.sz-lg .fcard .finfo{padding:12px 14px}.sz-lg .fcard .fname{font-size:13px}
+.fchk{position:absolute;top:8px;left:8px;width:20px;height:20px;border-radius:6px;border:1.5px solid rgba(255,255,255,.3);background:rgba(0,0,0,.4);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;z-index:5;transition:.15s}
 .fcard.selected .fchk{background:var(--a1d);border-color:var(--a1)}
-.fslot{
-  position:absolute;bottom:7px;right:7px;
-  font-size:10px;font-weight:800;padding:2px 7px;border-radius:99px;
-  background:rgba(0,0,0,.55);color:rgba(255,255,255,.8);backdrop-filter:blur(4px);z-index:5;
-}
-
-.finfo{padding:10px 12px;flex:1}
-.fname{font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:4px}
+.fslot{position:absolute;bottom:7px;right:7px;font-size:10px;font-weight:800;padding:2px 7px;border-radius:99px;background:rgba(0,0,0,.55);color:rgba(255,255,255,.8);backdrop-filter:blur(4px);z-index:5}
+.finfo{padding:10px 12px;flex:1}.fname{font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:4px}
 .fmeta{font-size:11px;color:var(--muted);display:flex;justify-content:space-between}
 
-/* empty / loading */
-.state-box{
-  padding:60px 20px;text-align:center;color:var(--muted);
-  border:1px dashed rgba(255,255,255,.07);border-radius:18px;margin:8px 0;
-}
-.state-icon{font-size:48px;margin-bottom:14px;opacity:.6}
-.state-text{font-size:14px;line-height:1.6}
-.state-text a,.state-text button.inline-link{
-  color:var(--a1);background:none;border:none;padding:0;font:inherit;
-  cursor:pointer;text-decoration:underline;
-}
+/* ── List view ── */
+.file-grid.view-list{display:block;background:var(--s1);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.list-header{display:grid;grid-template-columns:28px 28px 1fr 90px 120px 80px;padding:8px 14px;border-bottom:1px solid var(--border);font-size:11px;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.06em}
+.list-row{display:grid;grid-template-columns:28px 28px 1fr 90px 120px 80px;padding:9px 14px;border-bottom:1px solid rgba(255,255,255,.04);align-items:center;cursor:pointer;transition:.12s;font-size:13px}
+.list-row:last-child{border-bottom:none}.list-row:hover{background:rgba(255,255,255,.03)}.list-row.selected{background:rgba(167,139,250,.08)}.list-row.is-folder{color:var(--warn)}
+.lr-chk{width:16px;height:16px;border-radius:4px;border:1.5px solid rgba(255,255,255,.2);background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;color:#fff;flex-shrink:0}
+.list-row.selected .lr-chk{background:var(--a1d);border-color:var(--a1)}
+.lr-icon{font-size:16px;text-align:center}.lr-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:500;padding-right:8px}
+.lr-size{color:var(--muted);font-size:12px}.lr-date{color:var(--muted);font-size:12px}.lr-slot{font-size:11px;font-weight:700;color:var(--a1)}
+@media(max-width:600px){.list-header,.list-row{grid-template-columns:28px 28px 1fr 70px 60px}.lr-date{display:none}}
 
-/* ── Statusbar ────────────────────────────────────────────────────────────────── */
-#statusBar{
-  flex-shrink:0;background:var(--s0);border-top:1px solid var(--border);
-  padding:8px 20px;display:flex;align-items:center;gap:10px;font-size:12px;
-}
+/* ── Drop overlay ── */
+#dropOverlay{position:absolute;inset:0;z-index:20;border-radius:16px;background:rgba(124,58,237,.13);border:2px solid var(--a1);display:flex;align-items:center;justify-content:center;pointer-events:none;opacity:0;transition:opacity .15s}
+#dropOverlay.visible{opacity:1}
+#dropOverlayText{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--a1);text-align:center}
+
+/* ── States ── */
+.state-box{padding:60px 20px;text-align:center;color:var(--muted);border:1px dashed rgba(255,255,255,.07);border-radius:18px;margin:8px 0}
+.state-icon{font-size:48px;margin-bottom:14px;opacity:.6}.state-text{font-size:14px;line-height:1.6}
+.state-text button.inline-link{color:var(--a1);background:none;border:none;padding:0;font:inherit;cursor:pointer;text-decoration:underline}
+
+/* ── Status bar ── */
+#statusBar{flex-shrink:0;background:var(--s0);border-top:1px solid var(--border);padding:8px 20px;display:flex;align-items:center;gap:10px;font-size:12px}
 .sdot{width:7px;height:7px;border-radius:50%;background:var(--dim);flex-shrink:0;transition:background .3s}
 .sdot.ok{background:var(--ok)}.sdot.warn{background:var(--warn)}.sdot.bad{background:var(--bad)}
-#statusText{font-weight:600}
-#statusSub{flex:1;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-#fileCount{color:var(--dim);white-space:nowrap}
+#statusText{font-weight:600}#statusSub{flex:1;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#fileCount{color:var(--dim);white-space:nowrap}
 
-/* ═══════════════════════════════════════════════════════════════════════════════
-   MODALS (shared)
-═══════════════════════════════════════════════════════════════════════════════ */
-.modal-wrap{
-  position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);
-  display:flex;align-items:center;justify-content:center;padding:16px;z-index:100;
-}
-.modal{
-  background:var(--s1);border:1px solid var(--border);border-radius:22px;
-  width:min(680px,100%);max-height:90vh;display:flex;flex-direction:column;
-  box-shadow:var(--shadow);overflow:hidden;
-}
-.modal-wide{width:min(800px,100%)}
-.modal-head{
-  padding:18px 22px;border-bottom:1px solid var(--border);
-  display:flex;align-items:center;justify-content:space-between;gap:14px;flex-shrink:0;
-}
+/* ── Modals ── */
+.modal-wrap{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:16px;z-index:100}
+.modal{background:var(--s1);border:1px solid var(--border);border-radius:22px;width:min(680px,100%);max-height:90vh;display:flex;flex-direction:column;box-shadow:var(--shadow);overflow:hidden}
+.modal-wide{width:min(820px,100%)}
+.modal-head{padding:18px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:14px;flex-shrink:0}
 .modal-title{font-family:'Syne',sans-serif;font-weight:800;font-size:16px}
 .modal-head button{padding:7px 13px;font-size:12px}
 .modal-body{overflow-y:auto;padding:22px;display:flex;flex-direction:column;gap:18px}
-.modal-foot{
-  padding:14px 22px;border-top:1px solid var(--border);
-  display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;flex-shrink:0;
-}
+.modal-foot{padding:14px 22px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;flex-shrink:0}
 .modal-foot button{font-size:12px}
 
-/* ═══════════════════════════════════════════════════════════════════════════════
-   PREVIEW MODAL
-═══════════════════════════════════════════════════════════════════════════════ */
+/* ── Preview ── */
 #previewModal .modal{width:min(900px,100%);max-height:95vh}
-#previewMedia{
-  background:#000;min-height:200px;max-height:65vh;
-  display:flex;align-items:center;justify-content:center;overflow:hidden;
-}
+#previewMedia{background:#000;min-height:200px;max-height:65vh;display:flex;align-items:center;justify-content:center;overflow:hidden}
 #previewMedia img{max-width:100%;max-height:65vh;display:block}
 #previewMedia video{max-width:100%;max-height:65vh;display:block}
 #previewMedia audio{width:100%;padding:30px}
 .prev-name{font-family:'Syne',sans-serif;font-weight:700;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .prev-meta{font-size:12px;color:var(--muted);margin-top:2px}
+#renameWrap{display:flex;gap:8px;align-items:center;flex:1;min-width:0}
+#renameInput{flex:1;font-size:14px;font-weight:700;padding:6px 10px;min-width:0}
+#btnRenameConfirm{padding:6px 12px;font-size:12px}
 
-/* ═══════════════════════════════════════════════════════════════════════════════
-   MOVE MODAL
-═══════════════════════════════════════════════════════════════════════════════ */
-.move-info{
-  background:var(--s2);border-radius:12px;padding:14px 16px;
-  font-size:13px;line-height:1.6;color:var(--muted);
-}
+/* ── Move modal ── */
+.move-info{background:var(--s2);border-radius:12px;padding:14px 16px;font-size:13px;line-height:1.6;color:var(--muted)}
 .move-info strong{color:var(--text)}
 .move-slot-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
-.move-slot-card{
-  border:1.5px solid var(--border2);border-radius:12px;padding:14px;
-  cursor:pointer;transition:.18s;text-align:center;
-}
+.move-slot-card{border:1.5px solid var(--border2);border-radius:12px;padding:14px;cursor:pointer;transition:.18s;text-align:center}
 .move-slot-card:hover{border-color:var(--a1);background:rgba(167,139,250,.07)}
 .move-slot-card.selected{border-color:var(--a1);background:rgba(167,139,250,.12)}
-.move-slot-card .ms-slot{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--a1)}
+.move-slot-card .ms-slot{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:var(--a1)}
+.move-slot-card .ms-icon{font-size:22px;margin-bottom:4px}
 .move-slot-card .ms-email{font-size:11px;color:var(--muted);margin-top:4px;word-break:break-all}
 .move-slot-card .ms-n{font-size:11px;color:var(--dim);margin-top:3px}
 
-/* ═══════════════════════════════════════════════════════════════════════════════
-   SETTINGS MODAL
-═══════════════════════════════════════════════════════════════════════════════ */
+/* ── Settings ── */
 .settings-tabs{display:flex;gap:4px;border-bottom:1px solid var(--border);padding:0 22px;flex-shrink:0}
-.stab{
-  padding:12px 16px;font-size:13px;font-weight:600;
-  border:none;background:none;color:var(--muted);border-bottom:2px solid transparent;
-  margin-bottom:-1px;cursor:pointer;transition:.15s;
-}
-.stab:hover{color:var(--text)}
-.stab.active{color:var(--a1);border-bottom-color:var(--a1)}
-.stab-panel{display:none;flex-direction:column;gap:16px}
-.stab-panel.active{display:flex}
-
-/* storage slot cards in settings */
-.acct-card{
-  background:var(--s2);border:1px solid var(--border);border-radius:14px;
-  padding:14px 16px;display:grid;gap:10px;
-}
+.stab{padding:12px 16px;font-size:13px;font-weight:600;border:none;background:none;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-1px;cursor:pointer;transition:.15s}
+.stab:hover{color:var(--text)}.stab.active{color:var(--a1);border-bottom-color:var(--a1)}
+.stab-panel{display:none;flex-direction:column;gap:16px}.stab-panel.active{display:flex}
+.acct-card{background:var(--s2);border:1px solid var(--border);border-radius:14px;padding:14px 16px;display:grid;gap:10px}
 .acct-header{display:flex;align-items:center;justify-content:space-between;gap:12px}
-.acct-slot-badge{
-  font-family:'Syne',sans-serif;font-size:22px;font-weight:800;
-  background:linear-gradient(135deg,var(--a1),var(--a2));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-}
+.acct-slot-badge{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;background:linear-gradient(135deg,var(--a1),var(--a2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.acct-provider-icon{font-size:22px}
 .acct-email{font-size:13px;font-weight:600;word-break:break-all}
-.acct-actions{display:flex;gap:8px;flex-wrap:wrap}
-.acct-actions button{padding:6px 12px;font-size:12px}
-
-/* edit pw inline */
-.acct-edit-pw{display:none;flex-direction:column;gap:10px;padding-top:12px;border-top:1px solid var(--border)}
-.acct-edit-pw.open{display:flex}
-
-/* add storage form */
-.add-storage-form{
-  background:var(--s2);border:1px dashed rgba(167,139,250,.25);border-radius:14px;
-  padding:18px;display:none;flex-direction:column;gap:12px;
-}
-.add-storage-form.open{display:flex}
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-@media(max-width:480px){.form-grid{grid-template-columns:1fr}}
-.field label{font-size:12px;font-weight:600;color:var(--muted);display:block;margin-bottom:5px}
-
-/* change password form */
+.acct-actions{display:flex;gap:8px;flex-wrap:wrap}.acct-actions button{padding:6px 12px;font-size:12px}
+.acct-edit-pw{display:none;flex-direction:column;gap:10px;padding-top:12px;border-top:1px solid var(--border)}.acct-edit-pw.open{display:flex}
+.add-storage-form{background:var(--s2);border:1px dashed rgba(167,139,250,.25);border-radius:14px;padding:18px;display:none;flex-direction:column;gap:14px}.add-storage-form.open{display:flex}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:480px){.form-grid{grid-template-columns:1fr}}
+.provider-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px}
+.provider-card{border:1.5px solid var(--border2);border-radius:12px;padding:12px 8px;cursor:pointer;transition:.18s;text-align:center;display:flex;flex-direction:column;align-items:center;gap:6px}
+.provider-card:hover{border-color:var(--a1);background:rgba(167,139,250,.07)}
+.provider-card.selected{border-color:var(--a1);background:rgba(167,139,250,.12)}
+.provider-card.disabled{opacity:.35;cursor:not-allowed;pointer-events:none}
+.prov-icon{font-size:28px}.prov-name{font-size:12px;font-weight:700}
+.prov-tos{font-size:10px;color:var(--muted);line-height:1.4;margin-top:2px}
+.tos-warning{background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.2);border-radius:10px;padding:12px 14px;font-size:12px;color:var(--warn);line-height:1.5;display:none}
+.tos-warning.show{display:block}
+.oauth-instructions{background:var(--s3);border-radius:10px;padding:12px 14px;font-size:12px;color:var(--muted);line-height:1.6;display:none}
+.oauth-instructions.show{display:block}
+.oauth-instructions code{background:rgba(255,255,255,.08);padding:1px 5px;border-radius:4px;font-family:monospace;font-size:11px;color:var(--text)}
 .cpw-form{display:flex;flex-direction:column;gap:12px}
 
-/* ═══════════════════════════════════════════════════════════════════════════════
-   UPLOAD TOAST
-═══════════════════════════════════════════════════════════════════════════════ */
-#uploadToast{
-  position:fixed;bottom:20px;right:20px;z-index:200;
-  background:var(--s1);border:1px solid var(--border);border-radius:16px;
-  padding:14px 18px;min-width:260px;max-width:340px;box-shadow:var(--shadow);
-}
-.toast-title{font-weight:700;font-size:13px;margin-bottom:4px}
-.toast-sub{font-size:12px;color:var(--muted);margin-bottom:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.prog-bar{height:4px;background:var(--s3);border-radius:99px;overflow:hidden}
-.prog-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--a1d),var(--a2d));transition:width .25s}
+/* ── Provider connect step ── */
+.connect-step{background:var(--s2);border-radius:12px;padding:16px;display:none;flex-direction:column;gap:12px}.connect-step.show{display:flex}
 
+/* ── Hover preview popover ── */
+.hover-pop{position:fixed;z-index:90;background:var(--s1);border:1px solid var(--border2);border-radius:14px;box-shadow:0 16px 48px rgba(0,0,0,.6);overflow:hidden;width:220px;pointer-events:none;animation:popIn .15s ease}
+@keyframes popIn{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:scale(1)}}
+.hover-pop img,.hover-pop video{width:100%;display:block;max-height:160px;object-fit:cover}
+.hover-pop-info{padding:10px 12px}.hover-pop-name{font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:4px}.hover-pop-meta{font-size:11px;color:var(--muted)}
+
+/* ── Upload toast ── */
+#uploadToast{position:fixed;bottom:20px;right:20px;z-index:200;background:var(--s1);border:1px solid var(--border);border-radius:16px;padding:14px 18px;min-width:260px;max-width:340px;box-shadow:var(--shadow)}
+.toast-title{font-weight:700;font-size:13px;margin-bottom:4px}.toast-sub{font-size:12px;color:var(--muted);margin-bottom:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.prog-bar{height:4px;background:var(--s3);border-radius:99px;overflow:hidden}.prog-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--a1d),var(--a2d));transition:width .25s}
 </style>
 </head>
 <body>
-
-<!-- ══════════════════ AUTH SCREEN ══════════════════════════════════════════ -->
+<!-- ═══════════════════════ AUTH ═════════════════════════════════════════════ -->
 <div id="screenAuth">
   <div class="auth-box">
     <div class="auth-logo display">Storage Vault</div>
-    <div class="auth-sub">Secure private media storage</div>
-
+    <div class="auth-sub">Secure multi-cloud storage</div>
     <div class="auth-card">
-
-      <!-- Step 1: Email -->
       <div id="authEmail" class="auth-step">
-        <div>
-          <div class="auth-label">Email address</div>
-          <input id="inEmail" type="email" placeholder="you@example.com" autocomplete="email"/>
-        </div>
+        <div class="field"><label>Email address</label><input id="inEmail" type="email" placeholder="you@example.com" autocomplete="email"/></div>
         <button id="btnEmailNext" class="btn-grad">Continue →</button>
         <div class="auth-err" id="authEmailErr"></div>
       </div>
-
-      <!-- Step 2a: Register -->
       <div id="authRegister" class="auth-step hidden">
         <button class="auth-back" id="btnRegBack">← Back</button>
-        <div style="margin-bottom:4px">
-          <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:18px">Create your password</div>
-          <div style="font-size:12px;color:var(--muted);margin-top:4px" id="regEmailShow"></div>
-        </div>
-        <div class="field">
-          <label>New password</label>
-          <div class="pw-wrap">
-            <input id="inRegPw1" type="password" placeholder="Choose a strong password" autocomplete="new-password"/>
-            <button class="pw-eye" data-target="inRegPw1">👁</button>
-          </div>
-          <div class="pw-strength"><div class="pw-strength-bar" id="pwStrBar"></div></div>
-        </div>
-        <div class="field">
-          <label>Confirm password</label>
-          <div class="pw-wrap">
-            <input id="inRegPw2" type="password" placeholder="Repeat password" autocomplete="new-password"/>
-            <button class="pw-eye" data-target="inRegPw2">👁</button>
-          </div>
-        </div>
+        <div><div style="font-family:'Syne',sans-serif;font-weight:800;font-size:18px">Create your password</div><div style="font-size:12px;color:var(--muted);margin-top:4px" id="regEmailShow"></div></div>
+        <div class="field"><label>New password</label><div class="pw-wrap"><input id="inRegPw1" type="password" placeholder="Choose a strong password" autocomplete="new-password"/><button class="pw-eye" data-target="inRegPw1">👁</button></div><div class="pw-strength"><div class="pw-strength-bar" id="pwStrBar"></div></div></div>
+        <div class="field"><label>Confirm password</label><div class="pw-wrap"><input id="inRegPw2" type="password" placeholder="Repeat password" autocomplete="new-password"/><button class="pw-eye" data-target="inRegPw2">👁</button></div></div>
         <button id="btnRegister" class="btn-grad">Create account</button>
         <div class="auth-err" id="authRegErr"></div>
-        <div class="auth-hint">Your password is hashed in the browser before sending. The server never sees the raw password.</div>
+        <div class="auth-hint">Your password is hashed in the browser. The server never sees it.</div>
       </div>
-
-      <!-- Step 2b: Login -->
       <div id="authLogin" class="auth-step hidden">
         <button class="auth-back" id="btnLoginBack">← Back</button>
-        <div style="margin-bottom:4px">
-          <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:18px">Welcome back</div>
-          <div style="font-size:12px;color:var(--muted);margin-top:4px" id="loginEmailShow"></div>
-        </div>
-        <div class="field">
-          <label>Password</label>
-          <div class="pw-wrap">
-            <input id="inLoginPw" type="password" placeholder="Your vault password" autocomplete="current-password"/>
-            <button class="pw-eye" data-target="inLoginPw">👁</button>
-          </div>
-        </div>
+        <div><div style="font-family:'Syne',sans-serif;font-weight:800;font-size:18px">Welcome back</div><div style="font-size:12px;color:var(--muted);margin-top:4px" id="loginEmailShow"></div></div>
+        <div class="field"><label>Password</label><div class="pw-wrap"><input id="inLoginPw" type="password" placeholder="Your vault password" autocomplete="current-password"/><button class="pw-eye" data-target="inLoginPw">👁</button></div></div>
         <button id="btnLogin" class="btn-grad">Sign in →</button>
         <div class="auth-err" id="authLoginErr"></div>
       </div>
-
     </div>
   </div>
 </div>
 
-<!-- ══════════════════ VAULT SCREEN ═════════════════════════════════════════ -->
+<!-- ═══════════════════════ VAULT ════════════════════════════════════════════ -->
 <div id="screenVault" class="hidden">
-
   <div id="vaultHeader">
     <div class="hdr-logo">Storage Vault</div>
     <div id="hdrEmail"></div>
@@ -491,1458 +264,739 @@ button:disabled{opacity:.4;cursor:not-allowed}
     <button id="btnRefresh"  class="btn-ghost">↻</button>
     <button id="btnSignOut">Sign out</button>
   </div>
-
   <div id="vaultBody">
-
-    <!-- ── Sidebar ── -->
     <div id="sidebar">
-
       <div>
         <div class="sb-section-label">Storage Slots</div>
         <div id="slotList"></div>
       </div>
-
       <div>
         <div class="sb-section-label">Upload files</div>
         <label class="upload-area" id="uploadLabel">
-          <input id="uploadInput" type="file" multiple accept="image/*,video/*,audio/*,*/*"/>
+          <input id="uploadInput" type="file" multiple/>
           <span id="uploadLabelText">📎 Drop files here or<br/>click to browse</span>
         </label>
-        <div class="upload-slot-row">
-          <select id="uploadSlot"></select>
-        </div>
+        <div class="upload-slot-row"><select id="uploadSlot"></select></div>
       </div>
-
     </div>
-
-    <!-- ── Main ── -->
     <div id="vaultMain">
-
       <div class="toolbar">
         <input id="searchInput" type="search" placeholder="Search files…"/>
+        <button id="btnNewFolder" class="btn-ghost" title="New folder">📁 New folder</button>
         <button id="btnSelectAll" class="btn-ghost">Select all</button>
         <div class="tb-divider" id="selDivider" style="display:none"></div>
         <button id="btnMoveSelected"   class="hidden" style="color:var(--a1)">⇄ Move</button>
         <button id="btnDeleteSelected" class="btn-danger hidden">🗑 Delete</button>
+        <div style="flex:1"></div>
+        <div class="view-btns">
+          <button class="vbtn" id="vbSm" title="Small">⊞</button>
+          <button class="vbtn active" id="vbMd" title="Medium">▦</button>
+          <button class="vbtn" id="vbLg" title="Large">◻</button>
+          <button class="vbtn" id="vbList" title="List">≡</button>
+        </div>
       </div>
-
-      <div id="fileGrid" class="file-grid"></div>
-      <div id="dropOverlay"><div id="dropOverlayText">📂 Drop to upload<br/><span style="font-size:13px;font-weight:400;opacity:.7">to the active slot</span></div></div>
-      <div id="emptyState"   class="state-box hidden">
-        <div class="state-icon">🗂️</div>
-        <div class="state-text" id="emptyMsg">No files here yet.</div>
-      </div>
-      <div id="loadingState" class="state-box">
-        <div class="state-icon">⏳</div>
-        <div class="state-text" id="loadingMsg">Connecting to storage…</div>
-      </div>
-
+      <div id="breadcrumb" class="hidden"></div>
+      <div id="fileGrid" class="file-grid sz-md"></div>
+      <div id="dropOverlay"><div id="dropOverlayText">📂 Drop to upload<br/><span style="font-size:13px;font-weight:400;opacity:.7">to the selected slot</span></div></div>
+      <div id="emptyState"   class="state-box hidden"><div class="state-icon">🗂️</div><div class="state-text" id="emptyMsg">No files here yet.</div></div>
+      <div id="loadingState" class="state-box"><div class="state-icon">⏳</div><div class="state-text" id="loadingMsg">Connecting to storage…</div></div>
     </div>
   </div>
-
   <div id="statusBar">
     <div class="sdot warn" id="sdot"></div>
     <span id="statusText">Not connected</span>
     <span id="statusSub"></span>
     <span id="fileCount"></span>
   </div>
-
 </div>
 
-<!-- ══════════════════ PREVIEW MODAL ════════════════════════════════════════ -->
+<!-- ═══════════════════════ PREVIEW MODAL ═══════════════════════════════════ -->
 <div id="previewModal" class="modal-wrap hidden">
   <div class="modal modal-wide">
     <div class="modal-head">
-      <div style="min-width:0;flex:1">
-        <div class="prev-name" id="pName">—</div>
-        <div class="prev-meta" id="pMeta"></div>
-      </div>
+      <div style="min-width:0;flex:1"><div class="prev-name" id="pName">—</div><div class="prev-meta" id="pMeta"></div></div>
       <button id="btnClosePreview" class="btn-ghost">✕</button>
     </div>
-    <div id="previewMedia">
-      <span style="color:rgba(255,255,255,.3)">Loading…</span>
-    </div>
+    <div id="previewMedia"><span style="color:rgba(255,255,255,.3)">Loading…</span></div>
     <div class="modal-foot">
-      <div id="renameWrap" class="hidden">
-        <input id="renameInput" type="text" placeholder="New file name…"/>
-        <button id="btnRenameConfirm" class="btn-grad">✓ Save</button>
-        <button id="btnRenameCancel" class="btn-ghost">Cancel</button>
-      </div>
+      <div id="renameWrap" class="hidden"><input id="renameInput" type="text" placeholder="New file name…"/><button id="btnRenameConfirm" class="btn-grad">✓ Save</button><button id="btnRenameCancel" class="btn-ghost">Cancel</button></div>
       <span style="font-size:12px;color:var(--muted)" id="pSlot"></span>
       <div style="display:flex;gap:8px">
         <button id="btnPreviewRename" style="font-size:12px;color:var(--a1)">✏️ Rename</button>
         <button id="btnPreviewMove"   style="font-size:12px;color:var(--a1)">⇄ Move</button>
-        <button id="btnPreviewDl"     class="btn-ok" style="font-size:12px">⬇ Download</button>
-        <button id="btnPreviewDelete" class="btn-danger" style="font-size:12px">🗑 Delete</button>
+        <button id="btnPreviewDl"     class="btn-ok"     style="font-size:12px">⬇ Download</button>
+        <button id="btnPreviewDelete" class="btn-danger"  style="font-size:12px">🗑 Delete</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ══════════════════ MOVE MODAL ════════════════════════════════════════════ -->
+<!-- ═══════════════════════ MOVE MODAL ══════════════════════════════════════ -->
 <div id="moveModal" class="modal-wrap hidden">
   <div class="modal">
-    <div class="modal-head">
-      <div class="modal-title">Move files to slot</div>
-      <button id="btnCloseMoveModal" class="btn-ghost">✕</button>
-    </div>
+    <div class="modal-head"><div class="modal-title">Move files to slot</div><button id="btnCloseMoveModal" class="btn-ghost">✕</button></div>
     <div class="modal-body">
       <div class="move-info" id="moveInfo"></div>
-      <div>
-        <div style="font-size:12px;color:var(--muted);margin-bottom:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em">Select destination</div>
-        <div class="move-slot-grid" id="moveSlotGrid"></div>
-      </div>
+      <div><div style="font-size:12px;color:var(--muted);margin-bottom:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em">Select destination</div><div class="move-slot-grid" id="moveSlotGrid"></div></div>
     </div>
-    <div class="modal-foot">
-      <span style="font-size:12px;color:var(--dim)">Files already on the target slot are skipped.</span>
-      <button id="btnDoMove" class="btn-grad" disabled>Move files →</button>
-    </div>
+    <div class="modal-foot"><span style="font-size:12px;color:var(--dim)">Files on the target slot already are skipped.</span><button id="btnDoMove" class="btn-grad" disabled>Move files →</button></div>
   </div>
 </div>
 
-<!-- ══════════════════ SETTINGS MODAL ════════════════════════════════════════ -->
+<!-- ═══════════════════════ SETTINGS MODAL ══════════════════════════════════ -->
 <div id="settingsModal" class="modal-wrap hidden">
   <div class="modal modal-wide">
-    <div class="modal-head">
-      <div class="modal-title">⚙ Settings</div>
-      <button id="btnCloseSettings" class="btn-ghost">✕</button>
-    </div>
-
-    <!-- Tabs -->
+    <div class="modal-head"><div class="modal-title">⚙ Settings</div><button id="btnCloseSettings" class="btn-ghost">✕</button></div>
     <div class="settings-tabs">
       <button class="stab active" data-tab="storage">Storage Accounts</button>
       <button class="stab"        data-tab="security">Security</button>
     </div>
-
     <div class="modal-body" style="padding:22px">
-
-      <!-- ── Storage tab ── -->
+      <!-- Storage tab -->
       <div id="tabStorage" class="stab-panel active">
-
         <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
-          <div>
-            <div style="font-weight:700;font-size:14px">Your MEGA storage slots</div>
-            <div style="font-size:12px;color:var(--muted);margin-top:2px">Up to 5 slots. Passwords are stored encrypted — only you can decrypt them.</div>
-          </div>
+          <div><div style="font-weight:700;font-size:14px">Your storage slots</div><div style="font-size:12px;color:var(--muted);margin-top:2px">Up to 5 slots across any supported provider. Credentials are encrypted in your browser.</div></div>
           <button id="btnOpenAddStorage" style="font-size:12px;flex-shrink:0">+ Add slot</button>
         </div>
-
         <div id="acctList"></div>
-
         <!-- Add storage form -->
         <div class="add-storage-form" id="addStorageForm">
-          <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:14px">Add MEGA storage slot</div>
-          <div class="form-grid">
-            <div class="field">
-              <label>Slot number</label>
-              <select id="addSlot"></select>
-            </div>
-            <div class="field">
-              <label>MEGA email</label>
-              <input id="addMegaEmail" type="email" placeholder="your+slot1@gmail.com"/>
-            </div>
+          <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:14px">Add storage slot</div>
+          <!-- Step 1: Choose provider -->
+          <div id="addStep1">
+            <div class="field"><label>Slot number</label><select id="addSlot"></select></div>
+            <div style="font-size:12px;font-weight:600;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em">Choose provider</div>
+            <div class="provider-grid" id="providerGrid"></div>
+            <div class="tos-warning" id="tosWarning"></div>
           </div>
-          <div class="field">
-            <label>MEGA password</label>
-            <div class="pw-wrap">
-              <input id="addMegaPw" type="password" placeholder="MEGA account password"/>
-              <button class="pw-eye" data-target="addMegaPw">👁</button>
+          <!-- Step 2: Connect -->
+          <div class="connect-step" id="addStep2">
+            <div id="connectTitle" style="font-weight:700;font-size:14px"></div>
+            <!-- MEGA fields -->
+            <div id="megaFields" style="display:none;flex-direction:column;gap:12px">
+              <div class="oauth-instructions show" style="color:var(--warn)">
+                ⚠️ <strong>MEGA TOS:</strong> Only 1 MEGA account per person is allowed. Using multiple accounts risks all of them being banned. Free accounts have data deleted after <strong>3 months of inactivity</strong> — logging into this vault regularly keeps them active.
+              </div>
+              <div class="field"><label>MEGA email</label><input id="addMegaEmail" type="email" placeholder="your@email.com"/></div>
+              <div class="field"><label>MEGA password</label><div class="pw-wrap"><input id="addMegaPw" type="password" placeholder="MEGA account password"/><button class="pw-eye" data-target="addMegaPw">👁</button></div></div>
             </div>
+            <!-- OAuth fields (Dropbox / OneDrive) -->
+            <div id="oauthFields" style="display:none;flex-direction:column;gap:12px">
+              <div class="oauth-instructions show" id="oauthInstructions"></div>
+              <button id="btnConnectOAuth" class="btn-grad">🔗 Connect via OAuth →</button>
+            </div>
+            <!-- Google fields -->
+            <div id="googleFields" style="display:none;flex-direction:column;gap:12px">
+              <div class="oauth-instructions show">
+                Google Drive uses OAuth via your Apps Script backend (which holds the client_secret securely). Set <code>GOOGLE_CLIENT_ID</code> and <code>GOOGLE_CLIENT_SECRET</code> in Apps Script Script Properties and add your GitHub Pages URL as an authorized redirect URI in Google Cloud Console. ✅ Multiple Google accounts under different emails are fine.
+              </div>
+              <button id="btnConnectGoogle" class="btn-grad">🔗 Connect Google Drive →</button>
+            </div>
+            <!-- Box fields -->
+            <div id="boxFields" style="display:none;flex-direction:column;gap:12px">
+              <div class="oauth-instructions show">
+                Box uses OAuth via your Apps Script backend. Set <code>BOX_CLIENT_ID</code> and <code>BOX_CLIENT_SECRET</code> in Apps Script Script Properties, and add your GitHub Pages URL as a redirect URI in the <a href="https://app.box.com/developers/console" target="_blank" style="color:var(--a1)">Box Developer Console</a>. ✅ Multiple Box accounts under different emails are allowed by Box's own TOS.
+              </div>
+              <button id="btnConnectBox" class="btn-grad">🔗 Connect Box →</button>
+            </div>
+            <div style="display:flex;gap:10px;justify-content:space-between;align-items:center">
+              <button id="btnBackToProviders" class="btn-ghost">← Back</button>
+              <div style="display:flex;gap:8px">
+                <button id="btnCancelAddStorage">Cancel</button>
+                <button id="btnSaveAddStorage" class="btn-grad" style="display:none">Save slot</button>
+              </div>
+            </div>
+            <div class="auth-err" id="addStorageErr"></div>
           </div>
-          <div style="display:flex;gap:10px;justify-content:flex-end">
-            <button id="btnCancelAddStorage">Cancel</button>
-            <button id="btnSaveAddStorage" class="btn-grad">Save slot</button>
-          </div>
-          <div class="auth-err" id="addStorageErr"></div>
         </div>
-
       </div>
-
-      <!-- ── Security tab ── -->
+      <!-- Security tab -->
       <div id="tabSecurity" class="stab-panel">
         <div>
           <div style="font-weight:700;font-size:14px">Change vault password</div>
-          <div style="font-size:12px;color:var(--muted);margin-top:2px;margin-bottom:16px">
-            Your new password will re-encrypt all stored MEGA credentials. Other sessions will be signed out.
-          </div>
+          <div style="font-size:12px;color:var(--muted);margin-top:2px;margin-bottom:16px">Re-encrypts all stored credentials with your new password. Other sessions will be signed out.</div>
           <div class="cpw-form">
-            <div class="field">
-              <label>Current password</label>
-              <div class="pw-wrap">
-                <input id="inCpwOld" type="password" placeholder="Current password"/>
-                <button class="pw-eye" data-target="inCpwOld">👁</button>
-              </div>
-            </div>
-            <div class="field">
-              <label>New password</label>
-              <div class="pw-wrap">
-                <input id="inCpwNew1" type="password" placeholder="New password"/>
-                <button class="pw-eye" data-target="inCpwNew1">👁</button>
-              </div>
-              <div class="pw-strength"><div class="pw-strength-bar" id="cpwStrBar"></div></div>
-            </div>
-            <div class="field">
-              <label>Confirm new password</label>
-              <div class="pw-wrap">
-                <input id="inCpwNew2" type="password" placeholder="Repeat new password"/>
-                <button class="pw-eye" data-target="inCpwNew2">👁</button>
-              </div>
-            </div>
-            <div style="display:flex;gap:10px;align-items:center">
-              <button id="btnChangePassword" class="btn-grad">Update password</button>
-              <div class="auth-err" id="cpwErr" style="margin:0"></div>
-            </div>
+            <div class="field"><label>Current password</label><div class="pw-wrap"><input id="inCpwOld" type="password" placeholder="Current password"/><button class="pw-eye" data-target="inCpwOld">👁</button></div></div>
+            <div class="field"><label>New password</label><div class="pw-wrap"><input id="inCpwNew1" type="password" placeholder="New password"/><button class="pw-eye" data-target="inCpwNew1">👁</button></div><div class="pw-strength"><div class="pw-strength-bar" id="cpwStrBar"></div></div></div>
+            <div class="field"><label>Confirm new password</label><div class="pw-wrap"><input id="inCpwNew2" type="password" placeholder="Repeat new password"/><button class="pw-eye" data-target="inCpwNew2">👁</button></div></div>
+            <div style="display:flex;gap:10px;align-items:center"><button id="btnChangePassword" class="btn-grad">Update password</button><div class="auth-err" id="cpwErr" style="margin:0"></div></div>
           </div>
         </div>
       </div>
-
     </div>
   </div>
 </div>
 
-<!-- ══════════════════ UPLOAD TOAST ══════════════════════════════════════════ -->
+<!-- ═══════════════════════ UPLOAD TOAST ════════════════════════════════════ -->
 <div id="uploadToast" class="hidden">
   <div class="toast-title" id="toastTitle">Uploading…</div>
   <div class="toast-sub"   id="toastSub">Preparing…</div>
   <div class="prog-bar"><div class="prog-fill" id="toastFill" style="width:0%"></div></div>
 </div>
 
-<!-- ══════════════════ JAVASCRIPT ════════════════════════════════════════════ -->
 <script type="module">
 import { Storage } from 'https://unpkg.com/megajs/dist/main.browser-es.mjs';
 
 const BACKEND = 'https://script.google.com/macros/s/AKfycbzict1PB8A-nDDI0Rq44heHJcLoHwYLTUO7ckNcoeeHMdA5tm1dxmTgsUkW4CttOCWugQ/exec';
 
-// ═══════════════════════════════════════════════════════════════════════════════
-// STATE
-// ═══════════════════════════════════════════════════════════════════════════════
-const S = {
-  // Auth
-  email:       null,
-  passwordRaw: null,
-  salt:        null,
-  cryptoKey:   null,
-  authHash:    null,
-  // Encrypted accounts as returned from server
-  encAccounts: [],
-  // Decrypted, connected
-  accounts:    [],
-  storages:    [],
-  // Files
-  allFiles:    [],
-  currentSlot: 'all',
-  query:       '',
-  selected:    new Set(),
-  // Preview
-  preview:     null,
-  previewUrl:  null,
-  // Move modal
-  moveTarget:  null,
-  // Slot display names (persisted in localStorage)
-  slotNames:   JSON.parse(localStorage.getItem('vaultSlotNames')||'{}'),
+const PROVIDERS = {
+  mega:     { id:'mega',     name:'MEGA',         icon:'🔷', authType:'password', tosLevel:'bad',  inactivity:'3 months (free) — vault login keeps active', multiAccount:false,
+    tos:'⛔ 1 account per person — MEGA actively bans users with multiple accounts. Free storage is deleted after 3 months inactivity; logging into this vault counts as activity and resets the clock.' },
+  gdrive:   { id:'gdrive',   name:'Google Drive',  icon:'🟢', authType:'google',   tosLevel:'ok',   inactivity:'2 years (Google-wide activity)', multiAccount:true,
+    tos:'✅ Multiple accounts under different emails are completely fine. Google considers any Google service use as activity — very safe.' },
+  onedrive: { id:'onedrive', name:'OneDrive',       icon:'☁️', authType:'oauth',    tosLevel:'ok',   inactivity:'2 years (Microsoft account activity)', multiAccount:true,
+    oauthAuthUrl:'https://login.microsoftonline.com/common/oauth2/v2.0/authorize',
+    oauthTokenUrl:'https://login.microsoftonline.com/common/oauth2/v2.0/token',
+    oauthScopes:['files.readwrite','offline_access','user.read'],
+    clientId:'YOUR_ONEDRIVE_CLIENT_ID',
+    tos:'✅ Multiple Microsoft accounts under different emails are fine. 2-year inactivity window is very generous.',
+    instructions:"Click Connect — you'll sign into your Microsoft account. Works with any Microsoft/Outlook/Hotmail email. Safe to add multiple accounts under different emails." },
+  box:      { id:'box',      name:'Box',            icon:'🗃️', authType:'box',      tosLevel:'ok',   inactivity:'No stated inactivity deletion policy', multiAccount:true,
+    tos:"✅ Box's own TOS explicitly refers to 'your Box account(s)' — multiple accounts are acknowledged and allowed. 1TB/month cumulative bandwidth limit across all accounts.",
+    instructions:"Click Connect — you'll sign into your Box account via OAuth. Safe to add multiple accounts under different emails." },
+  dropbox:  { id:'dropbox',  name:'Dropbox',        icon:'📦', authType:'oauth',    tosLevel:'warn', inactivity:'12 months (free) — vault login keeps active', multiAccount:false,
+    oauthAuthUrl:'https://www.dropbox.com/oauth2/authorize',
+    oauthTokenUrl:'https://api.dropboxapi.com/oauth2/token',
+    oauthScopes:['files.content.write','files.content.read','account_info.read'],
+    clientId:'YOUR_DROPBOX_APP_KEY',
+    tos:"⚠️ Using multiple free Dropbox accounts to stack storage for the same person violates their TOS. Stick to 1 Dropbox account per person. Free accounts deleted after 12 months inactivity — logging in here resets the clock.",
+    instructions:"Click Connect — you'll sign into your Dropbox account. One account per person only." },
 };
 
-// ═══════════════════════════════════════════════════════════════════════════════
-// CRYPTO HELPERS
-// ═══════════════════════════════════════════════════════════════════════════════
-function hexToU8(hex) {
-  if (!hex || hex.length % 2) return new Uint8Array(0);
-  const a = new Uint8Array(hex.length / 2);
-  for (let i = 0; i < a.length; i++) a[i] = parseInt(hex.slice(i*2, i*2+2), 16);
-  return a;
-}
-function u8ToHex(buf) {
-  return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2,'0')).join('');
-}
-function genSalt() { return u8ToHex(crypto.getRandomValues(new Uint8Array(16))); }
-function genIV()   { return crypto.getRandomValues(new Uint8Array(12)); }
+const S = {
+  email:null,passwordRaw:null,salt:null,cryptoKey:null,authHash:null,
+  encAccounts:[],accounts:[],storages:[],allFiles:[],allFolders:[],
+  currentSlot:'all',currentPath:null,query:'',selected:new Set(),
+  preview:null,previewUrl:null,moveTarget:null,
+  viewMode:localStorage.getItem('vaultView')||'md',
+  slotNames:JSON.parse(localStorage.getItem('vaultSlotNames')||'{}'),
+  oauthTokens:JSON.parse(sessionStorage.getItem('vaultTokens')||'{}'),
+};
 
-async function sha256hex(str) {
-  return u8ToHex(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str)));
-}
+// ── Crypto ──────────────────────────────────────────────────────────────────
+const hexToU8=h=>{if(!h||h.length%2)return new Uint8Array(0);const a=new Uint8Array(h.length/2);for(let i=0;i<a.length;i++)a[i]=parseInt(h.slice(i*2,i*2+2),16);return a;};
+const u8ToHex=b=>[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('');
+const genSalt=()=>u8ToHex(crypto.getRandomValues(new Uint8Array(16)));
+const genIV=()=>crypto.getRandomValues(new Uint8Array(12));
+async function sha256hex(s){return u8ToHex(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s)));}
+async function deriveKey(pw,saltHex){const km=await crypto.subtle.importKey('raw',new TextEncoder().encode(pw),'PBKDF2',false,['deriveKey']);return crypto.subtle.deriveKey({name:'PBKDF2',salt:hexToU8(saltHex),iterations:100000,hash:'SHA-256'},km,{name:'AES-GCM',length:256},false,['encrypt','decrypt']);}
+async function encryptStr(key,pt){const iv=genIV();const enc=await crypto.subtle.encrypt({name:'AES-GCM',iv},key,new TextEncoder().encode(pt));return{ciphertext:u8ToHex(new Uint8Array(enc)),iv:u8ToHex(iv)};}
+async function decryptStr(key,cHex,ivHex){const dec=await crypto.subtle.decrypt({name:'AES-GCM',iv:hexToU8(ivHex)},key,hexToU8(cHex));return new TextDecoder().decode(dec);}
+const computeHash=(pw,salt)=>sha256hex(pw+salt);
+const genCV=()=>{const a=crypto.getRandomValues(new Uint8Array(48));return btoa(String.fromCharCode(...a)).replace(/\+/g,'-').replace(/\//g,'_').replace(/=/g,'').slice(0,128);};
+async function genCC(v){const h=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(v));return btoa(String.fromCharCode(...new Uint8Array(h))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=/g,'');}
 
-/** Derive AES-256-GCM key from password using PBKDF2 */
-async function deriveKey(password, saltHex) {
-  const keyMat = await crypto.subtle.importKey(
-    'raw', new TextEncoder().encode(password), 'PBKDF2', false, ['deriveKey']
-  );
-  return crypto.subtle.deriveKey(
-    { name:'PBKDF2', salt:hexToU8(saltHex), iterations:100000, hash:'SHA-256' },
-    keyMat,
-    { name:'AES-GCM', length:256 },
-    false,
-    ['encrypt','decrypt']
-  );
-}
-
-/** Encrypt a string; returns {ciphertext:hex, iv:hex} */
-async function encryptStr(key, plaintext) {
-  const iv  = genIV();
-  const enc = await crypto.subtle.encrypt(
-    { name:'AES-GCM', iv },
-    key,
-    new TextEncoder().encode(plaintext)
-  );
-  return { ciphertext: u8ToHex(new Uint8Array(enc)), iv: u8ToHex(iv) };
-}
-
-/** Decrypt a ciphertext hex string */
-async function decryptStr(key, ciphertextHex, ivHex) {
-  const dec = await crypto.subtle.decrypt(
-    { name:'AES-GCM', iv:hexToU8(ivHex) },
-    key,
-    hexToU8(ciphertextHex)
-  );
-  return new TextDecoder().decode(dec);
-}
-
-/** Compute auth hash: SHA-256(password + salt) */
-async function computeAuthHash(password, salt) {
-  return sha256hex(password + salt);
-}
-
-// ═══════════════════════════════════════════════════════════════════════════════
-// API
-// ═══════════════════════════════════════════════════════════════════════════════
-// Apps Script only supports CORS-safe GET requests from browsers.
-// All params go as URL query strings; arrays/objects are JSON-encoded.
-async function api(action, payload = {}) {
-  const url = new URL(BACKEND);
-  url.searchParams.set('action', action);
-  for (const [k, v] of Object.entries(payload)) {
-    url.searchParams.set(k, typeof v === 'object' ? JSON.stringify(v) : String(v));
-  }
-  let res, text;
-  try {
-    res  = await fetch(url.toString(), { redirect: 'follow' });
-    text = await res.text();
-  } catch (e) {
-    throw new Error('Network error — check your internet connection and that the Apps Script is deployed as "Anyone" access. (' + e.message + ')');
-  }
-  // Strip any leading BOM / whitespace that Apps Script sometimes adds
-  text = text.trim().replace(/^\uFEFF/, '');
-  let data;
-  try { data = JSON.parse(text); }
-  catch { throw new Error('Server returned non-JSON. Re-deploy the Apps Script as a new version and ensure "Execute as: Me, Who has access: Anyone".'); }
-  if (data.ok === false) throw new Error(data.error || 'Server error');
+// ── API ─────────────────────────────────────────────────────────────────────
+async function api(action,payload={}){
+  const url=new URL(BACKEND);url.searchParams.set('action',action);
+  for(const[k,v]of Object.entries(payload))url.searchParams.set(k,typeof v==='object'?JSON.stringify(v):String(v));
+  let res,text;
+  try{res=await fetch(url.toString(),{redirect:'follow'});text=await res.text();}
+  catch(e){throw new Error('Network error: '+e.message);}
+  text=text.trim().replace(/^\uFEFF/,'');
+  let data;try{data=JSON.parse(text);}catch{throw new Error('Server returned non-JSON.');}
+  if(data.ok===false)throw new Error(data.error||'Server error');
   return data;
 }
 
-// ═══════════════════════════════════════════════════════════════════════════════
-// UTILITIES
-// ═══════════════════════════════════════════════════════════════════════════════
-const $  = id => document.getElementById(id);
-const esc = s => String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-const norm = s => String(s??'').trim().toLowerCase();
-function fmtSize(b) {
-  if (!b) return '0 B';
-  const u=['B','KB','MB','GB','TB']; let i=0,n=b;
-  while(n>=1024&&i<u.length-1){n/=1024;i++;} return n.toFixed(i?1:0)+' '+u[i];
-}
-function fmtDate(ts) { return new Date(ts).toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'}); }
-function guessMime(name=''){
-  const e=name.split('.').pop().toLowerCase();
-  const img=['jpg','jpeg','png','gif','webp','avif','bmp','heic'];
-  const vid=['mp4','mov','webm','mkv','avi','m4v'];
-  const aud=['mp3','ogg','wav','flac','aac','m4a','opus'];
-  if(img.includes(e)) return 'image/'+e;
-  if(vid.includes(e)) return 'video/mp4';
-  if(aud.includes(e)) return 'audio/'+e;
-  return 'application/octet-stream';
-}
-function typeOf(f){ const m=f.mime||''; if(m.startsWith('image/')) return 'image'; if(m.startsWith('video/')) return 'video'; if(m.startsWith('audio/')) return 'audio'; return 'file'; }
-const typeIcon = { image:'🖼️', video:'🎬', audio:'🎵', file:'📄' };
+// ── Helpers ─────────────────────────────────────────────────────────────────
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const norm=s=>String(s??'').trim().toLowerCase();
+function fmtSize(b){if(!b)return'0 B';const u=['B','KB','MB','GB','TB'];let i=0,n=b;while(n>=1024&&i<u.length-1){n/=1024;i++;}return n.toFixed(i?1:0)+' '+u[i];}
+function fmtDate(ts){return new Date(ts).toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'});}
+function guessMime(n=''){const e=n.split('.').pop().toLowerCase();if(['jpg','jpeg','png','gif','webp','avif','bmp','heic'].includes(e))return'image/'+e;if(['mp4','mov','webm','mkv','avi','m4v'].includes(e))return'video/mp4';if(['mp3','ogg','wav','flac','aac','m4a','opus'].includes(e))return'audio/'+e;return'application/octet-stream';}
+function typeOf(f){const m=f.mime||'';if(m.startsWith('image/'))return'image';if(m.startsWith('video/'))return'video';if(m.startsWith('audio/'))return'audio';return'file';}
+const typeIcon={image:'🖼️',video:'🎬',audio:'🎵',file:'📄'};
+function setStatus(k,t,s=''){$('sdot').className='sdot '+k;$('statusText').textContent=t;$('statusSub').textContent=s;}
+function slotLabel(slot){return S.slotNames[slot]||`Slot ${slot}`;}
+function providerOf(slot){const a=S.encAccounts.find(x=>x.slot===slot);return a?PROVIDERS[a.provider]||PROVIDERS.mega:PROVIDERS.mega;}
+function providerIcon(slot){return providerOf(slot).icon;}
+function updateStoredToken(slot,tokens){S.oauthTokens[slot]={...S.oauthTokens[slot],...tokens};sessionStorage.setItem('vaultTokens',JSON.stringify(S.oauthTokens));const a=S.accounts.find(x=>x.slot===slot);if(a)Object.assign(a,tokens);}
 
-function setStatus(kind, text, sub=''){
-  $('sdot').className   = 'sdot '+kind;
-  $('statusText').textContent = text;
-  $('statusSub').textContent  = sub;
+// ── Auth ────────────────────────────────────────────────────────────────────
+let pendingEmail='',pendingSalt='';
+function showAuthStep(id){['authEmail','authRegister','authLogin'].forEach(x=>$(x).classList.toggle('hidden',x!==id));}
+
+async function stepEmail(){
+  const email=$('inEmail').value.trim().toLowerCase();$('authEmailErr').textContent='';
+  if(!email){$('authEmailErr').textContent='Enter your email.';return;}
+  $('btnEmailNext').textContent='Checking…';$('btnEmailNext').disabled=true;
+  try{const r=await api('checkEmail',{email});if(!r.allowed)throw new Error('Email not on access list.');pendingEmail=email;
+    if(r.registered){pendingSalt=r.salt;$('loginEmailShow').textContent=email;showAuthStep('authLogin');}
+    else{$('regEmailShow').textContent=email;showAuthStep('authRegister');}
+  }catch(e){$('authEmailErr').textContent=e.message;}
+  finally{$('btnEmailNext').textContent='Continue →';$('btnEmailNext').disabled=false;}
 }
 
-// ═══════════════════════════════════════════════════════════════════════════════
-// AUTH
-// ═══════════════════════════════════════════════════════════════════════════════
-let pendingEmail = '';
-let pendingSalt  = '';  // salt returned by checkEmail (if registered)
+async function doRegister(){
+  const pw1=$('inRegPw1').value,pw2=$('inRegPw2').value;$('authRegErr').textContent='';
+  if(pw1.length<8){$('authRegErr').textContent='At least 8 characters.';return;}
+  if(pw1!==pw2){$('authRegErr').textContent='Passwords do not match.';return;}
+  $('btnRegister').textContent='Creating…';$('btnRegister').disabled=true;
+  try{const salt=genSalt(),hash=await computeHash(pw1,salt);await api('register',{email:pendingEmail,passwordHash:hash,salt});await finishLogin(pendingEmail,pw1,salt,[]);}
+  catch(e){$('authRegErr').textContent=e.message;$('btnRegister').textContent='Create account';$('btnRegister').disabled=false;}
+}
 
-async function stepEmail() {
-  const email = $('inEmail').value.trim().toLowerCase();
-  $('authEmailErr').textContent = '';
-  if (!email) { $('authEmailErr').textContent = 'Enter your email.'; return; }
-  $('btnEmailNext').textContent = 'Checking…';
-  $('btnEmailNext').disabled = true;
-  try {
-    const res = await api('checkEmail', { email });
-    if (!res.allowed) throw new Error('This email is not on the access list.');
-    pendingEmail = email;
-    if (res.registered) {
-      pendingSalt = res.salt;
-      $('loginEmailShow').textContent = email;
-      show('authLogin');
-    } else {
-      $('regEmailShow').textContent = email;
-      show('authRegister');
+async function doLogin(){
+  const pw=$('inLoginPw').value;$('authLoginErr').textContent='';
+  if(!pw){$('authLoginErr').textContent='Enter your password.';return;}
+  $('btnLogin').textContent='Signing in…';$('btnLogin').disabled=true;
+  try{const hash=await computeHash(pw,pendingSalt);const r=await api('login',{email:pendingEmail,passwordHash:hash});await finishLogin(pendingEmail,pw,r.salt,r.accounts||[]);}
+  catch(e){$('authLoginErr').textContent=e.message;$('btnLogin').textContent='Sign in →';$('btnLogin').disabled=false;}
+}
+
+async function finishLogin(email,pw,salt,encAccounts){
+  S.email=email;S.passwordRaw=pw;S.salt=salt;
+  S.cryptoKey=await deriveKey(pw,salt);S.authHash=await computeHash(pw,salt);S.encAccounts=encAccounts;
+  S.accounts=[];
+  for(const a of encAccounts){
+    try{const creds=JSON.parse(await decryptStr(S.cryptoKey,a.encryptedCredentials,a.iv));S.accounts.push({slot:a.slot,provider:a.provider||'mega',identifier:a.identifier,...creds});}catch{}
+  }
+  // Restore oauth tokens from session
+  for(const a of S.accounts){const t=S.oauthTokens[a.slot];if(t)Object.assign(a,t);}
+  $('hdrEmail').textContent=email;$('screenAuth').classList.add('hidden');$('screenVault').classList.remove('hidden');
+  applyViewMode();
+  await handleOAuthCallback();
+  if(!S.accounts.length){setStatus('warn','No storage configured','Open ⚙ Settings to add accounts');$('loadingState').classList.remove('hidden');$('loadingMsg').textContent='No storage slots yet — open ⚙ Settings to add your first account.';buildSidebar();}
+  else await connectAndLoad();
+}
+
+function doSignOut(){
+  if(S.previewUrl){URL.revokeObjectURL(S.previewUrl);}
+  Object.assign(S,{email:null,passwordRaw:null,salt:null,cryptoKey:null,authHash:null,encAccounts:[],accounts:[],storages:[],allFiles:[],allFolders:[],currentSlot:'all',currentPath:null,query:'',selected:new Set(),preview:null,previewUrl:null,moveTarget:null,oauthTokens:{}});
+  sessionStorage.removeItem('vaultTokens');
+  $('screenVault').classList.add('hidden');$('screenAuth').classList.remove('hidden');showAuthStep('authEmail');
+  ['inEmail','inLoginPw','inRegPw1','inRegPw2'].forEach(id=>$(id).value='');
+}
+
+$('btnEmailNext').addEventListener('click',stepEmail);
+$('inEmail').addEventListener('keydown',e=>{if(e.key==='Enter')stepEmail();});
+$('inLoginPw').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+$('btnRegBack').addEventListener('click',()=>showAuthStep('authEmail'));
+$('btnLoginBack').addEventListener('click',()=>showAuthStep('authEmail'));
+$('btnRegister').addEventListener('click',doRegister);
+$('btnLogin').addEventListener('click',doLogin);
+$('btnSignOut').addEventListener('click',doSignOut);
+
+// ── MEGA ────────────────────────────────────────────────────────────────────
+async function connectMega(acc){
+  const storage=await new Storage({email:acc.megaEmail||acc.identifier,password:acc.megaPassword||acc.password,userAgent:'StorageVault/1.0'}).ready;
+  const files=[],folders=[];
+  function walk(node,slot,path){for(const c of(node.children||[])){if(c.directory){folders.push({id:c.nodeId||c.handle||`d${slot}${Math.random()}`,name:c.name,slot,path,megaNode:c});walk(c,slot,path?`${path}/${c.name}`:c.name);}else files.push({id:c.nodeId||c.handle||`${slot}${Math.random()}`,name:c.name||'unnamed',size:c.size||0,mime:c.mime||guessMime(c.name),slot,path,createdAt:c.timestamp?c.timestamp*1000:Date.now(),megaNode:c});}}
+  walk(storage.root,acc.slot,'');
+  return{slot:acc.slot,provider:'mega',identifier:acc.identifier,storage,
+    listFiles:async()=>({files,folders}),
+    uploadFile:async(parent,name,size,data)=>(await parent.upload({name,size},data).complete),
+    downloadFile:async(node)=>{const b=await node.downloadBuffer();return b instanceof Uint8Array?b:new Uint8Array(b);},
+    deleteFile:async(node)=>node.delete(true),
+    renameFile:async(node,name)=>node.rename(name),
+    mkdir:async(parent,name)=>parent.mkdir(name),
+    resolveNode:(parts)=>{let n=storage.root;for(const p of parts){const c=(n.children||[]).find(x=>x.directory&&x.name===p);if(!c)return null;n=c;}return n;},
+  };
+}
+
+// ── Dropbox ─────────────────────────────────────────────────────────────────
+async function connectDropbox(acc){
+  let{accessToken,refreshToken,expiresAt}=acc;
+  async function ensureToken(){if(Date.now()>expiresAt-60000){const r=await fetch('https://api.dropboxapi.com/oauth2/token',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({grant_type:'refresh_token',refresh_token:refreshToken,client_id:PROVIDERS.dropbox.clientId})});const d=await r.json();if(d.error)throw new Error('Dropbox refresh failed: '+d.error_description);accessToken=d.access_token;expiresAt=Date.now()+d.expires_in*1000;updateStoredToken(acc.slot,{accessToken,expiresAt});}return accessToken;}
+  async function dbx(ep,opts={}){const tok=await ensureToken();const r=await fetch('https://api.dropboxapi.com/2/'+ep,{...opts,headers:{Authorization:'Bearer '+tok,'Content-Type':'application/json',...(opts.headers||{})}});if(!r.ok)throw new Error('Dropbox: '+(await r.text()));return r.json();}
+  const files=[],folders=[];
+  async function walk(path){let res=await dbx('files/list_folder',{method:'POST',body:JSON.stringify({path:path||'',recursive:false})});
+    function proc(es,pp){for(const e of es){const p=pp?pp.replace(/^\/+/,''):'';if(e['.tag']==='folder')folders.push({id:e.id,name:e.name,slot:acc.slot,path:p,megaNode:e});else files.push({id:e.id,name:e.name,size:e.size||0,mime:guessMime(e.name),slot:acc.slot,path:p,createdAt:new Date(e.client_modified||e.server_modified).getTime(),megaNode:e});}}
+    proc(res.entries,path);while(res.has_more){res=await dbx('files/list_folder/continue',{method:'POST',body:JSON.stringify({cursor:res.cursor})});proc(res.entries,path);}
+    for(const f of folders.filter(x=>x.path===(path?path.replace(/^\/+/,''):'')))await walk('/'+f.name);
+  }
+  await walk('');
+  return{slot:acc.slot,provider:'dropbox',identifier:acc.identifier,
+    listFiles:async()=>({files,folders}),
+    uploadFile:async(parent,name,size,data)=>{const tok=await ensureToken();const path=(parent.path_display||'')+'/'+name;const r=await fetch('https://content.dropboxapi.com/2/files/upload',{method:'POST',headers:{Authorization:'Bearer '+tok,'Content-Type':'application/octet-stream','Dropbox-API-Arg':JSON.stringify({path,mode:'add',autorename:true})},body:data});return r.json();},
+    downloadFile:async(node)=>{const tok=await ensureToken();const r=await fetch('https://content.dropboxapi.com/2/files/download',{method:'POST',headers:{Authorization:'Bearer '+tok,'Dropbox-API-Arg':JSON.stringify({path:node.path_display||node.id})}});return new Uint8Array(await r.arrayBuffer());},
+    deleteFile:async(node)=>dbx('files/delete_v2',{method:'POST',body:JSON.stringify({path:node.path_display||node.id})}),
+    renameFile:async(node,name)=>dbx('files/move_v2',{method:'POST',body:JSON.stringify({from_path:node.path_display,to_path:(node.path_display||'').split('/').slice(0,-1).join('/')+'/'+name})}),
+    mkdir:async(parent,name)=>dbx('files/create_folder_v2',{method:'POST',body:JSON.stringify({path:(parent.path_display||'')+'/'+name})}),
+    resolveNode:(parts)=>({path_display:'/'+parts.join('/'),'.tag':'folder'}),
+  };
+}
+
+// ── Google Drive ─────────────────────────────────────────────────────────────
+async function connectGoogle(acc){
+  let{accessToken,refreshToken,expiresAt}=acc;
+  async function ensureToken(){if(Date.now()>expiresAt-60000){const r=await api('grefresh',{refreshToken});accessToken=r.accessToken;expiresAt=r.expiresAt;updateStoredToken(acc.slot,{accessToken,expiresAt});}return accessToken;}
+  async function gFetch(ep,opts={}){const tok=await ensureToken();const base='https://www.googleapis.com';const r=await fetch(base+ep,{...opts,headers:{Authorization:'Bearer '+tok,...(opts.headers||{})}});if(r.status===204)return{};if(!r.ok)throw new Error('Drive: '+(await r.text()));const ct=r.headers.get('content-type')||'';if(ct.includes('json'))return r.json();return r.arrayBuffer();}
+  const files=[],folders=[];
+  async function walk(fid,path){let pt='';do{const qs=new URLSearchParams({q:`'${fid}' in parents and trashed=false`,fields:'nextPageToken,files(id,name,mimeType,size,createdTime)',pageSize:'200',...(pt?{pageToken:pt}:{})});const r=await gFetch('/drive/v3/files?'+qs);for(const f of r.files||[]){if(f.mimeType==='application/vnd.google-apps.folder'){folders.push({id:f.id,name:f.name,slot:acc.slot,path,megaNode:f});await walk(f.id,path?`${path}/${f.name}`:f.name);}else files.push({id:f.id,name:f.name,size:parseInt(f.size)||0,mime:f.mimeType||guessMime(f.name),slot:acc.slot,path,createdAt:new Date(f.createdTime).getTime(),megaNode:f});}pt=r.nextPageToken||'';}while(pt);}
+  await walk('root','');
+  return{slot:acc.slot,provider:'gdrive',identifier:acc.identifier,
+    listFiles:async()=>({files,folders}),
+    uploadFile:async(parent,name,size,data)=>{const tok=await ensureToken();const meta=JSON.stringify({name,parents:[parent.id||'root']});const b='----VaultBound';const head=`--${b}\r\nContent-Type: application/json\r\n\r\n${meta}\r\n--${b}\r\nContent-Type: application/octet-stream\r\n\r\n`;const end=`\r\n--${b}--`;const he=new TextEncoder().encode(head),de=data,ee=new TextEncoder().encode(end);const combined=new Uint8Array(he.length+de.length+ee.length);combined.set(he,0);combined.set(de,he.length);combined.set(ee,he.length+de.length);const r=await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart',{method:'POST',headers:{Authorization:'Bearer '+tok,'Content-Type':`multipart/related; boundary=${b}`},body:combined});return r.json();},
+    downloadFile:async(node)=>{const buf=await gFetch(`/drive/v3/files/${node.id}?alt=media`);return new Uint8Array(buf);},
+    deleteFile:async(node)=>gFetch(`/drive/v3/files/${node.id}`,{method:'DELETE'}),
+    renameFile:async(node,name)=>{const tok=await ensureToken();const r=await fetch(`https://www.googleapis.com/drive/v3/files/${node.id}`,{method:'PATCH',headers:{Authorization:'Bearer '+tok,'Content-Type':'application/json'},body:JSON.stringify({name})});return r.json();},
+    mkdir:async(parent,name)=>{const tok=await ensureToken();const r=await fetch('https://www.googleapis.com/drive/v3/files',{method:'POST',headers:{Authorization:'Bearer '+tok,'Content-Type':'application/json'},body:JSON.stringify({name,mimeType:'application/vnd.google-apps.folder',parents:[parent.id||'root']})});return r.json();},
+    resolveNode:()=>({id:'root'}),
+  };
+}
+
+// ── OneDrive ─────────────────────────────────────────────────────────────────
+async function connectOneDrive(acc){
+  let{accessToken,refreshToken,expiresAt}=acc;
+  async function ensureToken(){if(Date.now()>expiresAt-60000){const r=await fetch(PROVIDERS.onedrive.oauthTokenUrl,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({grant_type:'refresh_token',refresh_token:refreshToken,client_id:PROVIDERS.onedrive.clientId,scope:PROVIDERS.onedrive.oauthScopes.join(' ')})});const d=await r.json();if(d.error)throw new Error('OD refresh: '+d.error_description);accessToken=d.access_token;if(d.refresh_token)refreshToken=d.refresh_token;expiresAt=Date.now()+d.expires_in*1000;updateStoredToken(acc.slot,{accessToken,refreshToken,expiresAt});}return accessToken;}
+  async function od(path,opts={}){const tok=await ensureToken();const url=path.startsWith('http')?path:'https://graph.microsoft.com/v1.0'+path;const r=await fetch(url,{...opts,headers:{Authorization:'Bearer '+tok,'Content-Type':'application/json',...(opts.headers||{})}});if(r.status===204)return{};if(!r.ok)throw new Error('OD: '+(await r.text()));const ct=r.headers.get('content-type')||'';if(ct.includes('json'))return r.json();return r.arrayBuffer();}
+  const files=[],folders=[];
+  async function walk(itemPath,path){let url=(itemPath==='root'?'/me/drive/root/children':`/me/drive/root:${itemPath}:/children`)+'?$select=id,name,file,folder,size,createdDateTime&$top=200';while(url){const r=await od(url);for(const f of r.value||[]){if(f.folder){folders.push({id:f.id,name:f.name,slot:acc.slot,path,megaNode:f});await walk((itemPath==='root'?'':itemPath)+'/'+f.name,path?`${path}/${f.name}`:f.name);}else files.push({id:f.id,name:f.name,size:f.size||0,mime:guessMime(f.name),slot:acc.slot,path,createdAt:new Date(f.createdDateTime).getTime(),megaNode:f});}url=r['@odata.nextLink']||'';}}
+  await walk('root','');
+  return{slot:acc.slot,provider:'onedrive',identifier:acc.identifier,
+    listFiles:async()=>({files,folders}),
+    uploadFile:async(parent,name,size,data)=>{const tok=await ensureToken();const pid=parent.id||'root';const r=await fetch(`https://graph.microsoft.com/v1.0/me/drive/items/${pid}:/${encodeURIComponent(name)}:/content`,{method:'PUT',headers:{Authorization:'Bearer '+tok,'Content-Type':'application/octet-stream'},body:data});return r.json();},
+    downloadFile:async(node)=>{const buf=await od(`/me/drive/items/${node.id}/content`);return new Uint8Array(buf);},
+    deleteFile:async(node)=>od(`/me/drive/items/${node.id}`,{method:'DELETE'}),
+    renameFile:async(node,name)=>od(`/me/drive/items/${node.id}`,{method:'PATCH',body:JSON.stringify({name})}),
+    mkdir:async(parent,name)=>od(`/me/drive/items/${parent.id||'root'}/children`,{method:'POST',body:JSON.stringify({name,folder:{},['@microsoft.graph.conflictBehavior']:'rename'})}),
+    resolveNode:()=>({id:'root'}),
+  };
+}
+
+// ── Connect all ──────────────────────────────────────────────────────────────
+// ── Box ──────────────────────────────────────────────────────────────────────
+async function connectBox(acc){
+  let{accessToken,refreshToken,expiresAt}=acc;
+  async function ensureToken(){
+    if(Date.now()>expiresAt-60000){
+      const r=await api('brefresh',{refreshToken});
+      accessToken=r.accessToken;
+      if(r.refreshToken) refreshToken=r.refreshToken;
+      expiresAt=r.expiresAt;
+      updateStoredToken(acc.slot,{accessToken,refreshToken,expiresAt});
     }
-  } catch(err) {
-    $('authEmailErr').textContent = err.message;
-  } finally {
-    $('btnEmailNext').textContent = 'Continue →';
-    $('btnEmailNext').disabled = false;
+    return accessToken;
   }
-}
-
-async function doRegister() {
-  const pw1 = $('inRegPw1').value;
-  const pw2 = $('inRegPw2').value;
-  $('authRegErr').textContent = '';
-  if (pw1.length < 8)   { $('authRegErr').textContent = 'Password must be at least 8 characters.'; return; }
-  if (pw1 !== pw2)      { $('authRegErr').textContent = 'Passwords do not match.'; return; }
-  $('btnRegister').textContent = 'Creating…';
-  $('btnRegister').disabled = true;
-  try {
-    const salt         = genSalt();
-    const passwordHash = await computeAuthHash(pw1, salt);
-    await api('register', { email: pendingEmail, passwordHash, salt });
-    // Auto-login after registration
-    await finishLogin(pendingEmail, pw1, salt, []);
-  } catch(err) {
-    $('authRegErr').textContent = err.message;
-    $('btnRegister').textContent = 'Create account';
-    $('btnRegister').disabled = false;
+  async function bFetch(ep,opts={}){
+    const tok=await ensureToken();
+    const url=ep.startsWith('http')?ep:'https://api.box.com/2.0'+ep;
+    const r=await fetch(url,{...opts,headers:{Authorization:'Bearer '+tok,'Content-Type':'application/json',...(opts.headers||{})}});
+    if(r.status===204||r.status===202)return{};
+    if(!r.ok)throw new Error('Box: '+(await r.text()));
+    const ct=r.headers.get('content-type')||'';
+    if(ct.includes('json'))return r.json();
+    return r.arrayBuffer();
   }
-}
-
-async function doLogin() {
-  const pw = $('inLoginPw').value;
-  $('authLoginErr').textContent = '';
-  if (!pw) { $('authLoginErr').textContent = 'Enter your password.'; return; }
-  $('btnLogin').textContent = 'Signing in…';
-  $('btnLogin').disabled = true;
-  try {
-    const authHash = await computeAuthHash(pw, pendingSalt);
-    const res      = await api('login', { email: pendingEmail, passwordHash: authHash });
-    await finishLogin(pendingEmail, pw, res.salt, res.accounts || []);
-  } catch(err) {
-    $('authLoginErr').textContent = err.message;
-    $('btnLogin').textContent = 'Sign in →';
-    $('btnLogin').disabled = false;
-  }
-}
-
-async function finishLogin(email, passwordRaw, salt, encAccounts) {
-  S.email       = email;
-  S.passwordRaw = passwordRaw;
-  S.salt        = salt;
-  S.cryptoKey   = await deriveKey(passwordRaw, salt);
-  S.authHash    = await computeAuthHash(passwordRaw, salt);
-  S.encAccounts = encAccounts;
-
-  // Decrypt MEGA passwords
-  S.accounts = [];
-  for (const a of encAccounts) {
-    try {
-      const megaPassword = await decryptStr(S.cryptoKey, a.encryptedPassword, a.iv);
-      S.accounts.push({ slot: a.slot, megaEmail: a.megaEmail, megaPassword });
-    } catch { /* skip bad entries */ }
-  }
-
-  $('hdrEmail').textContent = email;
-  $('screenAuth').classList.add('hidden');
-  $('screenVault').classList.remove('hidden');
-
-  if (!S.accounts.length) {
-    setStatus('warn', 'No storage configured', 'Open Settings to add your MEGA accounts');
-    $('loadingState').classList.remove('hidden');
-    $('loadingMsg').textContent = 'No storage slots yet. Open ⚙ Settings to add your MEGA accounts.';
-    buildSidebar();
-  } else {
-    await connectAndLoad();
-  }
-}
-
-function doSignOut() {
-  if (S.previewUrl) { URL.revokeObjectURL(S.previewUrl); S.previewUrl = null; }
-  Object.assign(S, {
-    email:null, passwordRaw:null, salt:null, cryptoKey:null, authHash:null,
-    encAccounts:[], accounts:[], storages:[], allFiles:[], currentSlot:'all',
-    query:'', selected:new Set(), preview:null, previewUrl:null, moveTarget:null,
-    slotNames: JSON.parse(localStorage.getItem('vaultSlotNames')||'{}')
-  });
-  $('screenVault').classList.add('hidden');
-  $('screenAuth').classList.remove('hidden');
-  show('authEmail');
-  $('inEmail').value=''; $('inLoginPw').value=''; $('inRegPw1').value=''; $('inRegPw2').value='';
-}
-
-// Auth screen navigation
-function show(stepId) {
-  ['authEmail','authRegister','authLogin'].forEach(id=>$( id).classList.toggle('hidden', id!==stepId));
-}
-$('btnEmailNext').addEventListener('click', stepEmail);
-$('inEmail').addEventListener('keydown', e=>{ if(e.key==='Enter') stepEmail(); });
-$('inLoginPw').addEventListener('keydown', e=>{ if(e.key==='Enter') doLogin(); });
-$('btnRegBack').addEventListener('click', ()=>show('authEmail'));
-$('btnLoginBack').addEventListener('click', ()=>show('authEmail'));
-$('btnRegister').addEventListener('click', doRegister);
-$('btnLogin').addEventListener('click', doLogin);
-$('btnSignOut').addEventListener('click', doSignOut);
-
-// ═══════════════════════════════════════════════════════════════════════════════
-// MEGA CONNECTION & FILE TREE
-// ═══════════════════════════════════════════════════════════════════════════════
-async function connectAndLoad() {
-  setStatus('warn','Connecting…','Logging into MEGA accounts');
-  $('loadingState').classList.remove('hidden');
-  $('emptyState').classList.add('hidden');
-  $('fileGrid').innerHTML = '';
-  S.storages = [];
-  S.allFiles = [];
-
-  const results = await Promise.allSettled(
-    S.accounts.map(async acc => {
-      const storage = await new Storage({
-        email:    acc.megaEmail,
-        password: acc.megaPassword,
-        userAgent:'StorageVault/1.0'
-      }).ready;
-      return { slot: acc.slot, storage, megaEmail: acc.megaEmail };
-    })
-  );
-
-  const failed = [];
-  for (const r of results) {
-    if (r.status==='fulfilled') S.storages.push(r.value);
-    else failed.push(r.reason?.message || String(r.reason));
-  }
-
-  if (!S.storages.length) {
-    setStatus('bad','No slots connected', failed.join(' | '));
-    $('loadingMsg').textContent = 'Failed to connect: '+(failed[0]||'Unknown error');
-    buildSidebar();
-    return;
-  }
-
-  setStatus('warn','Loading files…',`${S.storages.length} of ${S.accounts.length} slot(s) connected`);
-  for (const entry of S.storages) {
-    $('loadingMsg').textContent = `Scanning slot ${entry.slot}…`;
-    walkNode(entry.storage.root, entry.slot, '');
-  }
-
-  $('loadingState').classList.add('hidden');
-  buildSidebar();
-  buildUploadSlotDropdown();
-  applyFilter();
-
-  const warn = failed.length ? ` (${failed.length} slot(s) failed to connect)` : '';
-  setStatus(failed.length?'warn':'ok',
-    `${S.allFiles.length} files across ${S.storages.length} slot(s)`,
-    warn || `${S.accounts.length} storage slot(s) active`
-  );
-}
-
-function walkNode(node, slot, path) {
-  for (const child of (node.children||[])) {
-    if (child.directory) walkNode(child, slot, path ? `${path}/${child.name}` : child.name);
-    else {
-      const mime = child.mime || guessMime(child.name);
-      S.allFiles.push({
-        id:        child.nodeId || child.handle || `s${slot}-${Date.now()}-${Math.random()}`,
-        name:      child.name  || 'unnamed',
-        size:      child.size  || 0,
-        mime,
-        slot,
-        path,
-        createdAt: child.timestamp ? child.timestamp*1000 : Date.now(),
-        megaNode:  child
-      });
-    }
-  }
-}
-
-// ═══════════════════════════════════════════════════════════════════════════════
-// SIDEBAR & SLOT FILTERS
-// ═══════════════════════════════════════════════════════════════════════════════
-function slotLabel(slot) {
-  return S.slotNames[slot] || `Slot ${slot}`;
-}
-
-function buildSidebar() {
-  const counts = {};
-  for (const f of S.allFiles) counts[f.slot]=(counts[f.slot]||0)+1;
-  const failedSlots = S.accounts.filter(a => !S.storages.find(s=>s.slot===a.slot));
-
-  let html = `<div class="slot-btn-wrap">
-    <button class="slot-btn ${S.currentSlot==='all'?'active':''}" data-slot="all">
-      <span class="sname">All files</span>
-      <span class="slot-count">${S.allFiles.length}</span>
-    </button>
-  </div>`;
-  for (const entry of S.storages) {
-    html += `<div class="slot-btn-wrap" id="slotwrap-${entry.slot}">
-      <button class="slot-btn ${S.currentSlot==entry.slot?'active':''}" data-slot="${entry.slot}">
-        <span class="sname">${esc(slotLabel(entry.slot))}</span>
-        <span class="slot-count">${counts[entry.slot]||0}</span>
-      </button>
-      <button class="slot-rename-btn" data-renslot="${entry.slot}" title="Rename slot">✏</button>
-    </div>`;
-  }
-  for (const a of failedSlots) {
-    html += `<div class="slot-btn-wrap">
-      <button class="slot-btn err" data-slot="${a.slot}" title="Connection failed">
-        <span class="sname">${esc(slotLabel(a.slot))} ⚠</span>
-        <span class="slot-count">—</span>
-      </button>
-    </div>`;
-  }
-  $('slotList').innerHTML = html;
-
-  $('slotList').querySelectorAll('.slot-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      S.currentSlot = btn.dataset.slot;
-      buildSidebar();
-      applyFilter();
-    });
-  });
-
-  $('slotList').querySelectorAll('[data-renslot]').forEach(btn => {
-    btn.addEventListener('click', e => {
-      e.stopPropagation();
-      startSlotRename(Number(btn.dataset.renslot));
-    });
-  });
-}
-
-function buildUploadSlotDropdown() {
-  $('uploadSlot').innerHTML = S.storages
-    .map(s=>`<option value="${s.slot}">${esc(slotLabel(s.slot))} — ${s.megaEmail.split('@')[0]}…</option>`)
-    .join('');
-}
-
-// ═══════════════════════════════════════════════════════════════════════════════
-// FILE GRID
-// ═══════════════════════════════════════════════════════════════════════════════
-function applyFilter() {
-  S.query = norm($('searchInput').value);
-  let files = S.allFiles;
-  if (S.currentSlot !== 'all') files = files.filter(f => f.slot == S.currentSlot);
-  if (S.query) files = files.filter(f => norm(f.name).includes(S.query));
-  renderGrid(files);
-}
-
-function renderGrid(files) {
-  $('fileCount').textContent = files.length ? `${files.length} file${files.length!==1?'s':''}` : '';
-
-  if (!files.length) {
-    $('fileGrid').innerHTML = '';
-    $('emptyState').classList.remove('hidden');
-    if (!S.storages.length && S.accounts.length) {
-      $('emptyMsg').innerHTML = 'No slots connected. Check ⚙ Settings for credentials.';
-    } else if (!S.accounts.length) {
-      $('emptyMsg').innerHTML = 'No storage configured. <button class="inline-link" id="emptyOpenSettings">Open Settings</button> to add your MEGA accounts.';
-      setTimeout(()=>{
-        document.getElementById('emptyOpenSettings')?.addEventListener('click', openSettings);
-      }, 0);
-    } else {
-      $('emptyMsg').innerHTML = S.query ? `No files matching "${esc(S.query)}"` : 'No files in this slot yet. Upload something!';
-    }
-    updateSelUI();
-    return;
-  }
-  $('emptyState').classList.add('hidden');
-
-  $('fileGrid').innerHTML = files.map(f => {
-    const type = typeOf(f);
-    const sel  = S.selected.has(f.id);
-    return `<div class="fcard${sel?' selected':''}" data-id="${esc(f.id)}">
-      <div class="fthumb t-${type}">
-        <span style="position:relative;z-index:1">${typeIcon[type]}</span>
-        <span class="fslot">S${f.slot}</span>
-      </div>
-      <div class="fchk">${sel?'✓':''}</div>
-      <div class="finfo">
-        <div class="fname" title="${esc(f.name)}">${esc(f.name)}</div>
-        <div class="fmeta">
-          <span>${fmtSize(f.size)}</span>
-          <span style="color:var(--dim)">${fmtDate(f.createdAt)}</span>
-        </div>
-      </div>
-    </div>`;
-  }).join('');
-
-  $('fileGrid').querySelectorAll('.fcard').forEach(card => {
-    card.addEventListener('click', e => {
-      if (e.target.closest('.fchk')) {
-        toggleSelect(card.dataset.id);
-      } else {
-        const f = S.allFiles.find(x=>x.id===card.dataset.id);
-        if (f) openPreview(f);
+  const files=[],folders=[];
+  async function walk(folderId,path){
+    let offset=0,total=Infinity;
+    while(offset<total){
+      const r=await bFetch(`/folders/${folderId}/items?fields=id,name,type,size,created_at&limit=200&offset=${offset}`);
+      total=r.total_count||0;
+      for(const e of r.entries||[]){
+        if(e.type==='folder'){folders.push({id:e.id,name:e.name,slot:acc.slot,path,megaNode:e});await walk(e.id,path?`${path}/${e.name}`:e.name);}
+        else files.push({id:e.id,name:e.name,size:e.size||0,mime:guessMime(e.name),slot:acc.slot,path,createdAt:new Date(e.created_at).getTime(),megaNode:e});
       }
-    });
-  });
-
-  updateSelUI();
-}
-
-function toggleSelect(id) {
-  S.selected.has(id) ? S.selected.delete(id) : S.selected.add(id);
-  const card = $('fileGrid').querySelector(`[data-id="${CSS.escape(id)}"]`);
-  if (card) {
-    card.classList.toggle('selected', S.selected.has(id));
-    card.querySelector('.fchk').textContent = S.selected.has(id)?'✓':'';
+      offset+=r.entries?.length||200;
+      if(!r.next_marker&&offset>=total)break;
+    }
   }
-  updateSelUI();
+  await walk('0','');
+  return{slot:acc.slot,provider:'box',identifier:acc.identifier,
+    listFiles:async()=>({files,folders}),
+    uploadFile:async(parent,name,size,data)=>{
+      const tok=await ensureToken();
+      const folderId=parent.id||'0';
+      const formData=new FormData();
+      formData.append('attributes',JSON.stringify({name,parent:{id:folderId}}));
+      formData.append('file',new Blob([data]),name);
+      const r=await fetch('https://upload.box.com/api/2.0/files/content',{method:'POST',headers:{Authorization:'Bearer '+tok},body:formData});
+      const d=await r.json();
+      return d.entries?.[0]||d;
+    },
+    downloadFile:async(node)=>{
+      const tok=await ensureToken();
+      // Get download URL first
+      const r=await fetch(`https://api.box.com/2.0/files/${node.id}/content`,{headers:{Authorization:'Bearer '+tok}});
+      return new Uint8Array(await r.arrayBuffer());
+    },
+    deleteFile:async(node)=>bFetch(`/files/${node.id}`,{method:'DELETE'}),
+    renameFile:async(node,name)=>bFetch(`/files/${node.id}`,{method:'PUT',body:JSON.stringify({name})}),
+    mkdir:async(parent,name)=>bFetch('/folders',{method:'POST',body:JSON.stringify({name,parent:{id:parent.id||'0'}})}),
+    resolveNode:(parts)=>({id:'0',name:'root',type:'folder'}),
+  };
 }
 
-function updateSelUI() {
-  const n = S.selected.size;
-  $('btnDeleteSelected').classList.toggle('hidden', !n);
-  $('btnMoveSelected').classList.toggle('hidden', !n || S.storages.length < 2);
-  $('selDivider').style.display = n ? '' : 'none';
+async function connectAccount(acc){switch(acc.provider){case'dropbox':return connectDropbox(acc);case'gdrive':return connectGoogle(acc);case'onedrive':return connectOneDrive(acc);case'box':return connectBox(acc);default:return connectMega(acc);}}
+
+async function connectAndLoad(){
+  setStatus('warn','Connecting…','Logging into storage accounts');
+  $('loadingState').classList.remove('hidden');$('emptyState').classList.add('hidden');$('fileGrid').innerHTML='';
+  S.storages=[];S.allFiles=[];S.allFolders=[];S.currentPath=null;
+  const results=await Promise.allSettled(S.accounts.map(connectAccount));
+  const failed=[];
+  for(const r of results){if(r.status==='fulfilled'&&r.value)S.storages.push(r.value);else if(r.status==='rejected')failed.push(r.reason?.message||String(r.reason));}
+  if(!S.storages.length){setStatus('bad','No slots connected',failed.join(' | '));$('loadingMsg').textContent='Failed to connect: '+(failed[0]||'Unknown error');buildSidebar();return;}
+  setStatus('warn','Loading files…',`${S.storages.length} of ${S.accounts.length} connected`);
+  for(const st of S.storages){$('loadingMsg').textContent=`Scanning ${providerIcon(st.slot)} ${slotLabel(st.slot)}…`;try{const{files,folders}=await st.listFiles();S.allFiles.push(...files);S.allFolders.push(...folders);}catch(e){console.error('Scan failed slot',st.slot,e);}}
+  $('loadingState').classList.add('hidden');buildSidebar();buildUploadSlotDropdown();applyFilter();
+  setStatus(failed.length?'warn':'ok',`${S.allFiles.length} files across ${S.storages.length} slot(s)`,failed.length?`${failed.length} slot(s) failed`:`${S.accounts.length} slot(s) active`);
 }
 
-$('btnSelectAll').addEventListener('click', () => {
-  let files = S.allFiles;
-  if (S.currentSlot!=='all') files=files.filter(f=>f.slot==S.currentSlot);
-  if (S.query) files=files.filter(f=>norm(f.name).includes(S.query));
-  files.forEach(f=>S.selected.add(f.id));
-  applyFilter();
+// ── OAuth ────────────────────────────────────────────────────────────────────
+async function startOAuth(provider,slot){
+  const prov=PROVIDERS[provider];const cv=genCV();const cc=await genCC(cv);
+  const redirectUri=window.location.href.split('?')[0].split('#')[0];
+  const state=btoa(JSON.stringify({slot,provider,ts:Date.now()}));
+  sessionStorage.setItem('oauthPending',JSON.stringify({cv,slot,provider,redirectUri}));
+  const params=new URLSearchParams({client_id:prov.clientId,response_type:'code',redirect_uri:redirectUri,scope:prov.oauthScopes.join(' '),state,code_challenge:cc,code_challenge_method:'S256',token_access_type:'offline'});
+  window.location.href=prov.oauthAuthUrl+'?'+params;
+}
+
+async function startGoogleOAuth(slot){
+  const cfg=await api('getConfig',{}).catch(()=>({}));
+  if(!cfg.clientId){alert('Set GOOGLE_CLIENT_ID in Apps Script Script Properties. Also ensure the getConfig case is in your Code.gs switch statement.');return;}
+  const cv=genCV();const cc=await genCC(cv);
+  const redirectUri=window.location.href.split('?')[0].split('#')[0];
+  const state=btoa(JSON.stringify({slot,provider:'gdrive',ts:Date.now()}));
+  sessionStorage.setItem('oauthPending',JSON.stringify({cv,slot,provider:'gdrive',redirectUri}));
+  const params=new URLSearchParams({client_id:cfg.clientId,response_type:'code',redirect_uri:redirectUri,scope:'https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/userinfo.email',state,code_challenge:cc,code_challenge_method:'S256',access_type:'offline',prompt:'consent'});
+  window.location.href='https://accounts.google.com/o/oauth2/v2/auth?'+params;
+}
+
+async function startBoxOAuth(slot){
+  const cfg=await api('getConfig',{}).catch(()=>({}));
+  if(!cfg.boxClientId){alert('Set BOX_CLIENT_ID in Apps Script Script Properties.');return;}
+  const cv=genCV();const cc=await genCC(cv);
+  const redirectUri=window.location.href.split('?')[0].split('#')[0];
+  sessionStorage.setItem('oauthPending',JSON.stringify({cv,slot,provider:'box',redirectUri}));
+  const params=new URLSearchParams({client_id:cfg.boxClientId,response_type:'code',redirect_uri:redirectUri,state:btoa(JSON.stringify({slot,provider:'box',ts:Date.now()})),code_challenge:cc,code_challenge_method:'S256'});
+  window.location.href='https://account.box.com/api/oauth2/authorize?'+params;
+}
+
+async function handleOAuthCallback(){
+  const params=new URLSearchParams(window.location.search);const code=params.get('code');
+  if(!code)return;
+  window.history.replaceState({},'',window.location.pathname);
+  const pending=JSON.parse(sessionStorage.getItem('oauthPending')||'null');
+  if(!pending){setStatus('warn','OAuth callback received but no pending state','');return;}
+  sessionStorage.removeItem('oauthPending');
+  const{cv,slot,provider,redirectUri}=pending;
+  setStatus('warn',`Completing ${PROVIDERS[provider]?.name||provider} connection…`,'');
+  try{
+    let tokens;
+    if(provider==='gdrive'){const r=await api('gexchange',{code,codeVerifier:cv,redirectUri});tokens={accessToken:r.accessToken,refreshToken:r.refreshToken,expiresAt:r.expiresAt,identifier:r.email};}
+    else if(provider==='box'){const r=await api('bexchange',{code,codeVerifier:cv,redirectUri});tokens={accessToken:r.accessToken,refreshToken:r.refreshToken,expiresAt:r.expiresAt,identifier:r.identifier};}
+    else{const prov=PROVIDERS[provider];const r=await fetch(prov.oauthTokenUrl,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({code,grant_type:'authorization_code',client_id:prov.clientId,redirect_uri:redirectUri,code_verifier:cv})});const d=await r.json();if(d.error)throw new Error(d.error_description||d.error);let identifier=provider;if(provider==='dropbox'){const u=await(await fetch('https://api.dropboxapi.com/2/users/get_current_account',{method:'POST',headers:{Authorization:'Bearer '+d.access_token,'Content-Type':'application/json'}})).json();identifier=u.email||'dropbox';}else if(provider==='onedrive'){const u=await(await fetch('https://graph.microsoft.com/v1.0/me',{headers:{Authorization:'Bearer '+d.access_token}})).json();identifier=u.mail||u.userPrincipalName||'onedrive';}tokens={accessToken:d.access_token,refreshToken:d.refresh_token||'',expiresAt:Date.now()+(d.expires_in||3600)*1000,identifier};}
+    const{ciphertext,iv}=await encryptStr(S.cryptoKey,JSON.stringify(tokens));
+    await api('addStorage',{email:S.email,passwordHash:S.authHash,slot,provider,identifier:tokens.identifier,encryptedCredentials:ciphertext,iv});
+    S.encAccounts.push({slot,provider,identifier:tokens.identifier,encryptedCredentials:ciphertext,iv});
+    S.accounts.push({slot,provider,identifier:tokens.identifier,...tokens});
+    updateStoredToken(slot,tokens);
+    const storage=await connectAccount(S.accounts.find(a=>a.slot===slot));
+    if(storage){S.storages.push(storage);const{files,folders}=await storage.listFiles();S.allFiles.push(...files);S.allFolders.push(...folders);}
+    buildSidebar();buildUploadSlotDropdown();applyFilter();setStatus('ok',`${PROVIDERS[provider]?.name} Slot ${slot} connected`,'');
+    openSettings();
+  }catch(e){setStatus('bad','OAuth failed',e.message);}
+}
+
+// ── Sidebar ──────────────────────────────────────────────────────────────────
+function buildSidebar(){
+  const counts={};for(const f of S.allFiles)counts[f.slot]=(counts[f.slot]||0)+1;
+  const failed=S.accounts.filter(a=>!S.storages.find(s=>s.slot===a.slot));
+  let html=`<div class="slot-btn-wrap"><button class="slot-btn ${S.currentSlot==='all'?'active':''}" data-slot="all"><span class="sname">All files</span><span class="slot-count">${S.allFiles.length}</span></button></div>`;
+  for(const st of S.storages)html+=`<div class="slot-btn-wrap" id="slotwrap-${st.slot}"><button class="slot-btn ${S.currentSlot==st.slot?'active':''}" data-slot="${st.slot}"><span class="sname"><span class="provider-badge">${providerIcon(st.slot)}</span>${esc(slotLabel(st.slot))}</span><span class="slot-count">${counts[st.slot]||0}</span></button><button class="slot-rename-btn" data-renslot="${st.slot}" title="Rename">✏</button></div>`;
+  for(const a of failed)html+=`<div class="slot-btn-wrap"><button class="slot-btn err" data-slot="${a.slot}"><span class="sname"><span class="provider-badge">${PROVIDERS[a.provider]?.icon||'❓'}</span>${esc(slotLabel(a.slot))} ⚠</span><span class="slot-count">—</span></button></div>`;
+  $('slotList').innerHTML=html;
+  $('slotList').querySelectorAll('.slot-btn').forEach(btn=>btn.addEventListener('click',()=>{S.currentSlot=btn.dataset.slot;S.currentPath=null;buildSidebar();applyFilter();}));
+  $('slotList').querySelectorAll('[data-renslot]').forEach(btn=>btn.addEventListener('click',e=>{e.stopPropagation();startSlotRename(Number(btn.dataset.renslot));}));
+}
+function buildUploadSlotDropdown(){$('uploadSlot').innerHTML=S.storages.map(s=>`<option value="${s.slot}">${providerIcon(s.slot)} ${esc(slotLabel(s.slot))} — ${esc(s.identifier||'')}</option>`).join('');}
+
+// ── Breadcrumb ────────────────────────────────────────────────────────────────
+function buildBreadcrumb(){
+  const bc=$('breadcrumb');if(S.currentSlot==='all'||S.currentPath===null){bc.classList.add('hidden');return;}bc.classList.remove('hidden');
+  const segs=S.currentPath===''?[]:S.currentPath.split('/');
+  let html=`<button class="bc-seg" data-bcpath="">${providerIcon(Number(S.currentSlot))} ${esc(slotLabel(Number(S.currentSlot)))}</button>`;
+  let built='';for(let i=0;i<segs.length;i++){built=built?`${built}/${segs[i]}`:segs[i];const last=i===segs.length-1;html+=`<span class="bc-sep">›</span><button class="bc-seg${last?' active':''}" data-bcpath="${esc(built)}">${esc(segs[i])}</button>`;}
+  bc.innerHTML=html;bc.querySelectorAll('.bc-seg').forEach(btn=>btn.addEventListener('click',()=>{S.currentPath=btn.dataset.bcpath;buildBreadcrumb();applyFilter();}));
+}
+
+// ── Filter & Render ───────────────────────────────────────────────────────────
+function applyFilter(){
+  S.query=norm($('searchInput').value);let files=S.allFiles,folders=S.allFolders;
+  if(S.currentSlot!=='all'){const n=Number(S.currentSlot);files=files.filter(f=>f.slot===n);folders=folders.filter(f=>f.slot===n);}
+  if(S.currentSlot!=='all'&&S.currentPath!==null&&!S.query){files=files.filter(f=>f.path===S.currentPath);folders=folders.filter(f=>f.path===S.currentPath);}
+  else folders=[];
+  if(S.query){files=files.filter(f=>norm(f.name).includes(S.query));folders=[];}
+  buildBreadcrumb();renderGrid(folders,files);
+}
+function renderGrid(folders,files){
+  const total=folders.length+files.length;$('fileCount').textContent=total?`${total} item${total!==1?'s':''}` :'';
+  if(!total){$('fileGrid').innerHTML='';$('emptyState').classList.remove('hidden');
+    if(!S.storages.length&&S.accounts.length)$('emptyMsg').innerHTML='No slots connected. Check ⚙ Settings.';
+    else if(!S.accounts.length){$('emptyMsg').innerHTML='No storage configured. <button class="inline-link" id="emptyOpenSettings">Open Settings</button> to add your first account.';setTimeout(()=>document.getElementById('emptyOpenSettings')?.addEventListener('click',openSettings),0);}
+    else $('emptyMsg').innerHTML=S.query?`No files matching "${esc(S.query)}"`:S.currentPath!==null?'This folder is empty.':'No files yet.';
+    updateSelUI();return;
+  }
+  $('emptyState').classList.add('hidden');
+  S.viewMode==='list'?renderListView(folders,files):renderGridView(folders,files,S.viewMode);updateSelUI();
+}
+function renderGridView(folders,files,vm){
+  const g=$('fileGrid');g.className=`file-grid sz-${vm}`;
+  const fH=folders.map(f=>`<div class="fcard is-folder" data-folderid="${esc(f.id)}"><div class="fthumb t-folder"><span style="position:relative;z-index:1">📁</span></div><div class="finfo"><div class="fname">${esc(f.name)}</div><div class="fmeta"><span>Folder</span><span style="color:var(--dim)">${providerIcon(f.slot)} ${esc(slotLabel(f.slot))}</span></div></div></div>`).join('');
+  const fF=files.map(f=>{const t=typeOf(f),s=S.selected.has(f.id);return`<div class="fcard${s?' selected':''}" data-id="${esc(f.id)}"><div class="fthumb t-${t}"><span style="position:relative;z-index:1">${typeIcon[t]}</span><span class="fslot">${providerIcon(f.slot)}</span></div><div class="fchk">${s?'✓':''}</div><div class="finfo"><div class="fname" title="${esc(f.name)}">${esc(f.name)}</div><div class="fmeta"><span>${fmtSize(f.size)}</span><span>${fmtDate(f.createdAt)}</span></div></div></div>`;}).join('');
+  g.innerHTML=fH+fF;wireGridEvents(g);
+}
+function renderListView(folders,files){
+  const g=$('fileGrid');g.className='file-grid view-list';
+  const hdr='<div class="list-header"><span></span><span></span><span>Name</span><span>Size</span><span>Date</span><span>Slot</span></div>';
+  const fH=folders.map(f=>`<div class="list-row is-folder" data-folderid="${esc(f.id)}"><div class="lr-chk"></div><div class="lr-icon">📁</div><div class="lr-name">${esc(f.name)}</div><div class="lr-size">—</div><div class="lr-date">—</div><div class="lr-slot">${providerIcon(f.slot)} ${esc(slotLabel(f.slot))}</div></div>`).join('');
+  const fF=files.map(f=>{const s=S.selected.has(f.id);return`<div class="list-row${s?' selected':''}" data-id="${esc(f.id)}"><div class="lr-chk">${s?'✓':''}</div><div class="lr-icon">${typeIcon[typeOf(f)]}</div><div class="lr-name">${esc(f.name)}</div><div class="lr-size">${fmtSize(f.size)}</div><div class="lr-date">${fmtDate(f.createdAt)}</div><div class="lr-slot">${providerIcon(f.slot)} ${esc(slotLabel(f.slot))}</div></div>`;}).join('');
+  g.innerHTML=hdr+fH+fF;wireGridEvents(g);
+}
+function wireGridEvents(g){
+  g.querySelectorAll('[data-id]').forEach(el=>el.addEventListener('click',e=>{if(e.target.closest('.fchk,.lr-chk'))toggleSelect(el.dataset.id);else{const f=S.allFiles.find(x=>x.id===el.dataset.id);if(f)openPreview(f);}}));
+  g.querySelectorAll('[data-folderid]').forEach(el=>el.addEventListener('click',()=>{const folder=S.allFolders.find(x=>x.id===el.dataset.folderid);if(!folder)return;S.currentPath=folder.path?`${folder.path}/${folder.name}`:folder.name;if(S.currentSlot==='all')S.currentSlot=String(folder.slot);buildSidebar();buildBreadcrumb();applyFilter();}));
+}
+function toggleSelect(id){S.selected.has(id)?S.selected.delete(id):S.selected.add(id);const el=$('fileGrid').querySelector(`[data-id="${CSS.escape(id)}"]`);if(el){el.classList.toggle('selected',S.selected.has(id));const c=el.querySelector('.fchk,.lr-chk');if(c)c.textContent=S.selected.has(id)?'✓':'';}updateSelUI();}
+function updateSelUI(){const n=S.selected.size;$('btnDeleteSelected').classList.toggle('hidden',!n);$('btnMoveSelected').classList.toggle('hidden',!n||S.storages.length<2);$('selDivider').style.display=n?'':'none';}
+function applyViewMode(){const m={sm:'vbSm',md:'vbMd',lg:'vbLg',list:'vbList'};document.querySelectorAll('.vbtn').forEach(b=>b.classList.remove('active'));$(m[S.viewMode])?.classList.add('active');}
+['Sm','Md','Lg','List'].forEach(k=>$('vb'+k).addEventListener('click',()=>{S.viewMode=k.toLowerCase();localStorage.setItem('vaultView',S.viewMode);applyViewMode();applyFilter();}));
+$('btnSelectAll').addEventListener('click',()=>{let f=S.allFiles;if(S.currentSlot!=='all')f=f.filter(x=>x.slot==S.currentSlot);if(S.currentPath!==null&&!S.query)f=f.filter(x=>x.path===S.currentPath);if(S.query)f=f.filter(x=>norm(x.name).includes(S.query));f.forEach(x=>S.selected.add(x.id));applyFilter();});
+$('searchInput').addEventListener('input',()=>{S.currentPath=null;applyFilter();});
+$('btnRefresh').addEventListener('click',async()=>{S.allFiles=[];S.allFolders=[];S.selected.clear();S.currentSlot='all';S.currentPath=null;await connectAndLoad();});
+
+// ── New folder ────────────────────────────────────────────────────────────────
+$('btnNewFolder').addEventListener('click',async()=>{
+  if(S.currentSlot==='all'){alert('Select a slot first.');return;}
+  const storage=S.storages.find(s=>s.slot==S.currentSlot);if(!storage){alert('Slot not connected.');return;}
+  const name=prompt('Folder name:');if(!name?.trim())return;
+  try{
+    const parts=S.currentPath?S.currentPath.split('/').filter(Boolean):[];const parent=storage.resolveNode(parts)||storage.storage?.root||{id:'root'};
+    const node=await storage.mkdir(parent,name.trim());
+    S.allFolders.push({id:node.id||node.nodeId||`d${Date.now()}`,name:name.trim(),slot:Number(S.currentSlot),path:S.currentPath||'',megaNode:node});
+    buildSidebar();applyFilter();setStatus('ok',`Folder "${name.trim()}" created`,'');
+  }catch(e){alert('Failed: '+e.message);}
 });
 
-$('searchInput').addEventListener('input', applyFilter);
-$('btnRefresh').addEventListener('click', async()=>{ S.allFiles=[]; S.selected.clear(); S.currentSlot='all'; await connectAndLoad(); });
-
-// ═══════════════════════════════════════════════════════════════════════════════
-// PREVIEW MODAL
-// ═══════════════════════════════════════════════════════════════════════════════
-async function openPreview(file) {
-  S.preview = file;
-  $('pName').textContent = file.name;
-  $('pMeta').textContent = `${fmtSize(file.size)}  ·  ${fmtDate(file.createdAt)}`;
-  $('pSlot').textContent = `${slotLabel(file.slot)}${file.path?' › '+file.path:''}`;
-  $('previewMedia').innerHTML = '<span style="color:rgba(255,255,255,.3);font-size:14px">⏳ Loading…</span>';
+// ── Preview ───────────────────────────────────────────────────────────────────
+async function openPreview(file){
+  S.preview=file;$('pName').textContent=file.name;$('pMeta').textContent=`${fmtSize(file.size)} · ${fmtDate(file.createdAt)}`;
+  $('pSlot').textContent=`${providerIcon(file.slot)} ${slotLabel(file.slot)}${file.path?' › '+file.path:''}`;
+  $('previewMedia').innerHTML='<span style="color:rgba(255,255,255,.3)">⏳ Loading…</span>';
   $('previewModal').classList.remove('hidden');
-  try {
-    const buffer = await file.megaNode.downloadBuffer();
-    const mime   = file.mime || guessMime(file.name);
-    if (S.previewUrl) URL.revokeObjectURL(S.previewUrl);
-    S.previewUrl = URL.createObjectURL(new Blob([buffer],{type:mime}));
-    const type   = typeOf(file);
-    if (type==='image') $('previewMedia').innerHTML=`<img src="${S.previewUrl}" alt="${esc(file.name)}"/>`;
-    else if (type==='video') $('previewMedia').innerHTML=`<video src="${S.previewUrl}" controls autoplay playsinline></video>`;
-    else if (type==='audio') $('previewMedia').innerHTML=`<audio src="${S.previewUrl}" controls autoplay></audio>`;
-    else $('previewMedia').innerHTML=`<div style="padding:40px;text-align:center;color:rgba(255,255,255,.5)">
-      <div style="font-size:56px">📄</div>
-      <div style="margin-top:12px">${esc(file.name)}</div>
-      <div style="margin-top:6px;font-size:12px;opacity:.5">${fmtSize(file.size)}</div>
-    </div>`;
-  } catch(err) {
-    $('previewMedia').innerHTML=`<div style="padding:30px;color:var(--bad);text-align:center">${esc(err.message)}</div>`;
-  }
+  const storage=S.storages.find(s=>s.slot===file.slot);if(!storage){$('previewMedia').innerHTML='<div style="color:var(--bad);padding:30px">Slot not connected.</div>';return;}
+  try{
+    const buf=await storage.downloadFile(file.megaNode);const mime=file.mime||guessMime(file.name);
+    if(S.previewUrl)URL.revokeObjectURL(S.previewUrl);S.previewUrl=URL.createObjectURL(new Blob([buf],{type:mime}));
+    const t=typeOf(file);
+    if(t==='image')$('previewMedia').innerHTML=`<img src="${S.previewUrl}" alt="${esc(file.name)}"/>`;
+    else if(t==='video')$('previewMedia').innerHTML=`<video src="${S.previewUrl}" controls autoplay playsinline></video>`;
+    else if(t==='audio')$('previewMedia').innerHTML=`<audio src="${S.previewUrl}" controls autoplay></audio>`;
+    else $('previewMedia').innerHTML=`<div style="padding:40px;text-align:center;color:rgba(255,255,255,.5)"><div style="font-size:56px">📄</div><div style="margin-top:12px">${esc(file.name)}</div></div>`;
+  }catch(e){$('previewMedia').innerHTML=`<div style="padding:30px;color:var(--bad);text-align:center">${esc(e.message)}</div>`;}
 }
+function closePreview(){$('previewModal').classList.add('hidden');if(S.previewUrl){URL.revokeObjectURL(S.previewUrl);S.previewUrl=null;}$('previewMedia').innerHTML='';$('renameWrap').classList.add('hidden');$('btnPreviewRename').classList.remove('hidden');S.preview=null;destroyHoverPop();}
+$('btnClosePreview').addEventListener('click',closePreview);
+$('previewModal').addEventListener('click',e=>{if(e.target===$('previewModal'))closePreview();});
+$('btnPreviewDl').addEventListener('click',async()=>{if(!S.preview)return;let url=S.previewUrl;if(!url){const st=S.storages.find(s=>s.slot===S.preview.slot);if(!st)return;const buf=await st.downloadFile(S.preview.megaNode);url=URL.createObjectURL(new Blob([buf],{type:S.preview.mime||guessMime(S.preview.name)}));}const a=Object.assign(document.createElement('a'),{href:url,download:S.preview.name||'download'});document.body.appendChild(a);a.click();a.remove();});
+$('btnPreviewDelete').addEventListener('click',async()=>{if(!S.preview)return;if(!confirm(`Delete "${S.preview.name}"?`))return;try{const st=S.storages.find(s=>s.slot===S.preview.slot);if(st)await st.deleteFile(S.preview.megaNode);const id=S.preview.id;S.allFiles=S.allFiles.filter(f=>f.id!==id);S.selected.delete(id);closePreview();buildSidebar();applyFilter();setStatus('ok','File deleted','');}catch(e){alert('Delete failed: '+e.message);}});
+$('btnPreviewMove').addEventListener('click',()=>{if(S.preview)openMoveModal([S.preview.id]);});
 
-function closePreview() {
-  $('previewModal').classList.add('hidden');
-  if (S.previewUrl) { URL.revokeObjectURL(S.previewUrl); S.previewUrl=null; }
-  $('previewMedia').innerHTML='';
-  $('renameWrap').classList.add('hidden');
-  $('btnPreviewRename').classList.remove('hidden');
-  S.preview=null;
-  destroyHoverPop();
-}
+// ── Rename ────────────────────────────────────────────────────────────────────
+$('btnPreviewRename').addEventListener('click',()=>{if(!S.preview)return;$('renameWrap').classList.remove('hidden');$('renameInput').value=S.preview.name;$('renameInput').focus();$('renameInput').select();$('btnPreviewRename').classList.add('hidden');});
+$('btnRenameCancel').addEventListener('click',()=>{$('renameWrap').classList.add('hidden');$('btnPreviewRename').classList.remove('hidden');});
+$('btnRenameConfirm').addEventListener('click',doRenameFile);$('renameInput').addEventListener('keydown',e=>{if(e.key==='Enter')doRenameFile();if(e.key==='Escape')$('btnRenameCancel').click();});
+async function doRenameFile(){if(!S.preview)return;const n=$('renameInput').value.trim();if(!n||n===S.preview.name){$('btnRenameCancel').click();return;}$('btnRenameConfirm').disabled=true;$('btnRenameConfirm').textContent='…';try{const st=S.storages.find(s=>s.slot===S.preview.slot);if(st)await st.renameFile(S.preview.megaNode,n);const f=S.allFiles.find(x=>x.id===S.preview.id);if(f)f.name=n;S.preview.name=n;$('pName').textContent=n;$('renameWrap').classList.add('hidden');$('btnPreviewRename').classList.remove('hidden');applyFilter();setStatus('ok',`Renamed to "${n}"`,''  );}catch(e){alert('Rename failed: '+e.message);}finally{$('btnRenameConfirm').disabled=false;$('btnRenameConfirm').textContent='✓ Save';}}
 
-$('btnClosePreview').addEventListener('click', closePreview);
-$('previewModal').addEventListener('click', e=>{ if(e.target===$('previewModal')) closePreview(); });
+// ── Delete selected ───────────────────────────────────────────────────────────
+$('btnDeleteSelected').addEventListener('click',async()=>{const n=S.selected.size;if(!n)return;if(!confirm(`Delete ${n} file${n!==1?'s':''}?`))return;const ids=[...S.selected];setStatus('warn',`Deleting ${n}…`,'');let done=0;for(const id of ids){const f=S.allFiles.find(x=>x.id===id);if(!f)continue;try{const st=S.storages.find(s=>s.slot===f.slot);if(st)await st.deleteFile(f.megaNode);done++;}catch{}S.allFiles=S.allFiles.filter(x=>x.id!==id);}S.selected.clear();buildSidebar();applyFilter();setStatus('ok',`Deleted ${done}`,'');});
 
-$('btnPreviewDl').addEventListener('click', async()=>{
-  if (!S.preview) return;
-  let url = S.previewUrl;
-  if (!url) {
-    const buf = await S.preview.megaNode.downloadBuffer();
-    url = URL.createObjectURL(new Blob([buf],{type:S.preview.mime||guessMime(S.preview.name)}));
-  }
-  const a = Object.assign(document.createElement('a'),{href:url,download:S.preview.name||'download'});
-  document.body.appendChild(a); a.click(); a.remove();
-});
+// ── Move ─────────────────────────────────────────────────────────────────────
+let moveFileIds=[];
+function openMoveModal(ids){moveFileIds=ids;S.moveTarget=null;const files=S.allFiles.filter(f=>ids.includes(f.id));const fs=[...new Set(files.map(f=>f.slot))];$('moveInfo').innerHTML=`<strong>${files.length}</strong> file${files.length!==1?'s':''} — from ${fs.map(s=>`${providerIcon(s)} <strong>${slotLabel(s)}</strong>`).join(', ')}`;const grid=$('moveSlotGrid');grid.innerHTML='';const counts={};for(const f of S.allFiles)counts[f.slot]=(counts[f.slot]||0)+1;for(const s of S.storages){const toMove=files.filter(f=>f.slot!==s.slot).length;const div=document.createElement('div');div.className='move-slot-card';div.dataset.slot=s.slot;div.innerHTML=`<div class="ms-icon">${providerIcon(s.slot)}</div><div class="ms-slot">${esc(slotLabel(s.slot))}</div><div class="ms-email">${esc(s.identifier||'')}</div><div class="ms-n">${counts[s.slot]||0} files · +${toMove}</div>`;if(!toMove){div.style.opacity='.35';div.style.cursor='default';}else div.addEventListener('click',()=>{S.moveTarget=s.slot;grid.querySelectorAll('.move-slot-card').forEach(c=>c.classList.remove('selected'));div.classList.add('selected');$('btnDoMove').disabled=false;});grid.appendChild(div);}$('btnDoMove').disabled=true;$('moveModal').classList.remove('hidden');closePreview();}
+$('btnMoveSelected').addEventListener('click',()=>openMoveModal([...S.selected]));
+$('btnCloseMoveModal').addEventListener('click',()=>$('moveModal').classList.add('hidden'));
+$('moveModal').addEventListener('click',e=>{if(e.target===$('moveModal'))$('moveModal').classList.add('hidden');});
+$('btnDoMove').addEventListener('click',async()=>{if(S.moveTarget===null)return;$('moveModal').classList.add('hidden');const tst=S.storages.find(s=>s.slot===S.moveTarget);if(!tst){alert('Target not available.');return;}const files=S.allFiles.filter(f=>moveFileIds.includes(f.id)&&f.slot!==S.moveTarget);if(!files.length){setStatus('ok','Nothing to move','');return;}showToast('Moving…',`0/${files.length}`,0);let done=0;for(let i=0;i<files.length;i++){const f=files[i];updateToast(`Moving ${i+1}/${files.length}`,f.name,(i/files.length)*100);try{const sst=S.storages.find(s=>s.slot===f.slot);if(!sst)continue;const buf=await sst.downloadFile(f.megaNode);const node=await tst.uploadFile({id:'root'},f.name,f.size,buf);await sst.deleteFile(f.megaNode);const idx=S.allFiles.findIndex(x=>x.id===f.id);if(idx>=0)S.allFiles[idx]={...f,slot:S.moveTarget,path:'',megaNode:node,id:node.id||node.nodeId||`mv-${Date.now()}`};S.selected.delete(f.id);done++;}catch(e){console.error('Move failed',f.name,e);}}hideToast(2500);S.selected.clear();buildSidebar();applyFilter();setStatus('ok',`Moved ${done} to ${slotLabel(S.moveTarget)}`,'');});
 
-$('btnPreviewDelete').addEventListener('click', async()=>{
-  if (!S.preview) return;
-  if (!confirm(`Permanently delete "${S.preview.name}"?`)) return;
-  try {
-    await S.preview.megaNode.delete(true);
-    const id = S.preview.id;
-    S.allFiles = S.allFiles.filter(f=>f.id!==id);
-    S.selected.delete(id);
-    closePreview(); buildSidebar(); applyFilter();
-    setStatus('ok','File deleted','');
-  } catch(e){ alert('Delete failed: '+e.message); }
-});
+// ── Upload ────────────────────────────────────────────────────────────────────
+async function runUpload(fileList,slotNum){const files=[...fileList].filter(f=>f.size>0);if(!files.length)return;const storage=S.storages.find(s=>s.slot===slotNum);if(!storage){alert('Slot not connected.');return;}const parts=S.currentSlot==slotNum&&S.currentPath?S.currentPath.split('/').filter(Boolean):[];const parent=storage.resolveNode(parts)||storage.storage?.root||{id:'root'};const uploadPath=S.currentSlot==slotNum&&S.currentPath?S.currentPath:'';showToast('Uploading…','Preparing…',0);let done=0;for(let i=0;i<files.length;i++){const file=files[i];updateToast(`Uploading ${i+1}/${files.length}`,file.name,(i/files.length)*100);setStatus('warn',`Uploading ${i+1}/${files.length}…`,file.name);try{const data=new Uint8Array(await file.arrayBuffer());const node=await storage.uploadFile(parent,file.name,file.size,data);S.allFiles.push({id:node.id||node.nodeId||`up-${Date.now()}`,name:file.name,size:file.size,mime:file.type||guessMime(file.name),slot:slotNum,path:uploadPath,createdAt:Date.now(),megaNode:node});done++;}catch(e){alert(`Upload failed for "${file.name}":\n${e.message}`);}}hideToast(2500);buildSidebar();applyFilter();setStatus('ok',`Uploaded ${done} to ${providerIcon(slotNum)} ${slotLabel(slotNum)}`,'');}
+$('uploadInput').addEventListener('change',async function(){await runUpload(this.files,Number($('uploadSlot').value));this.value='';});
+const uploadLabel=$('uploadLabel');
+uploadLabel.addEventListener('dragover',e=>{e.preventDefault();uploadLabel.classList.add('drag-over');});
+uploadLabel.addEventListener('dragleave',()=>uploadLabel.classList.remove('drag-over'));
+uploadLabel.addEventListener('drop',e=>{e.preventDefault();uploadLabel.classList.remove('drag-over');runUpload(e.dataTransfer.files,Number($('uploadSlot').value));});
+const vaultMain=$('vaultMain'),dropOverlay=$('dropOverlay');let dragCounter=0;
+vaultMain.addEventListener('dragenter',e=>{e.preventDefault();dragCounter++;dropOverlay.classList.add('visible');});
+vaultMain.addEventListener('dragleave',()=>{dragCounter--;if(dragCounter<=0){dragCounter=0;dropOverlay.classList.remove('visible');}});
+vaultMain.addEventListener('dragover',e=>e.preventDefault());
+vaultMain.addEventListener('drop',e=>{e.preventDefault();dragCounter=0;dropOverlay.classList.remove('visible');if(e.dataTransfer.files.length)runUpload(e.dataTransfer.files,Number($('uploadSlot').value));});
 
-$('btnPreviewMove').addEventListener('click', ()=>{
-  if (!S.preview) return;
-  openMoveModal([S.preview.id]);
-});
+// ── Toast ─────────────────────────────────────────────────────────────────────
+let toastTimeout=null;
+function showToast(t,s,p){clearTimeout(toastTimeout);$('toastTitle').textContent=t;$('toastSub').textContent=s;$('toastFill').style.width=p+'%';$('uploadToast').classList.remove('hidden');}
+function updateToast(t,s,p){showToast(t,s,p);}
+function hideToast(d=0){if(d){$('toastFill').style.width='100%';toastTimeout=setTimeout(()=>$('uploadToast').classList.add('hidden'),d);}else $('uploadToast').classList.add('hidden');}
 
-// ═══════════════════════════════════════════════════════════════════════════════
-// DELETE SELECTED
-// ═══════════════════════════════════════════════════════════════════════════════
-$('btnDeleteSelected').addEventListener('click', async()=>{
-  const n = S.selected.size;
-  if (!n) return;
-  if (!confirm(`Permanently delete ${n} file${n!==1?'s':''}? This cannot be undone.`)) return;
-  const ids = [...S.selected];
-  setStatus('warn',`Deleting ${n} file${n!==1?'s':''}…`,'');
-  let done=0;
-  for (const id of ids) {
-    const f=S.allFiles.find(x=>x.id===id);
-    if (!f) continue;
-    try { await f.megaNode.delete(true); done++; } catch(e){}
-    S.allFiles = S.allFiles.filter(x=>x.id!==id);
-  }
-  S.selected.clear();
-  buildSidebar(); applyFilter();
-  setStatus('ok',`Deleted ${done} file${done!==1?'s':''}`, '');
-});
+// ── Slot rename ───────────────────────────────────────────────────────────────
+function startSlotRename(slot){const wrap=document.getElementById(`slotwrap-${slot}`);if(!wrap)return;const cur=S.slotNames[slot]||`Slot ${slot}`;wrap.innerHTML=`<input class="slot-rename-input" id="slotRenIn-${slot}" value="${esc(cur)}" maxlength="24"/>`;const inp=document.getElementById(`slotRenIn-${slot}`);inp.focus();inp.select();function commit(){const v=inp.value.trim()||`Slot ${slot}`;S.slotNames[slot]=v;localStorage.setItem('vaultSlotNames',JSON.stringify(S.slotNames));buildSidebar();buildUploadSlotDropdown();}inp.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();commit();}if(e.key==='Escape')buildSidebar();});inp.addEventListener('blur',commit);}
 
-// ═══════════════════════════════════════════════════════════════════════════════
-// MOVE FILES
-// ═══════════════════════════════════════════════════════════════════════════════
-let moveFileIds = [];
+// ── Hover preview ─────────────────────────────────────────────────────────────
+let hoverTimer=null,hoverPop=null,hoverBlobUrl=null;
+function destroyHoverPop(){clearTimeout(hoverTimer);hoverTimer=null;if(hoverPop){hoverPop.remove();hoverPop=null;}if(hoverBlobUrl){URL.revokeObjectURL(hoverBlobUrl);hoverBlobUrl=null;}}
+$('fileGrid').addEventListener('mouseover',e=>{const card=e.target.closest('[data-id]');if(!card)return;if(hoverPop&&hoverPop.dataset.forId===card.dataset.id)return;destroyHoverPop();hoverTimer=setTimeout(async()=>{const f=S.allFiles.find(x=>x.id===card.dataset.id);if(!f)return;const type=typeOf(f);if(!['image','video','audio'].includes(type))return;hoverPop=document.createElement('div');hoverPop.className='hover-pop';hoverPop.dataset.forId=f.id;hoverPop.innerHTML=`<div style="padding:20px;text-align:center;color:var(--muted);font-size:12px">Loading…</div><div class="hover-pop-info"><div class="hover-pop-name">${esc(f.name)}</div><div class="hover-pop-meta">${fmtSize(f.size)} · ${providerIcon(f.slot)} ${slotLabel(f.slot)}</div></div>`;document.body.appendChild(hoverPop);positionPop(card);try{const storage=S.storages.find(s=>s.slot===f.slot);if(!storage)return;const buffer=await storage.downloadFile(f.megaNode);if(!hoverPop||hoverPop.dataset.forId!==f.id)return;const mime=f.mime||guessMime(f.name);hoverBlobUrl=URL.createObjectURL(new Blob([buffer],{type:mime}));let m;if(type==='image')m=`<img src="${hoverBlobUrl}" style="width:100%;max-height:160px;object-fit:cover;display:block"/>`;else if(type==='video')m=`<video src="${hoverBlobUrl}" autoplay muted loop playsinline style="width:100%;max-height:160px;object-fit:cover;display:block"></video>`;else m=`<audio src="${hoverBlobUrl}" controls style="width:100%;padding:12px;display:block"></audio>`;hoverPop.innerHTML=m+`<div class="hover-pop-info"><div class="hover-pop-name">${esc(f.name)}</div><div class="hover-pop-meta">${fmtSize(f.size)} · ${providerIcon(f.slot)} ${slotLabel(f.slot)}</div></div>`;positionPop(card);}catch{destroyHoverPop();}},2000);});
+$('fileGrid').addEventListener('mouseleave',destroyHoverPop);
+$('fileGrid').addEventListener('mouseout',e=>{const c=e.target.closest('[data-id]');if(c&&!c.contains(e.relatedTarget))destroyHoverPop();});
+function positionPop(card){if(!hoverPop)return;const r=card.getBoundingClientRect(),pw=220,ph=hoverPop.offsetHeight||240;let left=r.right+10,top=r.top;if(left+pw>window.innerWidth-12)left=r.left-pw-10;if(top+ph>window.innerHeight-12)top=window.innerHeight-ph-12;if(top<8)top=8;hoverPop.style.left=left+'px';hoverPop.style.top=top+'px';}
 
-function openMoveModal(ids) {
-  moveFileIds = ids;
-  S.moveTarget = null;
-  // Determine which files and from which slots
-  const files = S.allFiles.filter(f=>ids.includes(f.id));
-  const fromSlots = [...new Set(files.map(f=>f.slot))];
-  $('moveInfo').innerHTML = `<strong>${files.length}</strong> file${files.length!==1?'s':''} selected — from slot${fromSlots.length>1?'s':''} <strong>${fromSlots.join(', ')}</strong>`;
+// ── Settings ──────────────────────────────────────────────────────────────────
+function openSettings(){renderStorageAccounts();buildAddSlotDropdown();$('settingsModal').classList.remove('hidden');}
+$('btnSettings').addEventListener('click',openSettings);$('btnCloseSettings').addEventListener('click',()=>$('settingsModal').classList.add('hidden'));$('settingsModal').addEventListener('click',e=>{if(e.target===$('settingsModal'))$('settingsModal').classList.add('hidden');});
+$('settingsModal').querySelectorAll('.stab').forEach(tab=>tab.addEventListener('click',()=>{$('settingsModal').querySelectorAll('.stab').forEach(t=>t.classList.remove('active'));$('settingsModal').querySelectorAll('.stab-panel').forEach(p=>p.classList.remove('active'));tab.classList.add('active');$(`tab${tab.dataset.tab.charAt(0).toUpperCase()+tab.dataset.tab.slice(1)}`).classList.add('active');}));
 
-  // Build destination slot cards (exclude slots that ALL files are already on if single file)
-  const grid = $('moveSlotGrid');
-  grid.innerHTML = '';
-  const fileCounts = {};
-  for (const f of S.allFiles) fileCounts[f.slot]=(fileCounts[f.slot]||0)+1;
-
-  for (const s of S.storages) {
-    const toMove = files.filter(f=>f.slot!==s.slot).length;
-    const div    = document.createElement('div');
-    div.className = 'move-slot-card';
-    div.dataset.slot = s.slot;
-    div.innerHTML = `<div class="ms-slot">S${s.slot}</div>
-      <div class="ms-email">${esc(s.megaEmail)}</div>
-      <div class="ms-n">${fileCounts[s.slot]||0} files · +${toMove} to move</div>`;
-    if (toMove===0) { div.style.opacity='.4'; div.style.cursor='default'; }
-    else {
-      div.addEventListener('click', ()=>{
-        S.moveTarget = s.slot;
-        grid.querySelectorAll('.move-slot-card').forEach(c=>c.classList.remove('selected'));
-        div.classList.add('selected');
-        $('btnDoMove').disabled = false;
-      });
-    }
-    grid.appendChild(div);
-  }
-  $('btnDoMove').disabled = true;
-  $('moveModal').classList.remove('hidden');
-  closePreview();
-}
-
-$('btnMoveSelected').addEventListener('click', ()=> openMoveModal([...S.selected]));
-$('btnCloseMoveModal').addEventListener('click', ()=>$('moveModal').classList.add('hidden'));
-$('moveModal').addEventListener('click', e=>{ if(e.target===$('moveModal')) $('moveModal').classList.add('hidden'); });
-
-$('btnDoMove').addEventListener('click', async()=>{
-  if (S.moveTarget===null) return;
-  $('moveModal').classList.add('hidden');
-  const target = S.storages.find(s=>s.slot===S.moveTarget);
-  if (!target) { alert('Target slot not available.'); return; }
-
-  const files = S.allFiles.filter(f=>moveFileIds.includes(f.id)&&f.slot!==S.moveTarget);
-  if (!files.length) { setStatus('ok','Nothing to move','All files already on target slot'); return; }
-
-  showToast('Moving…', `0/${files.length}`, 0);
-  let done=0;
-  for (let i=0; i<files.length; i++) {
-    const f = files[i];
-    updateToast(`Moving ${i+1}/${files.length}`, f.name, (i/files.length)*100);
-    try {
-      const rawBuf = await f.megaNode.downloadBuffer();
-      const buffer = rawBuf instanceof Uint8Array ? rawBuf : new Uint8Array(rawBuf);
-      const up     = target.storage.root.upload({ name:f.name, size:f.size }, buffer);
-      const newNode = await up.complete;
-      await f.megaNode.delete(true);
-      const idx = S.allFiles.findIndex(x=>x.id===f.id);
-      if (idx>=0) S.allFiles[idx] = {
-        ...f,
-        slot:     S.moveTarget,
-        megaNode: newNode,
-        id:       newNode.nodeId || `mv-${Date.now()}-${Math.random()}`
-      };
-      S.selected.delete(f.id);
-      done++;
-    } catch(err){ console.error('Move failed:',f.name,err); }
-  }
-  hideToast(2500);
-  S.selected.clear();
-  buildSidebar(); applyFilter();
-  setStatus('ok',`Moved ${done} file${done!==1?'s':''} to Slot ${S.moveTarget}`,'');
-});
-
-// ═══════════════════════════════════════════════════════════════════════════════
-// UPLOAD
-// ═══════════════════════════════════════════════════════════════════════════════
-$('uploadInput').addEventListener('change', async function() {
-  const files = [...this.files];
-  if (!files.length) return;
-  const slotNum = Number($('uploadSlot').value);
-  const entry   = S.storages.find(s=>s.slot===slotNum);
-  if (!entry) { alert('Select a connected slot to upload to.'); this.value=''; return; }
-
-  showToast('Uploading…','Preparing…',0);
-  let done=0;
-  for (let i=0; i<files.length; i++) {
-    const file = files[i];
-    updateToast(`Uploading ${i+1}/${files.length}`, file.name, (i/files.length)*100);
-    setStatus('warn',`Uploading ${i+1}/${files.length}…`,file.name);
-    try {
-      const ab   = await file.arrayBuffer();
-      const up   = entry.storage.root.upload({ name:file.name, size:file.size }, new Uint8Array(ab));
-      const node = await up.complete;
-      const mime = file.type || guessMime(file.name);
-      S.allFiles.push({
-        id:       node.nodeId||`up-${Date.now()}-${Math.random()}`,
-        name:     file.name,
-        size:     file.size,
-        mime, slot:slotNum, path:'',
-        createdAt: Date.now(),
-        megaNode: node
-      });
-      done++;
-    } catch(err){ console.error('Upload error:',file.name,err); alert(`Upload failed for "${file.name}":\n${err.message}`); }
-  }
-  this.value='';
-  hideToast(2500);
-  buildSidebar(); applyFilter();
-  setStatus('ok',`Uploaded ${done} file${done!==1?'s':''} to ${slotLabel(slotNum)}`,'');
-});
-
-// ═══════════════════════════════════════════════════════════════════════════════
-// DRAG & DROP UPLOAD  (sidebar drop zone + main grid drop)
-// ═══════════════════════════════════════════════════════════════════════════════
-async function uploadFileList(fileList) {
-  const files   = [...fileList].filter(f=>f.size > 0);
-  if (!files.length) return;
-  const slotNum = Number($('uploadSlot').value);
-  const entry   = S.storages.find(s=>s.slot===slotNum);
-  if (!entry) { alert('Select a connected slot first.'); return; }
-
-  showToast('Uploading…','Preparing…',0);
-  let done=0;
-  for (let i=0; i<files.length; i++) {
-    const file=files[i];
-    updateToast(`Uploading ${i+1}/${files.length}`,file.name,(i/files.length)*100);
-    setStatus('warn',`Uploading ${i+1}/${files.length}…`,file.name);
-    try {
-      const ab   = await file.arrayBuffer();
-      const up   = entry.storage.root.upload({name:file.name,size:file.size},new Uint8Array(ab));
-      const node = await up.complete;
-      S.allFiles.push({
-        id:node.nodeId||`up-${Date.now()}-${Math.random()}`,
-        name:file.name,size:file.size,
-        mime:file.type||guessMime(file.name),
-        slot:slotNum,path:'',createdAt:Date.now(),megaNode:node
-      });
-      done++;
-    } catch(err){ alert(`Upload failed for "${file.name}":\n${err.message}`); }
-  }
-  hideToast(2500);
-  buildSidebar(); applyFilter();
-  setStatus('ok',`Uploaded ${done} file${done!==1?'s':''} to ${slotLabel(slotNum)}`,'');
-}
-
-// Sidebar drop zone
-const uploadLabel = $('uploadLabel');
-uploadLabel.addEventListener('dragover',  e=>{ e.preventDefault(); uploadLabel.classList.add('drag-over'); });
-uploadLabel.addEventListener('dragleave', ()=> uploadLabel.classList.remove('drag-over'));
-uploadLabel.addEventListener('drop', e=>{
-  e.preventDefault();
-  uploadLabel.classList.remove('drag-over');
-  uploadFileList(e.dataTransfer.files);
-});
-
-// Main grid drag-over overlay
-const vaultMain   = $('vaultMain');
-const dropOverlay = $('dropOverlay');
-let dragCounter   = 0;
-
-vaultMain.addEventListener('dragenter', e=>{ e.preventDefault(); dragCounter++; dropOverlay.classList.add('visible'); });
-vaultMain.addEventListener('dragleave', ()=>{ dragCounter--; if(dragCounter<=0){ dragCounter=0; dropOverlay.classList.remove('visible'); } });
-vaultMain.addEventListener('dragover',  e=>e.preventDefault());
-vaultMain.addEventListener('drop', e=>{
-  e.preventDefault();
-  dragCounter=0;
-  dropOverlay.classList.remove('visible');
-  if (e.dataTransfer.files.length) uploadFileList(e.dataTransfer.files);
-});
-
-// ═══════════════════════════════════════════════════════════════════════════════
-// SLOT RENAME
-// ═══════════════════════════════════════════════════════════════════════════════
-function startSlotRename(slot) {
-  const wrap = document.getElementById(`slotwrap-${slot}`);
-  if (!wrap) return;
-  const current = S.slotNames[slot] || `Slot ${slot}`;
-  wrap.innerHTML = `<input class="slot-rename-input" id="slotRenIn-${slot}" value="${esc(current)}" maxlength="24"/>`;
-  const inp = document.getElementById(`slotRenIn-${slot}`);
-  inp.focus(); inp.select();
-  function commit() {
-    const val = inp.value.trim() || `Slot ${slot}`;
-    S.slotNames[slot] = val;
-    localStorage.setItem('vaultSlotNames', JSON.stringify(S.slotNames));
-    buildSidebar();
-    buildUploadSlotDropdown();
-  }
-  inp.addEventListener('keydown', e=>{
-    if (e.key==='Enter')  { e.preventDefault(); commit(); }
-    if (e.key==='Escape') { buildSidebar(); }
-  });
-  inp.addEventListener('blur', commit);
-}
-
-// ═══════════════════════════════════════════════════════════════════════════════
-// FILE RENAME
-// ═══════════════════════════════════════════════════════════════════════════════
-$('btnPreviewRename').addEventListener('click', ()=>{
-  if (!S.preview) return;
-  $('renameWrap').classList.remove('hidden');
-  $('renameInput').value = S.preview.name;
-  $('renameInput').focus();
-  $('renameInput').select();
-  $('btnPreviewRename').classList.add('hidden');
-});
-$('btnRenameCancel').addEventListener('click', ()=>{
-  $('renameWrap').classList.add('hidden');
-  $('btnPreviewRename').classList.remove('hidden');
-});
-$('btnRenameConfirm').addEventListener('click', doRenameFile);
-$('renameInput').addEventListener('keydown', e=>{ if(e.key==='Enter') doRenameFile(); if(e.key==='Escape') $('btnRenameCancel').click(); });
-
-async function doRenameFile() {
-  if (!S.preview) return;
-  const newName = $('renameInput').value.trim();
-  if (!newName || newName===S.preview.name) { $('btnRenameCancel').click(); return; }
-  $('btnRenameConfirm').disabled = true;
-  $('btnRenameConfirm').textContent = '…';
-  try {
-    await S.preview.megaNode.rename(newName);
-    // Update local state
-    const f = S.allFiles.find(x=>x.id===S.preview.id);
-    if (f) f.name = newName;
-    S.preview.name = newName;
-    $('pName').textContent = newName;
-    $('renameWrap').classList.add('hidden');
-    $('btnPreviewRename').classList.remove('hidden');
-    applyFilter();
-    setStatus('ok', `Renamed to "${newName}"`, '');
-  } catch(err) {
-    alert('Rename failed: '+err.message);
-  } finally {
-    $('btnRenameConfirm').disabled = false;
-    $('btnRenameConfirm').textContent = '✓ Save';
-  }
-}
-
-// ═══════════════════════════════════════════════════════════════════════════════
-// HOVER PREVIEW  (2-second delay, image/video only)
-// ═══════════════════════════════════════════════════════════════════════════════
-let hoverTimer  = null;
-let hoverPop    = null;
-let hoverBlobUrl = null;
-
-function destroyHoverPop() {
-  clearTimeout(hoverTimer);
-  hoverTimer = null;
-  if (hoverPop) { hoverPop.remove(); hoverPop = null; }
-  if (hoverBlobUrl) { URL.revokeObjectURL(hoverBlobUrl); hoverBlobUrl = null; }
-}
-
-$('fileGrid').addEventListener('mouseover', e => {
-  const card = e.target.closest('.fcard');
-  if (!card) return;
-  if (hoverPop && hoverPop.dataset.forId === card.dataset.id) return; // already showing
-  destroyHoverPop();
-  hoverTimer = setTimeout(async () => {
-    const f = S.allFiles.find(x => x.id === card.dataset.id);
-    if (!f) return;
-    const type = typeOf(f);
-    if (!['image','video','audio'].includes(type)) return;
-
-    // Build the popover shell immediately
-    hoverPop = document.createElement('div');
-    hoverPop.className = 'hover-pop';
-    hoverPop.dataset.forId = f.id;
-    hoverPop.innerHTML = `<div style="padding:20px;text-align:center;color:var(--muted);font-size:12px">Loading…</div>
-      <div class="hover-pop-info">
-        <div class="hover-pop-name">${esc(f.name)}</div>
-        <div class="hover-pop-meta">${fmtSize(f.size)} · ${slotLabel(f.slot)}</div>
-      </div>`;
-    document.body.appendChild(hoverPop);
-    positionPop(card);
-
-    try {
-      const buffer = await f.megaNode.downloadBuffer();
-      if (!hoverPop || hoverPop.dataset.forId !== f.id) return; // cancelled while loading
-      const mime = f.mime || guessMime(f.name);
-      hoverBlobUrl = URL.createObjectURL(new Blob([buffer], { type: mime }));
-      let mediaEl;
-      if (type === 'image') {
-        mediaEl = `<img src="${hoverBlobUrl}" alt="${esc(f.name)}" style="width:100%;max-height:160px;object-fit:cover;display:block"/>`;
-      } else if (type === 'video') {
-        mediaEl = `<video src="${hoverBlobUrl}" autoplay muted loop playsinline style="width:100%;max-height:160px;object-fit:cover;display:block"></video>`;
-      } else {
-        mediaEl = `<audio src="${hoverBlobUrl}" controls style="width:100%;padding:12px;display:block"></audio>`;
-      }
-      hoverPop.innerHTML = mediaEl +
-        `<div class="hover-pop-info">
-          <div class="hover-pop-name">${esc(f.name)}</div>
-          <div class="hover-pop-meta">${fmtSize(f.size)} · ${slotLabel(f.slot)}</div>
-        </div>`;
-      positionPop(card);
-    } catch(_) { destroyHoverPop(); }
-  }, 2000);
-});
-
-$('fileGrid').addEventListener('mouseleave', destroyHoverPop);
-$('fileGrid').addEventListener('mouseout', e => {
-  const card = e.target.closest('.fcard');
-  if (card && !card.contains(e.relatedTarget)) destroyHoverPop();
-});
-
-function positionPop(card) {
-  if (!hoverPop) return;
-  const r  = card.getBoundingClientRect();
-  const pw = 220;
-  const ph = hoverPop.offsetHeight || 240;
-  let left = r.right + 10;
-  let top  = r.top;
-  if (left + pw > window.innerWidth - 12)  left = r.left - pw - 10;
-  if (top  + ph > window.innerHeight - 12) top  = window.innerHeight - ph - 12;
-  if (top < 8) top = 8;
-  hoverPop.style.left = left + 'px';
-  hoverPop.style.top  = top  + 'px';
-}
-
-// ═══════════════════════════════════════════════════════════════════════════════
-// TOAST
-// ═══════════════════════════════════════════════════════════════════════════════
-let toastTimeout = null;
-function showToast(title, sub, pct) {
-  clearTimeout(toastTimeout);
-  $('toastTitle').textContent  = title;
-  $('toastSub').textContent    = sub;
-  $('toastFill').style.width   = pct+'%';
-  $('uploadToast').classList.remove('hidden');
-}
-function updateToast(title, sub, pct) { showToast(title, sub, pct); }
-function hideToast(delay=0) {
-  if (delay) {
-    $('toastFill').style.width='100%';
-    toastTimeout=setTimeout(()=>$('uploadToast').classList.add('hidden'),delay);
-  } else $('uploadToast').classList.add('hidden');
-}
-
-// ═══════════════════════════════════════════════════════════════════════════════
-// SETTINGS MODAL
-// ═══════════════════════════════════════════════════════════════════════════════
-function openSettings() {
-  renderStorageAccounts();
-  buildAddSlotDropdown();
-  $('settingsModal').classList.remove('hidden');
-}
-$('btnSettings').addEventListener('click', openSettings);
-$('btnCloseSettings').addEventListener('click', ()=>$('settingsModal').classList.add('hidden'));
-$('settingsModal').addEventListener('click', e=>{ if(e.target===$('settingsModal')) $('settingsModal').classList.add('hidden'); });
-
-// Tabs
-$('settingsModal').querySelectorAll('.stab').forEach(tab=>{
-  tab.addEventListener('click', ()=>{
-    $('settingsModal').querySelectorAll('.stab').forEach(t=>t.classList.remove('active'));
-    $('settingsModal').querySelectorAll('.stab-panel').forEach(p=>p.classList.remove('active'));
-    tab.classList.add('active');
-    $('tab'+tab.dataset.tab.charAt(0).toUpperCase()+tab.dataset.tab.slice(1)).classList.add('active');
-  });
-});
-
-// ── Storage accounts ─────────────────────────────────────────────────────────
-function renderStorageAccounts() {
-  const list = $('acctList');
-  if (!S.encAccounts.length) {
-    list.innerHTML = `<div style="font-size:13px;color:var(--muted);padding:10px 0">No storage slots yet. Add your first MEGA account below.</div>`;
-    return;
-  }
-  list.innerHTML = S.encAccounts.map(a=>`
-    <div class="acct-card" id="acct-${a.slot}">
-      <div class="acct-header">
-        <div>
-          <span class="acct-slot-badge">S${a.slot}</span>
-        </div>
-        <div style="flex:1;min-width:0">
-          <div class="acct-email">${esc(a.megaEmail)}</div>
-          <div style="font-size:11px;color:var(--dim);margin-top:2px">Password encrypted · Slot ${a.slot}</div>
-        </div>
-        <div class="acct-actions">
-          <button class="btn-ghost" data-editpw="${a.slot}" style="font-size:12px">✏️ Edit password</button>
-          <button class="btn-danger" data-delslot="${a.slot}" style="font-size:12px">Remove</button>
-        </div>
-      </div>
-      <div class="acct-edit-pw" id="editpw-${a.slot}">
-        <div class="field">
-          <label>New MEGA password for slot ${a.slot}</label>
-          <div class="pw-wrap">
-            <input type="password" id="epw-${a.slot}" placeholder="New MEGA password"/>
-            <button class="pw-eye" data-target="epw-${a.slot}">👁</button>
-          </div>
-        </div>
-        <div style="display:flex;gap:8px;align-items:center">
-          <button class="btn-grad" data-savepw="${a.slot}" style="font-size:12px">Save</button>
-          <button class="btn-ghost" data-cancelpw="${a.slot}" style="font-size:12px">Cancel</button>
-          <span class="auth-err" id="epwerr-${a.slot}" style="margin:0"></span>
-        </div>
-      </div>
-    </div>
-  `).join('');
-
-  // Wire up eye toggle for dynamically rendered inputs
+function renderStorageAccounts(){
+  const list=$('acctList');if(!S.encAccounts.length){list.innerHTML='<div style="font-size:13px;color:var(--muted);padding:10px 0">No storage slots yet. Click "+ Add slot" below.</div>';return;}
+  list.innerHTML=S.encAccounts.map(a=>{const prov=PROVIDERS[a.provider]||PROVIDERS.mega;return`<div class="acct-card" id="acct-${a.slot}"><div class="acct-header"><div><span class="acct-slot-badge">S${a.slot}</span></div><div style="flex:1;min-width:0"><div style="display:flex;align-items:center;gap:8px;margin-bottom:3px"><span class="acct-provider-icon">${prov.icon}</span><span style="font-size:12px;font-weight:700;color:var(--muted)">${prov.name}</span></div><div class="acct-email">${esc(a.identifier)}</div><div style="font-size:11px;color:var(--dim);margin-top:3px">⏰ Inactivity limit: ${prov.inactivity}</div></div><div class="acct-actions"><button class="btn-ghost" data-editpw="${a.slot}" style="font-size:12px">✏️ Edit creds</button><button class="btn-danger" data-delslot="${a.slot}" style="font-size:12px">Remove</button></div></div><div class="acct-edit-pw" id="editpw-${a.slot}">${a.provider==='mega'?`<div class="field"><label>New MEGA password for slot ${a.slot}</label><div class="pw-wrap"><input type="password" id="epw-${a.slot}" placeholder="New MEGA password"/><button class="pw-eye" data-target="epw-${a.slot}">👁</button></div></div><div style="display:flex;gap:8px;align-items:center"><button class="btn-grad" data-savepw="${a.slot}" style="font-size:12px">Save</button><button class="btn-ghost" data-cancelpw="${a.slot}" style="font-size:12px">Cancel</button><span class="auth-err" id="epwerr-${a.slot}" style="margin:0"></span></div>`:`<div style="font-size:13px;color:var(--muted)">To update OAuth credentials, remove this slot and re-add it to re-authorize.</div><button class="btn-ghost" data-cancelpw="${a.slot}" style="font-size:12px;margin-top:8px">Close</button>`}</div></div>`;}).join('');
   list.querySelectorAll('.pw-eye').forEach(attachEye);
-
-  list.querySelectorAll('[data-editpw]').forEach(btn=>{
-    btn.addEventListener('click', ()=>{
-      const panel = $(`editpw-${btn.dataset.editpw}`);
-      panel.classList.toggle('open');
-    });
-  });
-  list.querySelectorAll('[data-cancelpw]').forEach(btn=>{
-    $(`editpw-${btn.dataset.cancelpw}`).classList.remove('open');
-  });
-  list.querySelectorAll('[data-savepw]').forEach(btn=>{
-    btn.addEventListener('click', ()=>saveSlotPassword(Number(btn.dataset.savepw)));
-  });
-  list.querySelectorAll('[data-delslot]').forEach(btn=>{
-    btn.addEventListener('click', ()=>deleteSlot(Number(btn.dataset.delslot)));
-  });
+  list.querySelectorAll('[data-editpw]').forEach(btn=>btn.addEventListener('click',()=>$(`editpw-${btn.dataset.editpw}`).classList.toggle('open')));
+  list.querySelectorAll('[data-cancelpw]').forEach(btn=>$(`editpw-${btn.dataset.cancelpw}`).classList.remove('open'));
+  list.querySelectorAll('[data-savepw]').forEach(btn=>btn.addEventListener('click',()=>saveSlotPassword(Number(btn.dataset.savepw))));
+  list.querySelectorAll('[data-delslot]').forEach(btn=>btn.addEventListener('click',()=>deleteSlot(Number(btn.dataset.delslot))));
 }
-
-async function saveSlotPassword(slot) {
-  const newPw = $(`epw-${slot}`)?.value;
-  const errEl = $(`epwerr-${slot}`);
-  if (errEl) errEl.textContent='';
-  if (!newPw) { if(errEl) errEl.textContent='Enter a new password.'; return; }
-  try {
-    const { ciphertext, iv } = await encryptStr(S.cryptoKey, newPw);
-    await api('updateStorage',{
-      email:             S.email,
-      passwordHash:      S.authHash,
-      slot,
-      encryptedPassword: ciphertext,
-      iv
-    });
-    // Update local state
-    const ea = S.encAccounts.find(a=>a.slot===slot);
-    if (ea) { ea.encryptedPassword=ciphertext; ea.iv=iv; }
-    const a = S.accounts.find(a=>a.slot===slot);
-    if (a) a.megaPassword = newPw;
-    if (errEl) errEl.textContent='';
-    $(`editpw-${slot}`).classList.remove('open');
-    setStatus('ok',`Slot ${slot} password updated`,'');
-  } catch(err) {
-    if (errEl) errEl.textContent=err.message;
-  }
-}
-
-async function deleteSlot(slot) {
-  if (!confirm(`Remove Slot ${slot}? This does NOT delete your MEGA account — only the saved credentials.`)) return;
-  try {
-    await api('deleteStorage',{ email:S.email, passwordHash:S.authHash, slot });
-    S.encAccounts = S.encAccounts.filter(a=>a.slot!==slot);
-    S.accounts    = S.accounts.filter(a=>a.slot!==slot);
-    S.storages    = S.storages.filter(s=>s.slot!==slot);
-    S.allFiles    = S.allFiles.filter(f=>f.slot!==slot);
-    S.selected    = new Set([...S.selected].filter(id=>S.allFiles.some(f=>f.id===id)));
-    renderStorageAccounts();
-    buildAddSlotDropdown();
-    buildSidebar();
-    buildUploadSlotDropdown();
-    applyFilter();
-    setStatus('ok',`Slot ${slot} removed`,'');
-  } catch(err){ alert('Failed: '+err.message); }
-}
+async function saveSlotPassword(slot){const pw=$(`epw-${slot}`)?.value;const errEl=$(`epwerr-${slot}`);if(errEl)errEl.textContent='';if(!pw){if(errEl)errEl.textContent='Enter new password.';return;}try{const ident=S.encAccounts.find(a=>a.slot===slot)?.identifier||'';const creds=JSON.stringify({megaEmail:ident,megaPassword:pw});const{ciphertext,iv}=await encryptStr(S.cryptoKey,creds);await api('updateStorage',{email:S.email,passwordHash:S.authHash,slot,encryptedCredentials:ciphertext,iv});const ea=S.encAccounts.find(a=>a.slot===slot);if(ea){ea.encryptedCredentials=ciphertext;ea.iv=iv;}const a=S.accounts.find(a=>a.slot===slot);if(a){a.megaPassword=pw;}$(`editpw-${slot}`).classList.remove('open');setStatus('ok',`Slot ${slot} credentials updated`,'');}catch(e){if(errEl)errEl.textContent=e.message;}}
+async function deleteSlot(slot){if(!confirm(`Remove Slot ${slot}? This does NOT delete your storage account.`))return;try{await api('deleteStorage',{email:S.email,passwordHash:S.authHash,slot});S.encAccounts=S.encAccounts.filter(a=>a.slot!==slot);S.accounts=S.accounts.filter(a=>a.slot!==slot);S.storages=S.storages.filter(s=>s.slot!==slot);S.allFiles=S.allFiles.filter(f=>f.slot!==slot);S.allFolders=S.allFolders.filter(f=>f.slot!==slot);S.selected=new Set([...S.selected].filter(id=>S.allFiles.some(f=>f.id===id)));renderStorageAccounts();buildAddSlotDropdown();buildSidebar();buildUploadSlotDropdown();applyFilter();setStatus('ok',`Slot ${slot} removed`,'');}catch(e){alert('Failed: '+e.message);}}
 
 // ── Add storage ───────────────────────────────────────────────────────────────
-$('btnOpenAddStorage').addEventListener('click', ()=>{
-  const form = $('addStorageForm');
-  form.classList.toggle('open');
-  if (form.classList.contains('open')) buildAddSlotDropdown();
-  $('addStorageErr').textContent='';
-});
-$('btnCancelAddStorage').addEventListener('click', ()=>{
-  $('addStorageForm').classList.remove('open');
-  $('addStorageErr').textContent='';
-});
-
-function buildAddSlotDropdown() {
-  const used = new Set(S.encAccounts.map(a=>a.slot));
-  const opts = [1,2,3,4,5].filter(n=>!used.has(n))
-    .map(n=>`<option value="${n}">Slot ${n}</option>`).join('');
-  $('addSlot').innerHTML = opts || '<option disabled>All 5 slots used</option>';
+let selectedProvider=null;
+$('btnOpenAddStorage').addEventListener('click',()=>{$('addStorageForm').classList.toggle('open');if($('addStorageForm').classList.contains('open')){buildAddSlotDropdown();buildProviderGrid();showAddStep(1);}$('addStorageErr').textContent='';});
+$('btnCancelAddStorage').addEventListener('click',()=>{$('addStorageForm').classList.remove('open');selectedProvider=null;});
+$('btnBackToProviders').addEventListener('click',()=>showAddStep(1));
+function showAddStep(n){$('addStep1').style.display=n===1?'':'none';$('addStep2').classList.toggle('show',n===2);}
+function buildAddSlotDropdown(){const used=new Set(S.encAccounts.map(a=>a.slot));$('addSlot').innerHTML=[1,2,3,4,5,6,7,8,9,10].filter(n=>!used.has(n)).map(n=>`<option value="${n}">Slot ${n}</option>`).join('')||'<option disabled>All 10 slots used</option>';}
+function buildProviderGrid(){
+  $('providerGrid').innerHTML=Object.values(PROVIDERS).map(p=>`<div class="provider-card" data-prov="${p.id}"><div class="prov-icon">${p.icon}</div><div class="prov-name">${p.name}</div><div class="prov-tos">${p.tosLevel==='warn'?'⚠️ ':p.tosLevel==='ok'?'✅ ':'ℹ️ '}${p.inactivity}</div></div>`).join('');
+  $('providerGrid').querySelectorAll('.provider-card').forEach(card=>card.addEventListener('click',()=>{selectedProvider=card.dataset.prov;$('providerGrid').querySelectorAll('.provider-card').forEach(c=>c.classList.remove('selected'));card.classList.add('selected');const prov=PROVIDERS[selectedProvider];const w=$('tosWarning');w.textContent=prov.tos;w.classList.add('show');showAddStep(2);const ct=$('connectTitle');ct.textContent=`Connect ${prov.icon} ${prov.name}`;['megaFields','oauthFields','googleFields','boxFields'].forEach(id=>{const el=$(id);if(el)el.style.display='none';});$('btnSaveAddStorage').style.display='none';
+    if(selectedProvider==='mega'){$('megaFields').style.display='flex';$('btnSaveAddStorage').style.display='';}
+    else if(selectedProvider==='gdrive'){$('googleFields').style.display='flex';}
+    else if(selectedProvider==='box'){const bf=$('boxFields');if(bf)bf.style.display='flex';}
+    else{$('oauthFields').style.display='flex';$('oauthInstructions').textContent=prov.instructions||'';}
+  }));
 }
-
-$('btnSaveAddStorage').addEventListener('click', async()=>{
-  const slot    = Number($('addSlot').value);
-  const memail  = $('addMegaEmail').value.trim();
-  const mpw     = $('addMegaPw').value;
-  const errEl   = $('addStorageErr');
-  errEl.textContent='';
-  if (!memail||!mpw) { errEl.textContent='All fields required.'; return; }
-  $('btnSaveAddStorage').disabled=true;
-  try {
-    const { ciphertext, iv } = await encryptStr(S.cryptoKey, mpw);
-    await api('addStorage',{
-      email:             S.email,
-      passwordHash:      S.authHash,
-      slot,
-      megaEmail:         memail,
-      encryptedPassword: ciphertext,
-      iv
-    });
-    S.encAccounts.push({ slot, megaEmail:memail, encryptedPassword:ciphertext, iv });
-    S.accounts.push({ slot, megaEmail:memail, megaPassword:mpw });
-    $('addMegaEmail').value=''; $('addMegaPw').value='';
-    $('addStorageForm').classList.remove('open');
-    renderStorageAccounts();
-    buildAddSlotDropdown();
-    setStatus('warn','New slot added — refresh to connect','');
-    // Attempt to connect the new slot live
-    try {
-      setStatus('warn',`Connecting slot ${slot}…`,'');
-      const storage = await new Storage({ email:memail, password:mpw, userAgent:'StorageVault/1.0' }).ready;
-      S.storages.push({ slot, storage, megaEmail:memail });
-      walkNode(storage.root, slot, '');
-      buildSidebar();
-      buildUploadSlotDropdown();
-      applyFilter();
-      setStatus('ok',`Slot ${slot} connected and loaded`,'');
-    } catch(connErr){
-      setStatus('warn',`Slot ${slot} saved but connection failed`,connErr.message);
-    }
-  } catch(err){
-    errEl.textContent=err.message;
-  } finally {
-    $('btnSaveAddStorage').disabled=false;
-  }
+$('btnConnectOAuth').addEventListener('click',async()=>{if(!selectedProvider)return;const slot=Number($('addSlot').value);if(!slot){$('addStorageErr').textContent='Select a slot.';return;}await startOAuth(selectedProvider,slot);});
+$('btnConnectGoogle').addEventListener('click',async()=>{const slot=Number($('addSlot').value);if(!slot){$('addStorageErr').textContent='Select a slot.';return;}await startGoogleOAuth(slot);});
+$('btnConnectBox').addEventListener('click',async()=>{const slot=Number($('addSlot').value);if(!slot){$('addStorageErr').textContent='Select a slot.';return;}await startBoxOAuth(slot);});
+$('btnSaveAddStorage').addEventListener('click',async()=>{
+  if(selectedProvider!=='mega')return;const slot=Number($('addSlot').value);const memail=$('addMegaEmail').value.trim();const mpw=$('addMegaPw').value;const errEl=$('addStorageErr');errEl.textContent='';if(!memail||!mpw){errEl.textContent='All fields required.';return;}$('btnSaveAddStorage').disabled=true;
+  try{const creds=JSON.stringify({megaEmail:memail,megaPassword:mpw});const{ciphertext,iv}=await encryptStr(S.cryptoKey,creds);await api('addStorage',{email:S.email,passwordHash:S.authHash,slot,provider:'mega',identifier:memail,encryptedCredentials:ciphertext,iv});S.encAccounts.push({slot,provider:'mega',identifier:memail,encryptedCredentials:ciphertext,iv});S.accounts.push({slot,provider:'mega',identifier:memail,megaEmail:memail,megaPassword:mpw});$('addMegaEmail').value='';$('addMegaPw').value='';$('addStorageForm').classList.remove('open');selectedProvider=null;renderStorageAccounts();buildAddSlotDropdown();setStatus('warn',`Connecting slot ${slot}…`,'');try{const storage=await connectAccount(S.accounts.find(a=>a.slot===slot));if(storage){S.storages.push(storage);const{files,folders}=await storage.listFiles();S.allFiles.push(...files);S.allFolders.push(...folders);}buildSidebar();buildUploadSlotDropdown();applyFilter();setStatus('ok',`MEGA Slot ${slot} connected`,'');}catch(e){setStatus('warn','Slot saved but connection failed',e.message);}
+  }catch(e){errEl.textContent=e.message;}finally{$('btnSaveAddStorage').disabled=false;}
 });
 
 // ── Change password ───────────────────────────────────────────────────────────
-$('btnChangePassword').addEventListener('click', async()=>{
-  const oldPw = $('inCpwOld').value;
-  const newPw = $('inCpwNew1').value;
-  const conf  = $('inCpwNew2').value;
-  const errEl = $('cpwErr');
-  errEl.textContent='';
-  if (!oldPw||!newPw||!conf) { errEl.textContent='All fields required.'; return; }
-  if (newPw.length<8)         { errEl.textContent='New password must be at least 8 characters.'; return; }
-  if (newPw!==conf)           { errEl.textContent='New passwords do not match.'; return; }
+$('btnChangePassword').addEventListener('click',async()=>{const old=$('inCpwOld').value,n1=$('inCpwNew1').value,n2=$('inCpwNew2').value;const errEl=$('cpwErr');errEl.style.color='var(--bad)';errEl.textContent='';if(!old||!n1||!n2){errEl.textContent='All fields required.';return;}if(n1.length<8){errEl.textContent='Min 8 chars.';return;}if(n1!==n2){errEl.textContent='Passwords do not match.';return;}const oldHash=await computeHash(old,S.salt);if(oldHash!==S.authHash){errEl.textContent='Current password incorrect.';return;}$('btnChangePassword').disabled=true;$('btnChangePassword').textContent='Updating…';try{const ns=genSalt(),nh=await computeHash(n1,ns),nk=await deriveKey(n1,ns);const reenc=[];for(const a of S.accounts){const creds=JSON.stringify({megaEmail:a.identifier,megaPassword:a.megaPassword||a.password,...(a.accessToken?{accessToken:a.accessToken,refreshToken:a.refreshToken,expiresAt:a.expiresAt,identifier:a.identifier}:{})});const{ciphertext,iv}=await encryptStr(nk,creds);reenc.push({slot:a.slot,provider:a.provider||'mega',identifier:a.identifier,encryptedCredentials:ciphertext,iv});}await api('changePassword',{email:S.email,oldPasswordHash:oldHash,newPasswordHash:nh,newSalt:ns,accounts:reenc});S.salt=ns;S.cryptoKey=nk;S.authHash=nh;S.passwordRaw=n1;S.encAccounts=reenc;['inCpwOld','inCpwNew1','inCpwNew2'].forEach(id=>$(id).value='');errEl.style.color='var(--ok)';errEl.textContent='✓ Password changed.';setStatus('ok','Password updated','');}catch(e){errEl.textContent=e.message;}finally{$('btnChangePassword').disabled=false;$('btnChangePassword').textContent='Update password';}});
 
-  const oldHash = await computeAuthHash(oldPw, S.salt);
-  if (oldHash !== S.authHash) { errEl.textContent='Current password is incorrect.'; return; }
-
-  $('btnChangePassword').disabled=true;
-  $('btnChangePassword').textContent='Updating…';
-  try {
-    const newSalt    = genSalt();
-    const newHash    = await computeAuthHash(newPw, newSalt);
-    const newKey     = await deriveKey(newPw, newSalt);
-
-    // Re-encrypt all MEGA passwords with the new key
-    const reencrypted = [];
-    for (const a of S.accounts) {
-      const { ciphertext, iv } = await encryptStr(newKey, a.megaPassword);
-      reencrypted.push({ slot:a.slot, megaEmail:a.megaEmail, encryptedPassword:ciphertext, iv });
-    }
-
-    await api('changePassword',{
-      email:          S.email,
-      oldPasswordHash: oldHash,
-      newPasswordHash: newHash,
-      newSalt,
-      accounts:        reencrypted
-    });
-
-    // Update local session state
-    S.salt        = newSalt;
-    S.cryptoKey   = newKey;
-    S.authHash    = newHash;
-    S.passwordRaw = newPw;
-    S.encAccounts = reencrypted;
-
-    $('inCpwOld').value=''; $('inCpwNew1').value=''; $('inCpwNew2').value='';
-    errEl.style.color='var(--ok)';
-    errEl.textContent='✓ Password changed.';
-    setStatus('ok','Password updated','');
-  } catch(err){
-    errEl.style.color='var(--bad)';
-    errEl.textContent=err.message;
-  } finally {
-    $('btnChangePassword').disabled=false;
-    $('btnChangePassword').textContent='Update password';
-  }
-});
-
-// ═══════════════════════════════════════════════════════════════════════════════
-// PASSWORD STRENGTH METER
-// ═══════════════════════════════════════════════════════════════════════════════
-function pwStrength(pw) {
-  let s=0;
-  if(pw.length>=8)  s++;
-  if(pw.length>=12) s++;
-  if(/[A-Z]/.test(pw)) s++;
-  if(/[0-9]/.test(pw)) s++;
-  if(/[^A-Za-z0-9]/.test(pw)) s++;
-  return s;
-}
-function applyStrBar(barId, pw) {
-  const s   = pwStrength(pw);
-  const bar = $(barId);
-  if (!bar||!pw) { bar&&(bar.style.cssText='width:0%'); return; }
-  const cols=['#ef4444','#f97316','#eab308','#22c55e','#10b981'];
-  bar.style.width  = (s/5*100)+'%';
-  bar.style.background = cols[Math.min(s-1,4)];
-}
-$('inRegPw1').addEventListener('input',  e=>applyStrBar('pwStrBar',  e.target.value));
-$('inCpwNew1').addEventListener('input', e=>applyStrBar('cpwStrBar', e.target.value));
-
-// ═══════════════════════════════════════════════════════════════════════════════
-// PASSWORD VISIBILITY TOGGLE
-// ═══════════════════════════════════════════════════════════════════════════════
-function attachEye(btn) {
-  btn.addEventListener('click', ()=>{
-    const inp = $(btn.dataset.target);
-    if (!inp) return;
-    inp.type = inp.type==='password' ? 'text' : 'password';
-    btn.textContent = inp.type==='password' ? '👁' : '🙈';
-  });
-}
+// ── PW strength / eye toggle ──────────────────────────────────────────────────
+function pwStrength(pw){let s=0;if(pw.length>=8)s++;if(pw.length>=12)s++;if(/[A-Z]/.test(pw))s++;if(/[0-9]/.test(pw))s++;if(/[^A-Za-z0-9]/.test(pw))s++;return s;}
+function applyStrBar(id,pw){const s=pwStrength(pw),bar=$(id);if(!bar||!pw){bar&&(bar.style.cssText='width:0%');return;}const cols=['#ef4444','#f97316','#eab308','#22c55e','#10b981'];bar.style.width=(s/5*100)+'%';bar.style.background=cols[Math.min(s-1,4)];}
+$('inRegPw1').addEventListener('input',e=>applyStrBar('pwStrBar',e.target.value));$('inCpwNew1').addEventListener('input',e=>applyStrBar('cpwStrBar',e.target.value));
+function attachEye(btn){btn.addEventListener('click',()=>{const inp=$(btn.dataset.target);if(!inp)return;inp.type=inp.type==='password'?'text':'password';btn.textContent=inp.type==='password'?'👁':'🙈';});}
 document.querySelectorAll('.pw-eye').forEach(attachEye);
-
-// ═══════════════════════════════════════════════════════════════════════════════
-// GLOBAL KEYBOARD SHORTCUTS
-// ═══════════════════════════════════════════════════════════════════════════════
-document.addEventListener('keydown', e=>{
-  if (e.key==='Escape') {
-    $('previewModal').classList.add('hidden');
-    $('moveModal').classList.add('hidden');
-    $('settingsModal').classList.add('hidden');
-  }
-});
-
+document.addEventListener('keydown',e=>{if(e.key==='Escape')['previewModal','moveModal','settingsModal'].forEach(id=>$(id).classList.add('hidden'));});
 </script>
 </body>
 </html>
