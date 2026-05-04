@@ -205,6 +205,7 @@ button:hover{border-color:var(--a1);color:var(--a1)}button:disabled{opacity:.4;c
 .tos-warning.show{display:block}
 .oauth-instructions{background:var(--s3);border-radius:10px;padding:12px 14px;font-size:12px;color:var(--muted);line-height:1.6;display:none}
 .oauth-instructions.show{display:block}
+.popup-note{background:rgba(167,139,250,.08);border:1px solid rgba(167,139,250,.2);border-radius:8px;padding:8px 12px;font-size:11px;color:var(--a1);margin-top:8px;line-height:1.5}
 .oauth-instructions code{background:rgba(255,255,255,.08);padding:1px 5px;border-radius:4px;font-family:monospace;font-size:11px;color:var(--text)}
 .cpw-form{display:flex;flex-direction:column;gap:12px}
 
@@ -405,24 +406,27 @@ button:hover{border-color:var(--a1);color:var(--a1)}button:disabled{opacity:.4;c
               <div class="field"><label>MEGA email</label><input id="addMegaEmail" type="email" placeholder="your@email.com"/></div>
               <div class="field"><label>MEGA password</label><div class="pw-wrap"><input id="addMegaPw" type="password" placeholder="MEGA account password"/><button class="pw-eye" data-target="addMegaPw">👁</button></div></div>
             </div>
-            <!-- OAuth fields (Dropbox / OneDrive) -->
+            <!-- OAuth fields (Dropbox) -->
             <div id="oauthFields" style="display:none;flex-direction:column;gap:12px">
               <div class="oauth-instructions show" id="oauthInstructions"></div>
               <button id="btnConnectOAuth" class="btn-grad">🔗 Connect via OAuth →</button>
+              <div class="popup-note">🪟 A small popup opens for authorization — allow popups for this site. You will <strong>not</strong> be signed out.</div>
             </div>
             <!-- Google fields -->
             <div id="googleFields" style="display:none;flex-direction:column;gap:12px">
               <div class="oauth-instructions show">
-                Google Drive uses OAuth via your Apps Script backend (which holds the client_secret securely). Set <code>GOOGLE_CLIENT_ID</code> and <code>GOOGLE_CLIENT_SECRET</code> in Apps Script Script Properties and add your GitHub Pages URL as an authorized redirect URI in Google Cloud Console. ✅ Multiple Google accounts under different emails are fine.
+                Google Drive uses OAuth via your Apps Script backend. Set <code>GOOGLE_CLIENT_ID</code> and <code>GOOGLE_CLIENT_SECRET</code> in Script Properties and add your GitHub Pages URL as an authorized redirect URI in Google Cloud Console. ✅ Multiple Google accounts fine.
               </div>
               <button id="btnConnectGoogle" class="btn-grad">🔗 Connect Google Drive →</button>
+              <div class="popup-note">🪟 A small popup opens — allow popups for this site. You will <strong>not</strong> be signed out.</div>
             </div>
             <!-- Box fields -->
             <div id="boxFields" style="display:none;flex-direction:column;gap:12px">
               <div class="oauth-instructions show">
-                Box uses OAuth via your Apps Script backend. Set <code>BOX_CLIENT_ID</code> and <code>BOX_CLIENT_SECRET</code> in Apps Script Script Properties, and add your GitHub Pages URL as a redirect URI in the <a href="https://app.box.com/developers/console" target="_blank" style="color:var(--a1)">Box Developer Console</a>. ✅ Multiple Box accounts under different emails are allowed by Box's own TOS.
+                Box uses OAuth via your Apps Script backend. Set <code>BOX_CLIENT_ID</code> and <code>BOX_CLIENT_SECRET</code> in Script Properties, and add your GitHub Pages URL as a redirect URI in the <a href="https://app.box.com/developers/console" target="_blank" style="color:var(--a1)">Box Developer Console</a>. ✅ Multiple Box accounts allowed.
               </div>
               <button id="btnConnectBox" class="btn-grad">🔗 Connect Box →</button>
+              <div class="popup-note">🪟 A small popup opens — allow popups for this site. You will <strong>not</strong> be signed out.</div>
             </div>
             <div style="display:flex;gap:10px;justify-content:space-between;align-items:center">
               <button id="btnBackToProviders" class="btn-ghost">← Back</button>
@@ -463,6 +467,25 @@ button:hover{border-color:var(--a1);color:var(--a1)}button:disabled{opacity:.4;c
 import { Storage } from 'https://unpkg.com/megajs/dist/main.browser-es.mjs';
 
 const BACKEND = 'https://script.google.com/macros/s/AKfycbzict1PB8A-nDDI0Rq44heHJcLoHwYLTUO7ckNcoeeHMdA5tm1dxmTgsUkW4CttOCWugQ/exec';
+
+// ── POPUP CALLBACK DETECTION ─────────────────────────────────────────────────
+// If this page was opened as a popup by our OAuth flow, detect the code,
+// message it back to the opener, then close. Never loads the full app.
+(function(){
+  const urlParams = new URLSearchParams(window.location.search);
+  const code      = urlParams.get('code');
+  const state     = urlParams.get('state');
+  const error     = urlParams.get('error');
+  if ((code || error) && window.opener) {
+    window.opener.postMessage(
+      { type:'vault_oauth', code: code||null, state: state||null, error: error||null },
+      window.location.origin
+    );
+    window.close();
+    // Prevent rest of script from running in this popup
+    throw new Error('__oauth_popup_handled__');
+  }
+})();
 
 const PROVIDERS = {
   mega:     { id:'mega',     name:'MEGA',         icon:'🔷', authType:'password', tosLevel:'bad',  inactivity:'3 months (free) — vault login keeps active', multiAccount:false,
@@ -616,6 +639,12 @@ async function finishLogin(email,pw,salt,encAccounts){
   applyViewMode();
   await loadConfig();  // fetch all client IDs from Script Properties
   await handleOAuthCallback();
+  // Resume any OAuth flow that was interrupted by a page reload (popup blocked)
+  const resume = JSON.parse(localStorage.getItem('oauthResume') || 'null');
+  if (resume && S.cryptoKey) {
+    localStorage.removeItem('oauthResume');
+    await completeOAuthFlow(resume.code, resume.slot, resume.provider);
+  }
   if(!S.accounts.length){setStatus('warn','No storage configured','Open ⚙ Settings to add accounts');$('loadingState').classList.remove('hidden');$('loadingMsg').textContent='No storage slots yet — open ⚙ Settings to add your first account.';buildSidebar();}
   else await connectAndLoad();
 }
@@ -624,6 +653,10 @@ function doSignOut(){
   if(S.previewUrl){URL.revokeObjectURL(S.previewUrl);}
   Object.assign(S,{email:null,passwordRaw:null,salt:null,cryptoKey:null,authHash:null,encAccounts:[],accounts:[],storages:[],allFiles:[],allFolders:[],currentSlot:'all',currentPath:null,query:'',selected:new Set(),preview:null,previewUrl:null,moveTarget:null,oauthTokens:{},viewingTrash:false,trashSlot:null,trashItems:[]});
   sessionStorage.removeItem('vaultTokens');
+  localStorage.removeItem('oauthPending');
+  localStorage.removeItem('oauthResume');
+  if (_oauthPopup && !_oauthPopup.closed) { _oauthPopup.close(); _oauthPopup = null; }
+  if (_oauthMsgHandler) { window.removeEventListener('message', _oauthMsgHandler); _oauthMsgHandler = null; }
   $('screenVault').classList.add('hidden');$('screenAuth').classList.remove('hidden');showAuthStep('authEmail');
   ['inEmail','inLoginPw','inRegPw1','inRegPw2'].forEach(id=>$(id).value='');
 }
@@ -837,13 +870,13 @@ async function startOAuth(provider,slot){
   const cv=genCV();const cc=await genCC(cv);
   const redirectUri=window.location.href.split('?')[0].split('#')[0];
   const state=btoa(JSON.stringify({slot,provider,ts:Date.now()}));
-  sessionStorage.setItem('oauthPending',JSON.stringify({cv,slot,provider,redirectUri}));
-  // Dropbox needs token_access_type=offline for refresh tokens, and
-  // requires scopes listed in the app's Permission tab in developer console
+  // Store pending state in localStorage so popup can't access sessionStorage
+  localStorage.setItem('oauthPending',JSON.stringify({cv,slot,provider,redirectUri}));
+  // Dropbox: PKCE + offline tokens
   const isDropbox=provider==='dropbox';
   const extraParams=isDropbox?{token_access_type:'offline'}:{};
   const params=new URLSearchParams({client_id:cid,response_type:'code',redirect_uri:redirectUri,scope:prov.oauthScopes.join(' '),state,code_challenge:cc,code_challenge_method:'S256',...extraParams});
-  window.location.href=prov.oauthAuthUrl+'?'+params;
+  openOAuthPopup(prov.oauthAuthUrl+'?'+params,slot,provider);
 }
 
 async function startGoogleOAuth(slot){
@@ -851,52 +884,158 @@ async function startGoogleOAuth(slot){
   if(!cid){alert('GOOGLE_CLIENT_ID not set in Apps Script Script Properties. See setup guide in Code.gs.');return;}
   const cv=genCV();const cc=await genCC(cv);
   const redirectUri=window.location.href.split('?')[0].split('#')[0];
-  sessionStorage.setItem('oauthPending',JSON.stringify({cv,slot,provider:'gdrive',redirectUri}));
+  localStorage.setItem('oauthPending',JSON.stringify({cv,slot,provider:'gdrive',redirectUri}));
   const params=new URLSearchParams({client_id:cid,response_type:'code',redirect_uri:redirectUri,scope:'https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/userinfo.email',state:btoa(JSON.stringify({slot,provider:'gdrive',ts:Date.now()})),code_challenge:cc,code_challenge_method:'S256',access_type:'offline',prompt:'consent'});
-  window.location.href='https://accounts.google.com/o/oauth2/v2/auth?'+params;
+  openOAuthPopup('https://accounts.google.com/o/oauth2/v2/auth?'+params,slot,'gdrive');
 }
 
 async function startBoxOAuth(slot){
   const cid=clientId('box');
   if(!cid){alert('BOX_CLIENT_ID not set in Apps Script Script Properties. See setup guide in Code.gs.');return;}
-  const cv=genCV();const cc=await genCC(cv);
+  // Box uses plain auth-code flow (no PKCE) — token exchange happens
+  // server-side in Apps Script where the client_secret lives.
   const redirectUri=window.location.href.split('?')[0].split('#')[0];
-  sessionStorage.setItem('oauthPending',JSON.stringify({cv,slot,provider:'box',redirectUri}));
-  const params=new URLSearchParams({client_id:cid,response_type:'code',redirect_uri:redirectUri,state:btoa(JSON.stringify({slot,provider:'box',ts:Date.now()})),code_challenge:cc,code_challenge_method:'S256'});
-  window.location.href='https://account.box.com/api/oauth2/authorize?'+params;
+  const state=btoa(JSON.stringify({slot,provider:'box',ts:Date.now()}));
+  localStorage.setItem('oauthPending',JSON.stringify({cv:'',slot,provider:'box',redirectUri}));
+  const params=new URLSearchParams({client_id:cid,response_type:'code',redirect_uri:redirectUri,state});
+  openOAuthPopup('https://account.box.com/api/oauth2/authorize?'+params,slot,'box');
 }
 
-async function handleOAuthCallback(){
-  const params=new URLSearchParams(window.location.search);const code=params.get('code');
-  if(!code)return;
-  window.history.replaceState({},'',window.location.pathname);
-  const pending=JSON.parse(sessionStorage.getItem('oauthPending')||'null');
-  if(!pending){setStatus('warn','OAuth callback received but no pending state','');return;}
-  sessionStorage.removeItem('oauthPending');
-  const{cv,slot,provider,redirectUri}=pending;
-  setStatus('warn',`Completing ${PROVIDERS[provider]?.name||provider} connection…`,'');
-  try{
+// ── OAuth popup helpers ────────────────────────────────────────────────────────
+let _oauthPopup = null;
+let _oauthMsgHandler = null;
+
+function openOAuthPopup(url, slot, provider) {
+  // Close any previous popup
+  if (_oauthPopup && !_oauthPopup.closed) _oauthPopup.close();
+  if (_oauthMsgHandler) window.removeEventListener('message', _oauthMsgHandler);
+
+  const w = 520, h = 640;
+  const left = Math.round(window.screenX + (window.outerWidth  - w) / 2);
+  const top  = Math.round(window.screenY + (window.outerHeight - h) / 2);
+  _oauthPopup = window.open(url, 'vault_oauth',
+    `width=${w},height=${h},left=${left},top=${top},scrollbars=yes,resizable=yes`);
+
+  if (!_oauthPopup) {
+    alert('Popup blocked! Please allow popups for this site, then try again.');
+    return;
+  }
+  setStatus('warn', `Waiting for ${PROVIDERS[provider]?.name||provider} authorization…`,
+    'A popup window has opened — authorize there.');
+
+  _oauthMsgHandler = async (event) => {
+    if (event.origin !== window.location.origin) return;
+    if (event.data?.type !== 'vault_oauth') return;
+    window.removeEventListener('message', _oauthMsgHandler);
+    _oauthMsgHandler = null;
+    if (_oauthPopup && !_oauthPopup.closed) _oauthPopup.close();
+    if (event.data.error) {
+      setStatus('bad', 'Authorization denied', event.data.error);
+      return;
+    }
+    await completeOAuthFlow(event.data.code, slot, provider);
+  };
+  window.addEventListener('message', _oauthMsgHandler);
+}
+
+async function completeOAuthFlow(code, slot, provider) {
+  const pending = JSON.parse(localStorage.getItem('oauthPending') || 'null');
+  localStorage.removeItem('oauthPending');
+  const cv          = pending?.cv || '';
+  const redirectUri = pending?.redirectUri ||
+    window.location.href.split('?')[0].split('#')[0];
+
+  setStatus('warn', `Connecting ${PROVIDERS[provider]?.name||provider}…`, 'Exchanging tokens…');
+  try {
     let tokens;
-    if(provider==='gdrive'){const r=await api('gexchange',{code,codeVerifier:cv,redirectUri});tokens={accessToken:r.accessToken,refreshToken:r.refreshToken,expiresAt:r.expiresAt,identifier:r.email};}
-    else if(provider==='box'){const r=await api('bexchange',{code,codeVerifier:cv,redirectUri});tokens={accessToken:r.accessToken,refreshToken:r.refreshToken,expiresAt:r.expiresAt,identifier:r.identifier};}
-    else{const prov=PROVIDERS[provider];
-      // Dropbox requires Basic Auth header during token exchange, not client_id in body
-      const cid2=clientId(provider);
-      const useBasicAuth=provider==='dropbox';
-      const authHeader=useBasicAuth?{'Authorization':'Basic '+btoa(cid2+':')}:{};
-      const bodyParams={code,grant_type:'authorization_code',redirect_uri:redirectUri,code_verifier:cv};
-      if(!useBasicAuth)bodyParams.client_id=cid2;
-      const r=await fetch(prov.oauthTokenUrl,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded',...authHeader},body:new URLSearchParams(bodyParams)});const d=await r.json();if(d.error)throw new Error(d.error_description||d.error);let identifier=provider;if(provider==='dropbox'){const u=await(await fetch('https://api.dropboxapi.com/2/users/get_current_account',{method:'POST',headers:{Authorization:'Bearer '+d.access_token,'Content-Type':'application/json'}})).json();identifier=u.email||'dropbox';}else if(provider==='onedrive'){const u=await(await fetch('https://graph.microsoft.com/v1.0/me',{headers:{Authorization:'Bearer '+d.access_token}})).json();identifier=u.mail||u.userPrincipalName||'onedrive';}tokens={accessToken:d.access_token,refreshToken:d.refresh_token||'',expiresAt:Date.now()+(d.expires_in||3600)*1000,identifier};}
-    const{ciphertext,iv}=await encryptStr(S.cryptoKey,JSON.stringify(tokens));
-    await api('addStorage',{email:S.email,passwordHash:S.authHash,slot,provider,identifier:tokens.identifier,encryptedCredentials:ciphertext,iv});
-    S.encAccounts.push({slot,provider,identifier:tokens.identifier,encryptedCredentials:ciphertext,iv});
-    S.accounts.push({slot,provider,identifier:tokens.identifier,...tokens});
-    updateStoredToken(slot,tokens);
-    const storage=await connectAccount(S.accounts.find(a=>a.slot===slot));
-    if(storage){S.storages.push(storage);const{files,folders}=await storage.listFiles();S.allFiles.push(...files);S.allFolders.push(...folders);}
-    buildSidebar();buildUploadSlotDropdown();applyFilter();setStatus('ok',`${PROVIDERS[provider]?.name} Slot ${slot} connected`,'');
-    openSettings();
-  }catch(e){setStatus('bad','OAuth failed',e.message);}
+    if (provider === 'gdrive') {
+      const r = await api('gexchange', { code, codeVerifier: cv, redirectUri });
+      tokens = { accessToken: r.accessToken, refreshToken: r.refreshToken,
+                 expiresAt: r.expiresAt, identifier: r.identifier || r.email };
+    } else if (provider === 'box') {
+      // Box: server-side exchange (no PKCE, uses client_secret in Apps Script)
+      const r = await api('bexchange', { code, codeVerifier: '', redirectUri });
+      tokens = { accessToken: r.accessToken, refreshToken: r.refreshToken,
+                 expiresAt: r.expiresAt, identifier: r.identifier };
+    } else if (provider === 'dropbox') {
+      // Dropbox: PKCE exchange via Basic Auth (app key only, no secret needed)
+      const cid2 = clientId('dropbox');
+      const r = await fetch('https://api.dropboxapi.com/oauth2/token', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Authorization': 'Basic ' + btoa(cid2 + ':')
+        },
+        body: new URLSearchParams({
+          code, grant_type: 'authorization_code',
+          redirect_uri: redirectUri, code_verifier: cv
+        })
+      });
+      const d = await r.json();
+      if (d.error) throw new Error(d.error_description || d.error);
+      // Get Dropbox account email
+      const u = await (await fetch('https://api.dropboxapi.com/2/users/get_current_account', {
+        method: 'POST',
+        headers: { Authorization: 'Bearer ' + d.access_token, 'Content-Type': 'application/json' }
+      })).json();
+      tokens = {
+        accessToken:  d.access_token,
+        refreshToken: d.refresh_token || '',
+        expiresAt:    Date.now() + (d.expires_in || 14400) * 1000,
+        identifier:   u.email || 'dropbox'
+      };
+    } else {
+      throw new Error('Unknown provider: ' + provider);
+    }
+
+    // Encrypt and save credentials
+    const { ciphertext, iv } = await encryptStr(S.cryptoKey, JSON.stringify(tokens));
+    await api('addStorage', {
+      email: S.email, passwordHash: S.authHash, slot, provider,
+      identifier: tokens.identifier, encryptedCredentials: ciphertext, iv
+    });
+    S.encAccounts.push({ slot, provider, identifier: tokens.identifier,
+                         encryptedCredentials: ciphertext, iv });
+    S.accounts.push({ slot, provider, identifier: tokens.identifier, ...tokens });
+    updateStoredToken(slot, tokens);
+
+    // Connect the new slot live and load its files
+    setStatus('warn', `Loading files from ${PROVIDERS[provider]?.name}…`, '');
+    const storage = await connectAccount(S.accounts.find(a => a.slot === slot));
+    if (storage) {
+      S.storages.push(storage);
+      const { files, folders } = await storage.listFiles();
+      S.allFiles.push(...files);
+      S.allFolders.push(...folders);
+    }
+    buildSidebar(); buildUploadSlotDropdown(); applyFilter();
+    setStatus('ok', `${PROVIDERS[provider]?.name} connected`, tokens.identifier);
+    // Re-open settings so user sees the new slot
+    setTimeout(openSettings, 300);
+
+  } catch(e) {
+    setStatus('bad', 'OAuth connection failed', e.message);
+    console.error('OAuth error:', e);
+  }
+}
+
+// Legacy: handle redirect-based callback in case popup was blocked
+async function handleOAuthCallback() {
+  const params  = new URLSearchParams(window.location.search);
+  const code    = params.get('code');
+  if (!code) return;
+  window.history.replaceState({}, '', window.location.pathname);
+  const pending = JSON.parse(localStorage.getItem('oauthPending') || 'null');
+  if (!pending) return; // already handled by popup, or stale
+  const { slot, provider } = pending;
+  // Session should still be valid if user just logged in
+  if (!S.cryptoKey) {
+    // No session — user will need to log in again
+    // Store code in localStorage so we can resume after login
+    localStorage.setItem('oauthResume', JSON.stringify({ code, slot, provider }));
+    return;
+  }
+  await completeOAuthFlow(code, slot, provider);
 }
 
 // ── Sidebar ──────────────────────────────────────────────────────────────────
