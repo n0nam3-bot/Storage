@@ -469,19 +469,14 @@ const PROVIDERS = {
     tos:'⛔ 1 account per person — MEGA actively bans users with multiple accounts. Free storage is deleted after 3 months inactivity; logging into this vault counts as activity and resets the clock.' },
   gdrive:   { id:'gdrive',   name:'Google Drive',  icon:'🟢', authType:'google',   tosLevel:'ok',   inactivity:'2 years (Google-wide activity)', multiAccount:true,
     tos:'✅ Multiple accounts under different emails are completely fine.' },
-  onedrive: { id:'onedrive', name:'OneDrive',       icon:'☁️', authType:'oauth',    tosLevel:'ok',   inactivity:'2 years (Microsoft account activity)', multiAccount:true,
-    oauthAuthUrl:'https://login.microsoftonline.com/common/oauth2/v2.0/authorize',
-    oauthTokenUrl:'https://login.microsoftonline.com/common/oauth2/v2.0/token',
-    oauthScopes:['files.readwrite','offline_access','user.read'],
-    tos:'✅ Multiple Microsoft accounts under different emails are fine.',
-    instructions:"Click Connect — sign into any Microsoft/Outlook/Hotmail account." },
+
   box:      { id:'box',      name:'Box',            icon:'🗃️', authType:'box',      tosLevel:'ok',   inactivity:'No stated inactivity deletion policy', multiAccount:true,
     tos:"✅ Box TOS explicitly allows multiple accounts per person.",
-    instructions:"Click Connect — sign into your Box account." },
+    instructions:"Click Connect — sign into your Box account. Make sure BOX_CLIENT_ID and BOX_CLIENT_SECRET are in Script Properties." },
   dropbox:  { id:'dropbox',  name:'Dropbox',        icon:'📦', authType:'oauth',    tosLevel:'warn', inactivity:'12 months (free) — vault login keeps active', multiAccount:false,
     oauthAuthUrl:'https://www.dropbox.com/oauth2/authorize',
     oauthTokenUrl:'https://api.dropboxapi.com/oauth2/token',
-    oauthScopes:['files.content.write','files.content.read','account_info.read'],
+    oauthScopes:['files.metadata.read','files.metadata.write','files.content.read','files.content.write','account_info.read'],
     tos:"⚠️ 1 Dropbox per person — stacking free accounts violates their TOS.",
     instructions:"Click Connect — sign into your Dropbox account. One account per person only." },
 };
@@ -552,9 +547,17 @@ const esc=s=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>
 const norm=s=>String(s??'').trim().toLowerCase();
 function fmtSize(b){if(!b)return'0 B';const u=['B','KB','MB','GB','TB'];let i=0,n=b;while(n>=1024&&i<u.length-1){n/=1024;i++;}return n.toFixed(i?1:0)+' '+u[i];}
 function fmtDate(ts){return new Date(ts).toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'});}
-function guessMime(n=''){const e=n.split('.').pop().toLowerCase();if(['jpg','jpeg','png','gif','webp','avif','bmp','heic'].includes(e))return'image/'+e;if(['mp4','mov','webm','mkv','avi','m4v'].includes(e))return'video/mp4';if(['mp3','ogg','wav','flac','aac','m4a','opus'].includes(e))return'audio/'+e;return'application/octet-stream';}
+function guessMime(n=''){const e=(n||'').split('.').pop().toLowerCase();if(['jpg','jpeg','png','gif','webp','avif','bmp','heic','svg'].includes(e))return'image/'+e;if(['mp4','mov','webm','mkv','avi','m4v'].includes(e))return'video/mp4';if(['mp3','ogg','wav','flac','aac','m4a','opus'].includes(e))return'audio/'+e;if(e==='pdf')return'application/pdf';if(['doc','docx'].includes(e))return'application/vnd.openxmlformats-officedocument.wordprocessingml.document';if(['xls','xlsx'].includes(e))return'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';if(['ppt','pptx'].includes(e))return'application/vnd.openxmlformats-officedocument.presentationml.presentation';if(['txt','md','csv','json','xml','html','js','ts','css','py','rb','sh','yaml','yml','log'].includes(e))return'text/plain';return'application/octet-stream';}
 function typeOf(f){const m=f.mime||'';if(m.startsWith('image/'))return'image';if(m.startsWith('video/'))return'video';if(m.startsWith('audio/'))return'audio';return'file';}
 const typeIcon={image:'🖼️',video:'🎬',audio:'🎵',file:'📄'};
+const GDOC_ICONS={
+  'application/vnd.google-apps.document':'📝',
+  'application/vnd.google-apps.spreadsheet':'📊',
+  'application/vnd.google-apps.presentation':'📑',
+  'application/vnd.google-apps.drawing':'🎨',
+  'application/vnd.google-apps.form':'📋',
+};
+function fileIcon(file){return GDOC_ICONS[file.mime]||typeIcon[typeOf(file)]||'📄';}
 function setStatus(k,t,s=''){$('sdot').className='sdot '+k;$('statusText').textContent=t;$('statusSub').textContent=s;}
 function slotLabel(slot){
   const acc=S.encAccounts.find(a=>a.slot===slot);
@@ -645,7 +648,9 @@ async function connectMega(acc){
     uploadFile:async(parent,name,size,data)=>(await parent.upload({name,size},data).complete),
     downloadFile:async(node)=>{const b=await node.downloadBuffer();return b instanceof Uint8Array?b:new Uint8Array(b);},
     deleteFile:async(node)=>node.delete(true),
+    deleteFolder:async(node)=>node.delete(true),
     renameFile:async(node,name)=>node.rename(name),
+    renameFolder:async(node,name)=>node.rename(name),
     mkdir:async(parent,name)=>parent.mkdir(name),
     resolveNode:(parts)=>{let n=storage.root;for(const p of parts){const c=(n.children||[]).find(x=>x.directory&&x.name===p);if(!c)return null;n=c;}return n;},
   };
@@ -657,18 +662,31 @@ async function connectDropbox(acc){
   async function ensureToken(){if(Date.now()>expiresAt-60000){const r=await fetch('https://api.dropboxapi.com/oauth2/token',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({grant_type:'refresh_token',refresh_token:refreshToken,client_id:clientId('dropbox')})});const d=await r.json();if(d.error)throw new Error('Dropbox refresh failed: '+d.error_description);accessToken=d.access_token;expiresAt=Date.now()+d.expires_in*1000;updateStoredToken(acc.slot,{accessToken,expiresAt});}return accessToken;}
   async function dbx(ep,opts={}){const tok=await ensureToken();const r=await fetch('https://api.dropboxapi.com/2/'+ep,{...opts,headers:{Authorization:'Bearer '+tok,'Content-Type':'application/json',...(opts.headers||{})}});if(!r.ok)throw new Error('Dropbox: '+(await r.text()));return r.json();}
   const files=[],folders=[];
-  async function walk(path){let res=await dbx('files/list_folder',{method:'POST',body:JSON.stringify({path:path||'',recursive:false})});
-    function proc(es,pp){for(const e of es){const p=pp?pp.replace(/^\/+/,''):'';if(e['.tag']==='folder')folders.push({id:e.id,name:e.name,slot:acc.slot,path:p,megaNode:e});else files.push({id:e.id,name:e.name,size:e.size||0,mime:guessMime(e.name),slot:acc.slot,path:p,createdAt:new Date(e.client_modified||e.server_modified).getTime(),megaNode:e});}}
-    proc(res.entries,path);while(res.has_more){res=await dbx('files/list_folder/continue',{method:'POST',body:JSON.stringify({cursor:res.cursor})});proc(res.entries,path);}
-    for(const f of folders.filter(x=>x.path===(path?path.replace(/^\/+/,''):'')))await walk('/'+f.name);
+  async function walk(path,parentPath){
+    let res=await dbx('files/list_folder',{method:'POST',body:JSON.stringify({path:path||'',recursive:false})});
+    function proc(es){for(const e of es){
+      if(e['.tag']==='folder')folders.push({id:e.id,name:e.name,slot:acc.slot,path:parentPath,megaNode:e});
+      else files.push({id:e.id,name:e.name,size:e.size||0,mime:guessMime(e.name),slot:acc.slot,path:parentPath,createdAt:new Date(e.client_modified||e.server_modified).getTime(),megaNode:e});
+    }}
+    proc(res.entries);
+    while(res.has_more){res=await dbx('files/list_folder/continue',{method:'POST',body:JSON.stringify({cursor:res.cursor})});proc(res.entries);}
+    // Walk subfolders found in this directory
+    const myFolders=folders.filter(x=>x.path===parentPath&&(x.megaNode.path_display||'').startsWith(path||'/'));
+    for(const f of myFolders){
+      const subPath=(f.megaNode.path_display||'').replace(/^\/+/,'');
+      const subParent=subPath.split('/').slice(0,-1).join('/');
+      await walk(f.megaNode.path_display,subParent);
+    }
   }
-  await walk('');
+  await walk('','');
   return{slot:acc.slot,provider:'dropbox',identifier:acc.identifier,
     listFiles:async()=>({files,folders}),
     uploadFile:async(parent,name,size,data)=>{const tok=await ensureToken();const path=(parent.path_display||'')+'/'+name;const r=await fetch('https://content.dropboxapi.com/2/files/upload',{method:'POST',headers:{Authorization:'Bearer '+tok,'Content-Type':'application/octet-stream','Dropbox-API-Arg':JSON.stringify({path,mode:'add',autorename:true})},body:data});return r.json();},
     downloadFile:async(node)=>{const tok=await ensureToken();const r=await fetch('https://content.dropboxapi.com/2/files/download',{method:'POST',headers:{Authorization:'Bearer '+tok,'Dropbox-API-Arg':JSON.stringify({path:node.path_display||node.id})}});return new Uint8Array(await r.arrayBuffer());},
     deleteFile:async(node)=>dbx('files/delete_v2',{method:'POST',body:JSON.stringify({path:node.path_display||node.id})}),
-    renameFile:async(node,name)=>dbx('files/move_v2',{method:'POST',body:JSON.stringify({from_path:node.path_display,to_path:(node.path_display||'').split('/').slice(0,-1).join('/')+'/'+name})}),
+    deleteFolder:async(node)=>dbx('files/delete_v2',{method:'POST',body:JSON.stringify({path:node.path_display||node.id})}),
+    renameFile:async(node,name)=>{const parent=(node.path_display||'').split('/').slice(0,-1).join('/')||'/';return dbx('files/move_v2',{method:'POST',body:JSON.stringify({from_path:node.path_display,to_path:parent+'/'+name})});},
+    renameFolder:async(node,name)=>{const parent=(node.path_display||'').split('/').slice(0,-1).join('/')||'/';return dbx('files/move_v2',{method:'POST',body:JSON.stringify({from_path:node.path_display,to_path:parent+'/'+name})});},
     mkdir:async(parent,name)=>dbx('files/create_folder_v2',{method:'POST',body:JSON.stringify({path:(parent.path_display||'')+'/'+name})}),
     resolveNode:(parts)=>({path_display:'/'+parts.join('/'),'.tag':'folder'}),
   };
@@ -680,14 +698,31 @@ async function connectGoogle(acc){
   async function ensureToken(){if(Date.now()>expiresAt-60000){const r=await api('grefresh',{refreshToken});accessToken=r.accessToken;expiresAt=r.expiresAt;updateStoredToken(acc.slot,{accessToken,expiresAt});}return accessToken;}
   async function gFetch(ep,opts={}){const tok=await ensureToken();const base='https://www.googleapis.com';const r=await fetch(base+ep,{...opts,headers:{Authorization:'Bearer '+tok,...(opts.headers||{})}});if(r.status===204)return{};if(!r.ok)throw new Error('Drive: '+(await r.text()));const ct=r.headers.get('content-type')||'';if(ct.includes('json'))return r.json();return r.arrayBuffer();}
   const files=[],folders=[];
-  async function walk(fid,path){let pt='';do{const qs=new URLSearchParams({q:`'${fid}' in parents and trashed=false`,fields:'nextPageToken,files(id,name,mimeType,size,createdTime)',pageSize:'200',...(pt?{pageToken:pt}:{})});const r=await gFetch('/drive/v3/files?'+qs);for(const f of r.files||[]){if(f.mimeType==='application/vnd.google-apps.folder'){folders.push({id:f.id,name:f.name,slot:acc.slot,path,megaNode:f});await walk(f.id,path?`${path}/${f.name}`:f.name);}else files.push({id:f.id,name:f.name,size:parseInt(f.size)||0,mime:f.mimeType||guessMime(f.name),slot:acc.slot,path,createdAt:new Date(f.createdTime).getTime(),megaNode:f});}pt=r.nextPageToken||'';}while(pt);}
+  async function walk(fid,path){let pt='';do{const qs=new URLSearchParams({q:`'${fid}' in parents and trashed=false`,fields:'nextPageToken,files(id,name,mimeType,size,createdTime)',pageSize:'200',...(pt?{pageToken:pt}:{})});const r=await gFetch('/drive/v3/files?'+qs);for(const f of r.files||[]){if(f.mimeType==='application/vnd.google-apps.folder'){folders.push({id:f.id,name:f.name,slot:acc.slot,path,megaNode:f});await walk(f.id,path?`${path}/${f.name}`:f.name);}else files.push({id:f.id,name:f.name,size:parseInt(f.size)||0,mime:f.mimeType||guessMime(f.name),slot:acc.slot,path,createdAt:new Date(f.createdTime).getTime(),megaNode:{...f,mimeType:f.mimeType}});}pt=r.nextPageToken||'';}while(pt);}
   await walk('root','');
   return{slot:acc.slot,provider:'gdrive',identifier:acc.identifier,_ensureToken:ensureToken,
     listFiles:async()=>({files,folders}),
     uploadFile:async(parent,name,size,data)=>{const tok=await ensureToken();const meta=JSON.stringify({name,parents:[parent.id||'root']});const b='----VaultBound';const head=`--${b}\r\nContent-Type: application/json\r\n\r\n${meta}\r\n--${b}\r\nContent-Type: application/octet-stream\r\n\r\n`;const end=`\r\n--${b}--`;const he=new TextEncoder().encode(head),de=data,ee=new TextEncoder().encode(end);const combined=new Uint8Array(he.length+de.length+ee.length);combined.set(he,0);combined.set(de,he.length);combined.set(ee,he.length+de.length);const r=await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart',{method:'POST',headers:{Authorization:'Bearer '+tok,'Content-Type':`multipart/related; boundary=${b}`},body:combined});return r.json();},
-    downloadFile:async(node)=>{const buf=await gFetch(`/drive/v3/files/${node.id}?alt=media`);return new Uint8Array(buf);},
+    downloadFile:async(node)=>{
+      // Google Docs/Sheets/Slides cannot be downloaded as-is — must be exported
+      const EXPORT_MAP={
+        'application/vnd.google-apps.document':       {mime:'application/vnd.openxmlformats-officedocument.wordprocessingml.document', ext:'docx'},
+        'application/vnd.google-apps.spreadsheet':    {mime:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',       ext:'xlsx'},
+        'application/vnd.google-apps.presentation':   {mime:'application/vnd.openxmlformats-officedocument.presentationml.presentation',ext:'pptx'},
+        'application/vnd.google-apps.drawing':        {mime:'image/png',  ext:'png'},
+        'application/vnd.google-apps.script':         {mime:'application/vnd.google-apps.script+json', ext:'json'},
+        'application/vnd.google-apps.form':           {mime:'application/zip', ext:'zip'},
+      };
+      const exp=EXPORT_MAP[node.mimeType];
+      let ep;
+      if(exp){ep=`/drive/v3/files/${node.id}/export?mimeType=${encodeURIComponent(exp.mime)}`;}
+      else{ep=`/drive/v3/files/${node.id}?alt=media`;}
+      const buf=await gFetch(ep);return new Uint8Array(buf);
+    },
     deleteFile:async(node)=>gFetch(`/drive/v3/files/${node.id}`,{method:'DELETE'}),
+    deleteFolder:async(node)=>gFetch(`/drive/v3/files/${node.id}`,{method:'DELETE'}),
     renameFile:async(node,name)=>{const tok=await ensureToken();const r=await fetch(`https://www.googleapis.com/drive/v3/files/${node.id}`,{method:'PATCH',headers:{Authorization:'Bearer '+tok,'Content-Type':'application/json'},body:JSON.stringify({name})});return r.json();},
+    renameFolder:async(node,name)=>{const tok=await ensureToken();const r=await fetch(`https://www.googleapis.com/drive/v3/files/${node.id}`,{method:'PATCH',headers:{Authorization:'Bearer '+tok,'Content-Type':'application/json'},body:JSON.stringify({name})});return r.json();},
     mkdir:async(parent,name)=>{const tok=await ensureToken();const r=await fetch('https://www.googleapis.com/drive/v3/files',{method:'POST',headers:{Authorization:'Bearer '+tok,'Content-Type':'application/json'},body:JSON.stringify({name,mimeType:'application/vnd.google-apps.folder',parents:[parent.id||'root']})});return r.json();},
     resolveNode:()=>({id:'root'}),
   };
@@ -770,13 +805,15 @@ async function connectBox(acc){
       return new Uint8Array(await r.arrayBuffer());
     },
     deleteFile:async(node)=>bFetch(`/files/${node.id}`,{method:'DELETE'}),
+    deleteFolder:async(node)=>bFetch(`/folders/${node.id}?recursive=true`,{method:'DELETE'}),
     renameFile:async(node,name)=>bFetch(`/files/${node.id}`,{method:'PUT',body:JSON.stringify({name})}),
+    renameFolder:async(node,name)=>bFetch(`/folders/${node.id}`,{method:'PUT',body:JSON.stringify({name})}),
     mkdir:async(parent,name)=>bFetch('/folders',{method:'POST',body:JSON.stringify({name,parent:{id:parent.id||'0'}})}),
     resolveNode:(parts)=>({id:'0',name:'root',type:'folder'}),
   };
 }
 
-async function connectAccount(acc){switch(acc.provider){case'dropbox':return connectDropbox(acc);case'gdrive':return connectGoogle(acc);case'onedrive':return connectOneDrive(acc);case'box':return connectBox(acc);default:return connectMega(acc);}}
+async function connectAccount(acc){switch(acc.provider){case'dropbox':return connectDropbox(acc);case'gdrive':return connectGoogle(acc);case'box':return connectBox(acc);default:return connectMega(acc);}}
 
 async function connectAndLoad(){
   setStatus('warn','Connecting…','Logging into storage accounts');
@@ -801,7 +838,11 @@ async function startOAuth(provider,slot){
   const redirectUri=window.location.href.split('?')[0].split('#')[0];
   const state=btoa(JSON.stringify({slot,provider,ts:Date.now()}));
   sessionStorage.setItem('oauthPending',JSON.stringify({cv,slot,provider,redirectUri}));
-  const params=new URLSearchParams({client_id:cid,response_type:'code',redirect_uri:redirectUri,scope:prov.oauthScopes.join(' '),state,code_challenge:cc,code_challenge_method:'S256',token_access_type:'offline'});
+  // Dropbox needs token_access_type=offline for refresh tokens, and
+  // requires scopes listed in the app's Permission tab in developer console
+  const isDropbox=provider==='dropbox';
+  const extraParams=isDropbox?{token_access_type:'offline'}:{};
+  const params=new URLSearchParams({client_id:cid,response_type:'code',redirect_uri:redirectUri,scope:prov.oauthScopes.join(' '),state,code_challenge:cc,code_challenge_method:'S256',...extraParams});
   window.location.href=prov.oauthAuthUrl+'?'+params;
 }
 
@@ -838,7 +879,14 @@ async function handleOAuthCallback(){
     let tokens;
     if(provider==='gdrive'){const r=await api('gexchange',{code,codeVerifier:cv,redirectUri});tokens={accessToken:r.accessToken,refreshToken:r.refreshToken,expiresAt:r.expiresAt,identifier:r.email};}
     else if(provider==='box'){const r=await api('bexchange',{code,codeVerifier:cv,redirectUri});tokens={accessToken:r.accessToken,refreshToken:r.refreshToken,expiresAt:r.expiresAt,identifier:r.identifier};}
-    else{const prov=PROVIDERS[provider];const r=await fetch(prov.oauthTokenUrl,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({code,grant_type:'authorization_code',client_id:clientId(provider),redirect_uri:redirectUri,code_verifier:cv})});const d=await r.json();if(d.error)throw new Error(d.error_description||d.error);let identifier=provider;if(provider==='dropbox'){const u=await(await fetch('https://api.dropboxapi.com/2/users/get_current_account',{method:'POST',headers:{Authorization:'Bearer '+d.access_token,'Content-Type':'application/json'}})).json();identifier=u.email||'dropbox';}else if(provider==='onedrive'){const u=await(await fetch('https://graph.microsoft.com/v1.0/me',{headers:{Authorization:'Bearer '+d.access_token}})).json();identifier=u.mail||u.userPrincipalName||'onedrive';}tokens={accessToken:d.access_token,refreshToken:d.refresh_token||'',expiresAt:Date.now()+(d.expires_in||3600)*1000,identifier};}
+    else{const prov=PROVIDERS[provider];
+      // Dropbox requires Basic Auth header during token exchange, not client_id in body
+      const cid2=clientId(provider);
+      const useBasicAuth=provider==='dropbox';
+      const authHeader=useBasicAuth?{'Authorization':'Basic '+btoa(cid2+':')}:{};
+      const bodyParams={code,grant_type:'authorization_code',redirect_uri:redirectUri,code_verifier:cv};
+      if(!useBasicAuth)bodyParams.client_id=cid2;
+      const r=await fetch(prov.oauthTokenUrl,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded',...authHeader},body:new URLSearchParams(bodyParams)});const d=await r.json();if(d.error)throw new Error(d.error_description||d.error);let identifier=provider;if(provider==='dropbox'){const u=await(await fetch('https://api.dropboxapi.com/2/users/get_current_account',{method:'POST',headers:{Authorization:'Bearer '+d.access_token,'Content-Type':'application/json'}})).json();identifier=u.email||'dropbox';}else if(provider==='onedrive'){const u=await(await fetch('https://graph.microsoft.com/v1.0/me',{headers:{Authorization:'Bearer '+d.access_token}})).json();identifier=u.mail||u.userPrincipalName||'onedrive';}tokens={accessToken:d.access_token,refreshToken:d.refresh_token||'',expiresAt:Date.now()+(d.expires_in||3600)*1000,identifier};}
     const{ciphertext,iv}=await encryptStr(S.cryptoKey,JSON.stringify(tokens));
     await api('addStorage',{email:S.email,passwordHash:S.authHash,slot,provider,identifier:tokens.identifier,encryptedCredentials:ciphertext,iv});
     S.encAccounts.push({slot,provider,identifier:tokens.identifier,encryptedCredentials:ciphertext,iv});
@@ -930,19 +978,28 @@ function renderGrid(folders,files){
 function renderGridView(folders,files,vm){
   const g=$('fileGrid');g.className=`file-grid sz-${vm}`;
   const fH=folders.map(f=>`<div class="fcard is-folder" data-folderid="${esc(f.id)}"><div class="fthumb t-folder"><span style="position:relative;z-index:1">📁</span></div><div class="finfo"><div class="fname">${esc(f.name)}</div><div class="fmeta"><span>Folder</span><span style="color:var(--dim)">${providerIcon(f.slot)} ${esc(slotLabel(f.slot))}</span></div></div></div>`).join('');
-  const fF=files.map(f=>{const t=typeOf(f),s=S.selected.has(f.id);return`<div class="fcard${s?' selected':''}" data-id="${esc(f.id)}"><div class="fthumb t-${t}"><span style="position:relative;z-index:1">${typeIcon[t]}</span><span class="fslot">${providerIcon(f.slot)}</span></div><div class="fchk">${s?'✓':''}</div><div class="finfo"><div class="fname" title="${esc(f.name)}">${esc(f.name)}</div><div class="fmeta"><span>${fmtSize(f.size)}</span><span>${fmtDate(f.createdAt)}</span></div></div></div>`;}).join('');
+  const fF=files.map(f=>{const t=typeOf(f),s=S.selected.has(f.id);return`<div class="fcard${s?' selected':''}" data-id="${esc(f.id)}"><div class="fthumb t-${t}"><span style="position:relative;z-index:1">${fileIcon(f)}</span><span class="fslot">${providerIcon(f.slot)}</span></div><div class="fchk">${s?'✓':''}</div><div class="finfo"><div class="fname" title="${esc(f.name)}">${esc(f.name)}</div><div class="fmeta"><span>${fmtSize(f.size)}</span><span>${fmtDate(f.createdAt)}</span></div></div></div>`;}).join('');
   g.innerHTML=fH+fF;wireGridEvents(g);
 }
 function renderListView(folders,files){
   const g=$('fileGrid');g.className='file-grid view-list';
   const hdr='<div class="list-header"><span></span><span></span><span>Name</span><span>Size</span><span>Date</span><span>Slot</span></div>';
   const fH=folders.map(f=>`<div class="list-row is-folder" data-folderid="${esc(f.id)}"><div class="lr-chk"></div><div class="lr-icon">📁</div><div class="lr-name">${esc(f.name)}</div><div class="lr-size">—</div><div class="lr-date">—</div><div class="lr-slot">${providerIcon(f.slot)} ${esc(slotLabel(f.slot))}</div></div>`).join('');
-  const fF=files.map(f=>{const s=S.selected.has(f.id);return`<div class="list-row${s?' selected':''}" data-id="${esc(f.id)}"><div class="lr-chk">${s?'✓':''}</div><div class="lr-icon">${typeIcon[typeOf(f)]}</div><div class="lr-name">${esc(f.name)}</div><div class="lr-size">${fmtSize(f.size)}</div><div class="lr-date">${fmtDate(f.createdAt)}</div><div class="lr-slot">${providerIcon(f.slot)} ${esc(slotLabel(f.slot))}</div></div>`;}).join('');
+  const fF=files.map(f=>{const s=S.selected.has(f.id);return`<div class="list-row${s?' selected':''}" data-id="${esc(f.id)}"><div class="lr-chk">${s?'✓':''}</div><div class="lr-icon">${fileIcon(f)}</div><div class="lr-name">${esc(f.name)}</div><div class="lr-size">${fmtSize(f.size)}</div><div class="lr-date">${fmtDate(f.createdAt)}</div><div class="lr-slot">${providerIcon(f.slot)} ${esc(slotLabel(f.slot))}</div></div>`;}).join('');
   g.innerHTML=hdr+fH+fF;wireGridEvents(g);
 }
 function wireGridEvents(g){
   g.querySelectorAll('[data-id]').forEach(el=>el.addEventListener('click',e=>{if(e.target.closest('.fchk,.lr-chk'))toggleSelect(el.dataset.id);else{const f=S.allFiles.find(x=>x.id===el.dataset.id);if(f)openPreview(f);}}));
-  g.querySelectorAll('[data-folderid]').forEach(el=>el.addEventListener('click',()=>{const folder=S.allFolders.find(x=>x.id===el.dataset.folderid);if(!folder)return;S.currentPath=folder.path?`${folder.path}/${folder.name}`:folder.name;if(S.currentSlot==='all')S.currentSlot=String(folder.slot);buildSidebar();buildBreadcrumb();applyFilter();}));
+  g.querySelectorAll('[data-folderid]').forEach(el=>{
+    el.addEventListener('click',e=>{
+      if(e.target.closest('[data-folder-action]'))return;
+      const folder=S.allFolders.find(x=>x.id===el.dataset.folderid);if(!folder)return;
+      S.currentPath=folder.path?`${folder.path}/${folder.name}`:folder.name;
+      if(S.currentSlot==='all')S.currentSlot=String(folder.slot);
+      buildSidebar();buildBreadcrumb();applyFilter();
+    });
+    el.addEventListener('contextmenu',e=>{e.preventDefault();const folder=S.allFolders.find(x=>x.id===el.dataset.folderid);if(folder)showFolderMenu(folder,e.clientX,e.clientY);});
+  });
 }
 function toggleSelect(id){S.selected.has(id)?S.selected.delete(id):S.selected.add(id);const el=$('fileGrid').querySelector(`[data-id="${CSS.escape(id)}"]`);if(el){el.classList.toggle('selected',S.selected.has(id));const c=el.querySelector('.fchk,.lr-chk');if(c)c.textContent=S.selected.has(id)?'✓':'';}updateSelUI();}
 function updateSelUI(){const n=S.selected.size;$('btnDeleteSelected').classList.toggle('hidden',!n);$('btnMoveSelected').classList.toggle('hidden',!n||S.storages.length<2);$('selDivider').style.display=n?'':'none';}
@@ -965,7 +1022,62 @@ $('btnNewFolder').addEventListener('click',async()=>{
   }catch(e){alert('Failed: '+e.message);}
 });
 
-// ── Preview ───────────────────────────────────────────────────────────────────
+// ── Folder context menu ──────────────────────────────────────────────────────
+let folderMenu=null;
+function showFolderMenu(folder,x,y){
+  closeFolderMenu();
+  folderMenu=document.createElement('div');
+  folderMenu.style.cssText=`position:fixed;left:${Math.min(x,window.innerWidth-160)}px;top:${Math.min(y,window.innerHeight-100)}px;z-index:200;background:var(--s1);border:1px solid var(--border2);border-radius:12px;box-shadow:var(--shadow);overflow:hidden;min-width:150px;`;
+  folderMenu.innerHTML=`
+    <button data-fm="rename" style="display:flex;align-items:center;gap:8px;width:100%;padding:10px 14px;background:none;border:none;font:inherit;font-size:13px;color:var(--text);cursor:pointer;text-align:left">✏️ Rename</button>
+    <button data-fm="delete" style="display:flex;align-items:center;gap:8px;width:100%;padding:10px 14px;background:none;border:none;font:inherit;font-size:13px;color:var(--bad);cursor:pointer;text-align:left">🗑 Delete folder</button>`;
+  folderMenu.querySelector('[data-fm="rename"]').addEventListener('click',()=>{closeFolderMenu();startFolderRename(folder);});
+  folderMenu.querySelector('[data-fm="delete"]').addEventListener('click',()=>{closeFolderMenu();deleteFolder(folder);});
+  document.body.appendChild(folderMenu);
+  setTimeout(()=>document.addEventListener('click',closeFolderMenu,{once:true}),0);
+}
+function closeFolderMenu(){if(folderMenu){folderMenu.remove();folderMenu=null;}}
+
+async function startFolderRename(folder){
+  const newName=prompt('Rename folder:',folder.name);
+  if(!newName||!newName.trim()||newName.trim()===folder.name)return;
+  const storage=S.storages.find(s=>s.slot===folder.slot);
+  if(!storage){alert('Slot not connected.');return;}
+  try{
+    const fn=storage.renameFolder||storage.renameFile;
+    await fn(folder.megaNode,newName.trim());
+    const f=S.allFolders.find(x=>x.id===folder.id);
+    if(f){
+      // Update path references for child files/folders
+      const oldFull=f.path?`${f.path}/${f.name}`:f.name;
+      const newFull=f.path?`${f.path}/${newName.trim()}`:newName.trim();
+      S.allFiles.forEach(x=>{if(x.path===oldFull)x.path=newFull;else if(x.path.startsWith(oldFull+'/'))x.path=newFull+x.path.slice(oldFull.length);});
+      S.allFolders.forEach(x=>{if(x.path===oldFull)x.path=newFull;else if(x.path.startsWith(oldFull+'/'))x.path=newFull+x.path.slice(oldFull.length);});
+      f.name=newName.trim();
+      if(S.currentPath===oldFull)S.currentPath=newFull;
+    }
+    applyFilter();setStatus('ok',`Renamed to "${newName.trim()}"`,''  );
+  }catch(e){alert('Rename failed: '+e.message);}
+}
+
+async function deleteFolder(folder){
+  if(!confirm(`Delete folder "${folder.name}" and all its contents? This cannot be undone.`))return;
+  const storage=S.storages.find(s=>s.slot===folder.slot);
+  if(!storage){alert('Slot not connected.');return;}
+  try{
+    const dfn=storage.deleteFolder||storage.deleteFile;
+    await dfn(folder.megaNode);
+    const fullPath=folder.path?`${folder.path}/${folder.name}`:folder.name;
+    S.allFiles=S.allFiles.filter(x=>x.path!==fullPath&&!x.path.startsWith(fullPath+'/'));
+    S.allFolders=S.allFolders.filter(x=>x.id!==folder.id&&x.path!==fullPath&&!x.path.startsWith(fullPath+'/'));
+    if(S.currentPath===fullPath||S.currentPath?.startsWith(fullPath+'/')){
+      S.currentPath=folder.path||'';
+    }
+    buildSidebar();applyFilter();setStatus('ok',`Folder "${folder.name}" deleted`,''  );
+  }catch(e){alert('Delete failed: '+e.message);}
+}
+
+// ── Preview ───────────────────────────────────────────────────────────────────────
 // Extension → category for richer preview logic
 const EXT_TEXT=['txt','md','markdown','csv','json','xml','html','htm','js','ts','jsx','tsx','css','scss','py','rb','php','sh','yaml','yml','toml','ini','log','sql'];
 const EXT_OFFICE=['doc','docx','xls','xlsx','ppt','pptx','odt','ods','odp'];
