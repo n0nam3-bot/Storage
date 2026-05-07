@@ -62,7 +62,7 @@ button:disabled{opacity:.4;cursor:not-allowed}
 .auth-btn:hover{background:var(--blue2)}
 .auth-back{background:none;border:none;color:var(--text2);font:inherit;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:4px;padding:0}
 .auth-back:hover{color:var(--text)}
-.auth-err{font-size:12px;color:var(--red);min-height:16px}
+.auth-err{font-size:13px;font-weight:500;color:#ff6b6b;min-height:18px;padding:6px 0}
 .auth-hint{font-size:11px;color:var(--text3);line-height:1.5;padding:10px 12px;background:var(--bg3);border-radius:var(--r);border:1px solid var(--border)}
 
 /* ── App shell ── */
@@ -281,6 +281,21 @@ tr:hover .fl-chk,.fl tr.sel .fl-chk{border-color:var(--blue)}
 </style>
 </head>
 <body>
+<!-- JS error overlay — shows any crash visibly on mobile -->
+<div id="jsErrBox" style="display:none;position:fixed;inset:0;z-index:9999;background:#1a0000;color:#ff6b6b;padding:24px;font-family:monospace;font-size:14px;overflow:auto;white-space:pre-wrap"></div>
+<script>
+window.onerror=function(msg,src,line,col,err){
+  var b=document.getElementById('jsErrBox');
+  b.style.display='block';
+  b.textContent='JS ERROR:\n'+msg+'\nLine: '+line+'\nSource: '+src+'\n\n'+(err&&err.stack?err.stack:'');
+  return false;
+};
+window.addEventListener('unhandledrejection',function(e){
+  var b=document.getElementById('jsErrBox');
+  b.style.display='block';
+  b.textContent=(b.textContent||'')+'\nUNHANDLED PROMISE:\n'+(e.reason?.stack||e.reason||e);
+});
+</script>
 
 <!-- ═══════ AUTH ══════════════════════════════════════════════════════════ -->
 <div id="authScreen">
@@ -1377,11 +1392,4 @@ function renderAccounts(){
   list.querySelectorAll('[data-edit]').forEach(b=>b.addEventListener('click',()=>{ const el=$('ae-'+b.dataset.edit); if(el)el.classList.toggle('on'); }));
   list.querySelectorAll('[data-cancel]').forEach(b=>b.addEventListener('click',()=>{ const el=$('ae-'+b.dataset.cancel); if(el)el.classList.remove('on'); }));
   list.querySelectorAll('[data-save]').forEach(b=>b.addEventListener('click',()=>saveCreds(Number(b.dataset.save))));
-  list.querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click',()=>delSlot(Number(b.dataset.del))));
-  list.querySelectorAll('[data-reauth]').forEach(b=>b.addEventListener('click',()=>reAuth(Number(b.dataset.reauth),b.dataset.reprov)));
-  list.querySelectorAll('.pw-eye').forEach(attachEye);
-}
-async function saveCreds(slot){
-  const pw=$('epw-'+slot)?.value; const err=$('eerr-'+slot); if(err)err.textContent='';
-  if(!pw){if(err)err.textContent='Enter a new password.';return;}
-  try{const ident=S.encAccts.find(a=>a.slot===slot)?.identifier||'';const{ct,iv}=await aesEnc(S.key,JSON.stringify({megaEmail:ident,megaPassword:pw}));await api('updateStorage',{email:S.email,passwordHash:S.hash,slot,encryptedCredentials:ct,iv});const ea=S.encAccts.find(a=>a.slot===slot);if(ea){ea.encryptedCredentials=ct;ea.iv=iv
+  list.querySelectorAll('[data-del]').forEach
