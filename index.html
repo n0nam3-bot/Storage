@@ -560,7 +560,7 @@ const PROVIDERS = {
   gdrive:  { id:'gdrive',  name:'Google Drive', icon:'🟢', auth:'google',   multi:true,  inactivity:'2 years',         tosLevel:'ok',
     tos:'✅ Multiple Google accounts under different emails are fine. 15 GB free per account.' },
   box:     { id:'box',     name:'Box',          icon:'🗃️', auth:'box',      multi:true,  inactivity:'No stated policy', tosLevel:'ok',
-    tos:'✅ Box allows multiple accounts. 10 GB free per account.' },
+    tos:'✅ Box allows multiple accounts. 10 GB free per account.<br><br><strong>Required:</strong> In your Box app → Configuration → CORS Domains → add <code>https://n0nam3-bot.github.io</code> then click Save.' },
   dropbox: { id:'dropbox', name:'Dropbox',      icon:'📦', auth:'dropbox',  multi:false, inactivity:'12 months (free)', tosLevel:'warn',
     tos:'⚠️ 1 Dropbox per person. Free accounts inactive for 12 months may be deleted; using this vault resets the clock. 2 GB free.',
     authUrl:'https://www.dropbox.com/oauth2/authorize', tokenUrl:'https://api.dropboxapi.com/oauth2/token',
@@ -781,7 +781,8 @@ async function connectDropbox(a){
   let{accessToken,refreshToken,expiresAt}=a;
   async function tok(){
     if(Date.now()>expiresAt-60000){
-      const r=await fetch('https://api.dropboxapi.com/oauth2/token',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded','Authorization':'Basic '+btoa(cid('dropbox')+':')},body:new URLSearchParams({grant_type:'refresh_token',refresh_token:refreshToken})});
+      // Dropbox PKCE public client refresh: client_id in body, no Authorization header
+      const r=await fetch('https://api.dropboxapi.com/oauth2/token',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({grant_type:'refresh_token',refresh_token:refreshToken,client_id:cid('dropbox')})});
       const d=await r.json(); if(d.error)throw new Error('Dropbox refresh: '+d.error_description);
       accessToken=d.access_token; expiresAt=Date.now()+(d.expires_in||14400)*1000;
       updToken(a.slot,{accessToken,expiresAt});
@@ -928,7 +929,8 @@ async function finishOAuth(code,slot,provider){
       tokens={accessToken:r.accessToken,refreshToken:r.refreshToken,expiresAt:r.expiresAt,identifier:r.identifier};
     } else if(provider==='dropbox'){
       const k=cid('dropbox');
-      const r=await fetch('https://api.dropboxapi.com/oauth2/token',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded','Authorization':'Basic '+btoa(k+':')},body:new URLSearchParams({code,grant_type:'authorization_code',redirect_uri:redir,code_verifier:cv})});
+      // Dropbox PKCE public client: client_id goes in body, NO Authorization header, NO secret
+      const r=await fetch('https://api.dropboxapi.com/oauth2/token',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({code,grant_type:'authorization_code',redirect_uri:redir,code_verifier:cv,client_id:k})});
       const d=await r.json(); if(d.error)throw new Error(d.error_description||d.error);
       const u=await(await fetch('https://api.dropboxapi.com/2/users/get_current_account',{method:'POST',headers:{Authorization:'Bearer '+d.access_token,'Content-Type':'application/json'}})).json();
       tokens={accessToken:d.access_token,refreshToken:d.refresh_token||'',expiresAt:Date.now()+(d.expires_in||14400)*1000,identifier:u.email||'dropbox'};
@@ -1382,111 +1384,4 @@ function renderAccounts(){
 async function saveCreds(slot){
   const pw=$('epw-'+slot)?.value; const err=$('eerr-'+slot); if(err)err.textContent='';
   if(!pw){if(err)err.textContent='Enter a new password.';return;}
-  try{const ident=S.encAccts.find(a=>a.slot===slot)?.identifier||'';const{ct,iv}=await aesEnc(S.key,JSON.stringify({megaEmail:ident,megaPassword:pw}));await api('updateStorage',{email:S.email,passwordHash:S.hash,slot,encryptedCredentials:ct,iv});const ea=S.encAccts.find(a=>a.slot===slot);if(ea){ea.encryptedCredentials=ct;ea.iv=iv;}const a=S.accts.find(a=>a.slot===slot);if(a)a.megaPassword=pw;$('ae-'+slot)?.classList.remove('on');setStatus('ok','Credentials updated','');}
-  catch(e){if(err)err.textContent=e.message;}
-}
-async function delSlot(slot){
-  if(!confirm('Remove Slot '+slot+'? This does NOT delete the actual storage account.'))return;
-  try{await api('deleteStorage',{email:S.email,passwordHash:S.hash,slot});S.encAccts=S.encAccts.filter(a=>a.slot!==slot);S.accts=S.accts.filter(a=>a.slot!==slot);S.stores=S.stores.filter(s=>s.slot!==slot);S.files=S.files.filter(f=>f.slot!==slot);S.folders=S.folders.filter(f=>f.slot!==slot);renderAccounts();buildSlotDropdown();buildSidebar();buildUploadSel();render();setStatus('ok','Slot '+slot+' removed','');}
-  catch(e){alert('Failed: '+e.message);}
-}
-async function reAuth(slot,provider){
-  if(!confirm('Re-authorize '+slotLabel(slot)+'? You\'ll need to sign in again.'))return;
-  try{await api('deleteStorage',{email:S.email,passwordHash:S.hash,slot});S.encAccts=S.encAccts.filter(a=>a.slot!==slot);S.accts=S.accts.filter(a=>a.slot!==slot);S.stores=S.stores.filter(s=>s.slot!==slot);S.files=S.files.filter(f=>f.slot!==slot);S.folders=S.folders.filter(f=>f.slot!==slot);$('slotSelect').value=String(slot);if(provider==='gdrive')await oauthGoogle(slot);else if(provider==='box')await oauthBox(slot);else if(provider==='dropbox')await oauthDropbox(slot);}
-  catch(e){alert('Re-auth failed: '+e.message);}
-}
-
-// ── ADD ACCOUNT ───────────────────────────────────────────────────────────────
-let _selProv=null;
-$('btnAddAccount').addEventListener('click',()=>{$('addWrap').classList.toggle('on');if($('addWrap').classList.contains('on')){buildProvGrid();showAddStep(1);} });
-$('btnCancelAdd').addEventListener('click',()=>{$('addWrap').classList.remove('on');_selProv=null;});
-$('btnBackProv').addEventListener('click',()=>showAddStep(1));
-function showAddStep(n){$('addStep1').style.display=n===1?'':'none';$('addStep2').classList.toggle('on',n===2);}
-function buildSlotDropdown(){const used=new Set(S.encAccts.map(a=>a.slot));$('slotSelect').innerHTML=[1,2,3,4,5,6,7,8,9,10].filter(n=>!used.has(n)).map(n=>`<option value="${n}">Slot ${n}</option>`).join('')||'<option disabled>All 10 slots in use</option>';}
-function buildProvGrid(){
-  $('provGrid').innerHTML=Object.values(PROVIDERS).map(p=>`
-    <div class="prov-card" data-p="${p.id}">
-      <div class="prov-icon">${p.icon}</div><div class="prov-name">${p.name}</div>
-      <div class="${p.tosLevel==='ok'?'prov-note':'prov-warn'}">${p.inactivity}</div>
-    </div>`).join('');
-  $('provGrid').querySelectorAll('.prov-card').forEach(card=>card.addEventListener('click',()=>{
-    _selProv=card.dataset.p; $('provGrid').querySelectorAll('.prov-card').forEach(c=>c.classList.remove('on')); card.classList.add('on');
-    const prov=PROVIDERS[_selProv];
-    $('connectTitle').textContent='Connect '+prov.icon+' '+prov.name;
-    const tc=prov.tosLevel==='ok'?'tos-ok':prov.tosLevel==='warn'?'tos-warn':'tos-bad';
-    $('connectInfo').innerHTML=prov.tos+'<br><span class="'+tc+'" style="font-size:11px;margin-top:4px;display:inline-block">⏰ '+prov.inactivity+'</span>';
-    $('megaFields').style.display=_selProv==='mega'?'flex':'none';
-    $('oauthFields').style.display=_selProv!=='mega'?'flex':'none';
-    $('btnSaveMega').style.display=_selProv==='mega'?'':'none';
-    $('addErr2').textContent=''; showAddStep(2);
-  }));
-}
-$('btnDoOAuth').addEventListener('click',async()=>{
-  const slot=Number($('slotSelect').value);if(!slot){$('addErr2').textContent='Select a slot.';return;}
-  if(_selProv==='gdrive')await oauthGoogle(slot);
-  else if(_selProv==='box')await oauthBox(slot);
-  else if(_selProv==='dropbox')await oauthDropbox(slot);
-});
-$('btnSaveMega').addEventListener('click',async()=>{
-  const slot=Number($('slotSelect').value),memail=$('addMegaEmail').value.trim(),mpw=$('addMegaPw').value;
-  $('addErr2').textContent=''; if(!memail||!mpw){$('addErr2').textContent='All fields required.';return;}
-  $('btnSaveMega').disabled=true;$('btnSaveMega').textContent='Saving…';
-  try{
-    const{ct,iv}=await aesEnc(S.key,JSON.stringify({megaEmail:memail,megaPassword:mpw}));
-    await api('addStorage',{email:S.email,passwordHash:S.hash,slot,provider:'mega',identifier:memail,encryptedCredentials:ct,iv});
-    S.encAccts.push({slot,provider:'mega',identifier:memail,encryptedCredentials:ct,iv});
-    S.accts.push({slot,provider:'mega',identifier:memail,megaEmail:memail,megaPassword:mpw});
-    $('addMegaEmail').value='';$('addMegaPw').value='';$('addWrap').classList.remove('on');_selProv=null;
-    renderAccounts();buildSlotDropdown();
-    setStatus('warn','Connecting MEGA slot '+slot+'…','');
-    try{const store=await connectOne(S.accts.find(a=>a.slot===slot));if(store){S.stores.push(store);const{files,folders}=await store.list();S.files.push(...files);S.folders.push(...folders);}buildSidebar();buildUploadSel();render();setStatus('ok','MEGA Slot '+slot+' connected','');}
-    catch(e){setStatus('warn','Slot saved but connection failed',e.message);}
-  }catch(e){$('addErr2').textContent=e.message;}
-  finally{$('btnSaveMega').disabled=false;$('btnSaveMega').textContent='Save';}
-});
-
-// ── CHANGE PASSWORD ───────────────────────────────────────────────────────────
-$('btnChangePw').addEventListener('click',async()=>{
-  const old=$('cpwOld').value,n1=$('cpwNew1').value,n2=$('cpwNew2').value;
-  const el=$('cpwMsg'); el.className='err-msg'; el.textContent='';
-  if(!old||!n1||!n2){el.textContent='All fields required.';return;}
-  if(n1.length<8){el.textContent='Min 8 characters.';return;}
-  if(n1!==n2){el.textContent='Passwords do not match.';return;}
-  const oldHash=await mkHash(old,S.salt);
-  if(oldHash!==S.hash){el.textContent='Current password is incorrect.';return;}
-  $('btnChangePw').disabled=true;$('btnChangePw').textContent='Updating…';
-  try{
-    const ns=rnd(16),nh=await mkHash(n1,ns),nk=await mkKey(n1,ns);
-    const reenc=[];
-    for(const a of S.accts){const creds=JSON.stringify({megaEmail:a.identifier,megaPassword:a.megaPassword||a.password,...(a.accessToken?{accessToken:a.accessToken,refreshToken:a.refreshToken,expiresAt:a.expiresAt,identifier:a.identifier}:{})});const{ct,iv}=await aesEnc(nk,creds);reenc.push({slot:a.slot,provider:a.provider||'mega',identifier:a.identifier,encryptedCredentials:ct,iv});}
-    await api('changePassword',{email:S.email,oldPasswordHash:oldHash,newPasswordHash:nh,newSalt:ns,accounts:reenc});
-    S.salt=ns;S.key=nk;S.hash=nh;S.pw=n1;S.encAccts=reenc;
-    ['cpwOld','cpwNew1','cpwNew2'].forEach(id=>$(id).value='');
-    el.className='ok-msg'; el.textContent='✓ Password updated.'; setStatus('ok','Password updated','');
-  }catch(e){el.textContent=e.message;}
-  finally{$('btnChangePw').disabled=false;$('btnChangePw').textContent='Update password';}
-});
-
-// ── PW STRENGTH & EYE ────────────────────────────────────────────────────────
-function pwStr(pw){let s=0;if(pw.length>=8)s++;if(pw.length>=12)s++;if(/[A-Z]/.test(pw))s++;if(/[0-9]/.test(pw))s++;if(/[^A-Za-z0-9]/.test(pw))s++;return s;}
-function setBar(id,pw){const b=$(id);if(!b)return;if(!pw){b.style.width='0';return;}const s=pwStr(pw);b.style.width=(s/5*100)+'%';b.style.background=['#f85149','#e3b341','#f0883e','#3fb950','#2ea043'][Math.min(s-1,4)];}
-$('inReg1').addEventListener('input',e=>setBar('regBar',e.target.value));
-$('cpwNew1').addEventListener('input',e=>setBar('cpwBar',e.target.value));
-
-function attachEye(btn){btn.addEventListener('click',()=>{const inp=$(btn.dataset.t);if(!inp)return;inp.type=inp.type==='password'?'text':'password';btn.textContent=inp.type==='password'?'👁':'🙈';});}
-document.querySelectorAll('.pw-eye').forEach(attachEye);
-
-// ── KEYBOARD ─────────────────────────────────────────────────────────────────
-document.addEventListener('keydown',e=>{
-  if(e.key==='Escape'){closeCtx();['prevModal','moveModal','settingsModal'].forEach(id=>$(id)?.classList.add('hidden'));}
-  if((e.ctrlKey||e.metaKey)&&e.key==='a'&&!$('appScreen').classList.contains('hidden')){e.preventDefault();S.files.filter(f=>S.slot==='all'||f.slot==S.slot).forEach(f=>S.sel.add(f.id));render();}
-});
-
-// ── INIT ─────────────────────────────────────────────────────────────────────
-applyView();
-
-// Close the else block from popup detection
-} // end if(!popup)
-</script>
-</body>
-</html>
+  try{const ident=S.encAccts.find(a=>a.slot===slot)?.identifier||'';const{ct,iv}=await aesEnc(S.key,JSON.stringify({megaEmail:ident,megaPassword:pw}));await api('updateStorage',{email:S.email,passwordHash:S.hash,slot,encryptedCredentials:ct,iv});const ea=S.encAccts.find(a=>a.slot===slot);if(ea){ea.encryptedCredentials=ct;ea.iv=iv
