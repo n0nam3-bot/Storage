@@ -62,7 +62,7 @@ button:disabled{opacity:.4;cursor:not-allowed}
 .auth-btn:hover{background:var(--blue2)}
 .auth-back{background:none;border:none;color:var(--text2);font:inherit;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:4px;padding:0}
 .auth-back:hover{color:var(--text)}
-.auth-err{font-size:13px;font-weight:500;color:#ff6b6b;min-height:18px;padding:6px 0}
+.auth-err{font-size:13px;font-weight:500;color:#ff6b6b;min-height:18px;padding:8px 0;word-break:break-word}
 .auth-hint{font-size:11px;color:var(--text3);line-height:1.5;padding:10px 12px;background:var(--bg3);border-radius:var(--r);border:1px solid var(--border)}
 
 /* ── App shell ── */
@@ -676,17 +676,35 @@ let _pendingEmail='', _pendingSalt='';
 const showStep = id => ['stepEmail','stepRegister','stepLogin'].forEach(x=>$(x).classList.toggle('hidden',x!==id));
 
 async function stepEmail(){
+  // Clear any leftover OAuth state that might hijack finishLogin
+  localStorage.removeItem('oauthResume');
+  localStorage.removeItem('oauthPending');
   const email=$('inEmail').value.trim().toLowerCase();
   $('errEmail').textContent='';
-  if(!email){$('errEmail').textContent='Enter your email.';return;}
+  if(!email){$('errEmail').textContent='Enter your email address.';return;}
   $('btnNext').textContent='Checking…'; $('btnNext').disabled=true;
+  $('errEmail').textContent='Contacting server…';
+  $('errEmail').style.color='var(--text2)';
   try{
     const r=await api('checkEmail',{email});
-    if(!r.allowed) throw new Error('This email is not on the access list.');
+    $('errEmail').textContent='';
+    $('errEmail').style.color='';
+    if(!r.allowed) throw new Error('This email is not on the access list. Contact the vault owner.');
     _pendingEmail=email;
-    if(r.registered){ _pendingSalt=r.salt; $('loginEmail').textContent=email; showStep('stepLogin'); }
-    else { $('regEmail').textContent=email; showStep('stepRegister'); }
-  }catch(e){$('errEmail').textContent=e.message;}
+    if(r.registered){
+      _pendingSalt=r.salt;
+      $('loginEmail').textContent=email;
+      showStep('stepLogin');
+      setTimeout(()=>$('inLogin').focus(),100);
+    } else {
+      $('regEmail').textContent=email;
+      showStep('stepRegister');
+      setTimeout(()=>$('inReg1').focus(),100);
+    }
+  }catch(e){
+    $('errEmail').style.color='';
+    $('errEmail').textContent=e.message;
+  }
   finally{$('btnNext').textContent='Continue'; $('btnNext').disabled=false;}
 }
 
@@ -708,11 +726,20 @@ async function doLogin(){
   $('errLogin').textContent='';
   if(!pw){$('errLogin').textContent='Enter your password.';return;}
   $('btnLogin').textContent='Signing in…'; $('btnLogin').disabled=true;
+  $('errLogin').style.color='var(--text2)';
+  $('errLogin').textContent='Verifying…';
   try{
     const hash=await mkHash(pw,_pendingSalt);
+    $('errLogin').textContent='Connecting to server…';
     const r=await api('login',{email:_pendingEmail,passwordHash:hash});
+    $('errLogin').textContent='Decrypting credentials…';
     await finishLogin(_pendingEmail,pw,r.salt,r.accounts||[]);
-  }catch(e){$('errLogin').textContent=e.message; $('btnLogin').textContent='Sign in'; $('btnLogin').disabled=false;}
+  }catch(e){
+    $('errLogin').style.color='';
+    $('errLogin').textContent=e.message;
+    $('btnLogin').textContent='Sign in';
+    $('btnLogin').disabled=false;
+  }
 }
 
 async function finishLogin(email,pw,salt,encAccts){
@@ -731,9 +758,12 @@ async function finishLogin(email,pw,salt,encAccts){
   $('appScreen').classList.remove('hidden');
   applyView();
   await loadCfg();
-  // Resume interrupted OAuth
+  // Resume interrupted OAuth (only if code looks valid)
   const resume=JSON.parse(localStorage.getItem('oauthResume')||'null');
-  if(resume&&S.key){localStorage.removeItem('oauthResume'); await finishOAuth(resume.code,resume.slot,resume.provider);}
+  if(resume&&resume.code&&resume.slot&&resume.provider&&S.key){
+    localStorage.removeItem('oauthResume');
+    try{ await finishOAuth(resume.code,resume.slot,resume.provider); }catch(e){ console.warn('Resume failed:',e); }
+  }
   if(!S.accts.length){
     setStatus('warn','No storage configured','Open ⚙️ Settings to add accounts');
     $('loadingState').classList.remove('hidden');
@@ -1386,10 +1416,4 @@ function renderAccounts(){
         ${a.provider==='mega'?`<button class="btn sm ghost" data-edit="${a.slot}">✏️ Edit password</button>`:`<button class="btn sm ghost" data-reauth="${a.slot}" data-reprov="${a.provider}">🔄 Re-authorize</button>`}
         <button class="btn sm danger" data-del="${a.slot}">Remove</button>
       </div>
-      ${a.provider==='mega'?`<div class="acct-edit" id="ae-${a.slot}"><div class="f-field"><label class="f-label">New MEGA password</label><div class="pw-wrap"><input class="f-inp" type="password" id="epw-${a.slot}" placeholder="New password"/><button class="pw-eye" data-t="epw-${a.slot}">👁</button></div></div><div style="display:flex;gap:8px;align-items:center"><button class="btn sm primary" data-save="${a.slot}">Save</button><button class="btn sm ghost" data-cancel="${a.slot}">Cancel</button><span class="err-msg" id="eerr-${a.slot}"></span></div></div>`:''}
-    </div>`;
-  }).join('');
-  list.querySelectorAll('[data-edit]').forEach(b=>b.addEventListener('click',()=>{ const el=$('ae-'+b.dataset.edit); if(el)el.classList.toggle('on'); }));
-  list.querySelectorAll('[data-cancel]').forEach(b=>b.addEventListener('click',()=>{ const el=$('ae-'+b.dataset.cancel); if(el)el.classList.remove('on'); }));
-  list.querySelectorAll('[data-save]').forEach(b=>b.addEventListener('click',()=>saveCreds(Number(b.dataset.save))));
-  list.querySelectorAll('[data-del]').forEach
+      ${a.provider==='mega'?`<div class="acct-edit" id="ae-${a.slot}"><div class="f-field"><label class="f-label">New MEGA password</label><div class="
