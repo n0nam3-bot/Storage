@@ -554,7 +554,7 @@ window.addEventListener('unhandledrejection',function(e){
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
 <script type="module">
-import { Storage } from 'https://unpkg.com/megajs/dist/main.browser-es.mjs';
+// megajs loaded dynamically inside connectMega only when needed
 
 const BACKEND = 'https://script.google.com/macros/s/AKfycbzict1PB8A-nDDI0Rq44heHJcLoHwYLTUO7ckNcoeeHMdA5tm1dxmTgsUkW4CttOCWugQ/exec';
 
@@ -817,6 +817,14 @@ const cid = p => ({gdrive:S.cfg.googleClientId,box:S.cfg.boxClientId,dropbox:S.c
 
 // ── MEGA ──────────────────────────────────────────────────────────────────────
 async function connectMega(a){
+  // Dynamic import — only loads if user has MEGA storage
+  let Storage;
+  try {
+    const mod = await import('https://unpkg.com/megajs/dist/main.browser-es.mjs');
+    Storage = mod.Storage;
+  } catch(e) {
+    throw new Error('Failed to load MEGA library: ' + e.message);
+  }
   const st=await new Storage({email:a.megaEmail||a.identifier,password:a.megaPassword||a.password,userAgent:'StorageVault/1.0'}).ready;
   const files=[],folders=[];
   function walk(node,slot,path){ for(const c of(node.children||[])){ if(c.directory){folders.push({id:c.nodeId||c.handle||'d'+Math.random(),name:c.name,slot,path,node:c});walk(c,slot,path?path+'/'+c.name:c.name);}else{files.push({id:c.nodeId||c.handle||Math.random()+'',name:c.name||'unnamed',size:c.size||0,mime:c.mime||mime(c.name),slot,path,ts:c.timestamp?c.timestamp*1000:Date.now(),node:c});} } }
@@ -1424,6 +1432,4 @@ function renderAccounts(){
     const tc=prov.tosLevel==='ok'?'tos-ok':prov.tosLevel==='warn'?'tos-warn':'tos-bad';
     return`<div class="acct">
       <div class="acct-head"><div class="acct-prov">${prov.icon}</div><div class="acct-info"><div class="acct-pname">${prov.name}</div><div class="acct-email">${esc(a.identifier)}</div></div><div class="acct-slot">S${a.slot}</div></div>
-      <div class="acct-foot"><div class="acct-tos ${tc}">⏰ ${prov.inactivity}</div>
-        ${a.provider==='mega'?`<button class="btn sm ghost" data-edit="${a.slot}">✏️ Edit password</button>`:`<button class="btn sm ghost" data-reauth="${a.slot}" data-reprov="${a.provider}">🔄 Re-authorize</button>`}
-        <button class="btn 
+      <div class="acct-foot"><div class="acct-tos ${tc}">⏰ ${prov
