@@ -558,6 +558,18 @@ import { Storage } from 'https://unpkg.com/megajs/dist/main.browser-es.mjs';
 
 const BACKEND = 'https://script.google.com/macros/s/AKfycbzict1PB8A-nDDI0Rq44heHJcLoHwYLTUO7ckNcoeeHMdA5tm1dxmTgsUkW4CttOCWugQ/exec';
 
+// Safe storage — never throws even in private/restricted mode
+const LS = {
+  get:(k,d='')=>{ try{ return localStorage.getItem(k)||d; }catch{ return d; } },
+  set:(k,v)=>{ try{ localStorage.setItem(k,v); }catch{} },
+  del:(k)=>{ try{ localStorage.removeItem(k); }catch{} },
+};
+const SS = {
+  get:(k,d='')=>{ try{ return sessionStorage.getItem(k)||d; }catch{ return d; } },
+  set:(k,v)=>{ try{ sessionStorage.setItem(k,v); }catch{} },
+  del:(k)=>{ try{ sessionStorage.removeItem(k); }catch{} },
+};
+
 // ── POPUP CALLBACK (runs before anything else, exits cleanly) ─────────────────
 const _urlP = new URLSearchParams(window.location.search);
 if ((_urlP.get('code') || _urlP.get('error')) && window.opener) {
@@ -589,7 +601,7 @@ const S = {
   slot:'all', path:null, q:'', sel:new Set(),
   preview:null, prevUrl:null,
   moveTarget:null, moveIds:[],
-  view: localStorage.getItem('vv')||'grid',
+  view: LS.get('vv','grid'),
   trash:false, trashSlot:null, trashItems:[],
   cfg:{}, popup:null, popupHandler:null,
 };
@@ -669,7 +681,7 @@ function slotLabel(slot){
   return peers.length===1 ? p.name : p.name+' #'+(peers.findIndex(x=>x.slot===slot)+1);
 }
 function setStatus(k,t,s=''){$('sdot').className='sdot '+k;$('sb-text').textContent=t;$('sb-sub').textContent=s;}
-function updToken(slot,tokens){ const t=JSON.parse(sessionStorage.getItem('vt')||'{}'); t[slot]={...t[slot],...tokens}; sessionStorage.setItem('vt',JSON.stringify(t)); const a=S.accts.find(x=>x.slot===slot); if(a)Object.assign(a,tokens); }
+function updToken(slot,tokens){ const t=JSON.parse(SS.get('vt','{}')); t[slot]={...t[slot],...tokens}; SS.set('vt',JSON.stringify(t)); const a=S.accts.find(x=>x.slot===slot); if(a)Object.assign(a,tokens); }
 
 // ── AUTH ──────────────────────────────────────────────────────────────────────
 let _pendingEmail='', _pendingSalt='';
@@ -677,8 +689,8 @@ const showStep = id => ['stepEmail','stepRegister','stepLogin'].forEach(x=>$(x).
 
 async function stepEmail(){
   // Clear any leftover OAuth state that might hijack finishLogin
-  localStorage.removeItem('oauthResume');
-  localStorage.removeItem('oauthPending');
+  LS.del('oauthResume');
+  LS.del('oauthPending');
   const email=$('inEmail').value.trim().toLowerCase();
   $('errEmail').textContent='';
   if(!email){$('errEmail').textContent='Enter your email address.';return;}
@@ -751,7 +763,7 @@ async function finishLogin(email,pw,salt,encAccts){
   for(const a of encAccts){
     try{ const c=JSON.parse(await aesDec(S.key,a.encryptedCredentials,a.iv)); S.accts.push({slot:a.slot,provider:a.provider||'mega',identifier:a.identifier,...c}); }catch{}
   }
-  const stored=JSON.parse(sessionStorage.getItem('vt')||'{}');
+  const stored=JSON.parse(SS.get('vt','{}'));
   for(const a of S.accts){const t=stored[a.slot];if(t)Object.assign(a,t);}
   $('avatarBtn').textContent=(email[0]||'?').toUpperCase();
   $('authScreen').classList.add('hidden');
@@ -759,9 +771,9 @@ async function finishLogin(email,pw,salt,encAccts){
   applyView();
   await loadCfg();
   // Resume interrupted OAuth (only if code looks valid)
-  const resume=JSON.parse(localStorage.getItem('oauthResume')||'null');
+  const resume=JSON.parse(LS.get('oauthResume','null'));
   if(resume&&resume.code&&resume.slot&&resume.provider&&S.key){
-    localStorage.removeItem('oauthResume');
+    LS.del('oauthResume');
     try{ await finishOAuth(resume.code,resume.slot,resume.provider); }catch(e){ console.warn('Resume failed:',e); }
   }
   if(!S.accts.length){
@@ -778,8 +790,8 @@ function signOut(){
   if(S.prevUrl){URL.revokeObjectURL(S.prevUrl);}
   if(S.popup&&!S.popup.closed)S.popup.close();
   if(S.popupHandler)window.removeEventListener('message',S.popupHandler);
-  localStorage.removeItem('oauthPending'); localStorage.removeItem('oauthResume');
-  sessionStorage.removeItem('vt');
+  LS.del('oauthPending'); LS.del('oauthResume');
+  SS.del('vt');
   Object.assign(S,{email:null,pw:null,salt:null,key:null,hash:null,encAccts:[],accts:[],stores:[],files:[],folders:[],slot:'all',path:null,q:'',sel:new Set(),preview:null,prevUrl:null,moveTarget:null,moveIds:[],trash:false,trashSlot:null,trashItems:[],cfg:{},popup:null,popupHandler:null});
   $('appScreen').classList.add('hidden');
   $('authScreen').classList.remove('hidden');
@@ -959,8 +971,8 @@ function openPopup(url,slot,provider){
 }
 
 async function finishOAuth(code,slot,provider){
-  const pending=JSON.parse(localStorage.getItem('oauthPending')||'null');
-  localStorage.removeItem('oauthPending');
+  const pending=JSON.parse(LS.get('oauthPending','null'));
+  LS.del('oauthPending');
   const cv=pending?.cv||'';
   const redir=pending?.redir||window.location.href.split('?')[0].split('#')[0];
   setStatus('warn','Completing '+( PROVIDERS[provider]?.name||provider)+' connection…','');
@@ -998,21 +1010,21 @@ async function oauthGoogle(slot){
   const k=cid('gdrive'); if(!k){alert('GOOGLE_CLIENT_ID not set in Script Properties.');return;}
   const cv=mkCV(),cc=await mkCC(cv);
   const redir=window.location.href.split('?')[0].split('#')[0];
-  localStorage.setItem('oauthPending',JSON.stringify({cv,slot,provider:'gdrive',redir}));
+  LS.set('oauthPending',JSON.stringify({cv,slot,provider:'gdrive',redir}));
   const params=new URLSearchParams({client_id:k,response_type:'code',redirect_uri:redir,scope:'https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/userinfo.email',state:'gdrive',code_challenge:cc,code_challenge_method:'S256',access_type:'offline',prompt:'consent'});
   openPopup('https://accounts.google.com/o/oauth2/v2/auth?'+params,slot,'gdrive');
 }
 async function oauthBox(slot){
   const k=cid('box'); if(!k){alert('BOX_CLIENT_ID not set in Script Properties.');return;}
   const redir=window.location.href.split('?')[0].split('#')[0];
-  localStorage.setItem('oauthPending',JSON.stringify({cv:'',slot,provider:'box',redir}));
+  LS.set('oauthPending',JSON.stringify({cv:'',slot,provider:'box',redir}));
   openPopup('https://account.box.com/api/oauth2/authorize?'+new URLSearchParams({client_id:k,response_type:'code',redirect_uri:redir,state:'box'}),slot,'box');
 }
 async function oauthDropbox(slot){
   const k=cid('dropbox'); if(!k){alert('DROPBOX_CLIENT_ID not set in Script Properties.');return;}
   const cv=mkCV(),cc=await mkCC(cv);
   const redir=window.location.href.split('?')[0].split('#')[0];
-  localStorage.setItem('oauthPending',JSON.stringify({cv,slot,provider:'dropbox',redir}));
+  LS.set('oauthPending',JSON.stringify({cv,slot,provider:'dropbox',redir}));
   const prov=PROVIDERS.dropbox;
   const params=new URLSearchParams({client_id:k,response_type:'code',redirect_uri:redir,scope:prov.scopes.join(' '),state:'dropbox',code_challenge:cc,code_challenge_method:'S256',token_access_type:'offline'});
   openPopup(prov.authUrl+'?'+params,slot,'dropbox');
@@ -1149,8 +1161,8 @@ $('btnRefresh').addEventListener('click',async()=>{S.files=[];S.folders=[];S.sel
 $('btnNewFolder').addEventListener('click',newFolder);
 $('btnDelSelected').addEventListener('click',delSelected);
 $('btnMoveSelected').addEventListener('click',()=>openMove([...S.sel]));
-$('vGrid').addEventListener('click',()=>{S.view='grid';localStorage.setItem('vv','grid');applyView();render();});
-$('vList').addEventListener('click',()=>{S.view='list';localStorage.setItem('vv','list');applyView();render();});
+$('vGrid').addEventListener('click',()=>{S.view='grid';LS.set('vv','grid');applyView();render();});
+$('vList').addEventListener('click',()=>{S.view='list';LS.set('vv','list');applyView();render();});
 function applyView(){const g=S.view==='grid';$('vGrid').style.background=g?'var(--blue-bg)':'transparent';$('vGrid').style.color=g?'var(--blue)':'var(--text2)';$('vList').style.background=g?'transparent':'var(--blue-bg)';$('vList').style.color=g?'var(--text2)':'var(--blue)';}
 
 // ── CONTEXT MENU ─────────────────────────────────────────────────────────────
@@ -1414,6 +1426,4 @@ function renderAccounts(){
       <div class="acct-head"><div class="acct-prov">${prov.icon}</div><div class="acct-info"><div class="acct-pname">${prov.name}</div><div class="acct-email">${esc(a.identifier)}</div></div><div class="acct-slot">S${a.slot}</div></div>
       <div class="acct-foot"><div class="acct-tos ${tc}">⏰ ${prov.inactivity}</div>
         ${a.provider==='mega'?`<button class="btn sm ghost" data-edit="${a.slot}">✏️ Edit password</button>`:`<button class="btn sm ghost" data-reauth="${a.slot}" data-reprov="${a.provider}">🔄 Re-authorize</button>`}
-        <button class="btn sm danger" data-del="${a.slot}">Remove</button>
-      </div>
-      ${a.provider==='mega'?`<div class="acct-edit" id="ae-${a.slot}"><div class="f-field"><label class="f-label">New MEGA password</label><div class="
+        <button class="btn 
