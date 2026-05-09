@@ -4,539 +4,448 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>Storage Vault</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
 <style>
 :root{
-  --bg:#0f1117;--bg2:#161b22;--bg3:#21262d;--bg4:#30363d;
-  --border:#30363d;--border2:#484f58;
-  --text:#e6edf3;--text2:#848d97;--text3:#6e7681;
-  --blue:#2f81f7;--blue2:#388bfd;--blue-bg:rgba(47,129,247,.1);
-  --green:#3fb950;--green-bg:rgba(63,185,80,.1);
-  --red:#f85149;--red-bg:rgba(248,81,73,.1);
-  --yellow:#d29922;--yellow-bg:rgba(210,153,34,.1);
-  --shadow:0 8px 24px rgba(0,0,0,.4);
-  --r:8px;
+  --bg:#0d1117;--s1:#161b22;--s2:#21262d;--s3:#30363d;--s4:#484f58;
+  --bd:#30363d;--bd2:#484f58;
+  --tx:#e6edf3;--tx2:#8b949e;--tx3:#6e7681;
+  --bl:#2f81f7;--bl2:#1f6feb;--bl-dim:rgba(47,129,247,.15);
+  --gn:#3fb950;--gn-dim:rgba(63,185,80,.12);
+  --rd:#f85149;--rd-dim:rgba(248,81,73,.12);
+  --yw:#d29922;--yw-dim:rgba(210,153,34,.12);
+  --r:8px;--shadow:0 8px 32px rgba(0,0,0,.5);
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%;overflow:hidden;font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);font-size:14px}
-.hidden{display:none!important}
-a{color:var(--blue);text-decoration:none}a:hover{text-decoration:underline}
-::-webkit-scrollbar{width:6px;height:6px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:3px}
-
-/* ── Inputs & buttons ── */
-input,select{font:inherit;font-size:14px;background:var(--bg3);color:var(--text);border:1px solid var(--border2);border-radius:var(--r);outline:none;transition:.15s}
-input::placeholder{color:var(--text3)}
-input:focus,select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(47,129,247,.15)}
-select option{background:var(--bg3)}
-button{cursor:pointer;font:inherit;background:none;border:none;color:var(--text);transition:.15s}
+html,body{height:100%;overflow:hidden;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--tx);font-size:14px;line-height:1.5}
+.h{display:none!important}
+a{color:var(--bl)}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-thumb{background:var(--s3);border-radius:3px}
+::-webkit-scrollbar-track{background:transparent}
+button{cursor:pointer;font:inherit;border:none;background:none;color:var(--tx);transition:.15s}
 button:disabled{opacity:.4;cursor:not-allowed}
+input,select{font:inherit;background:var(--s2);color:var(--tx);border:1px solid var(--bd2);border-radius:var(--r);outline:none;transition:.15s}
+input::placeholder{color:var(--tx3)}
+input:focus,select:focus{border-color:var(--bl);box-shadow:0 0 0 3px rgba(47,129,247,.18)}
+select option{background:var(--s2)}
 
-.btn{padding:8px 16px;border-radius:var(--r);font-size:13px;font-weight:500;border:1px solid var(--border2);background:var(--bg3);color:var(--text);cursor:pointer;transition:.15s;display:inline-flex;align-items:center;gap:6px}
-.btn:hover{background:var(--bg4);border-color:var(--border2)}
-.btn.primary{background:var(--blue);color:#fff;border-color:var(--blue)}
-.btn.primary:hover{background:var(--blue2);border-color:var(--blue2)}
-.btn.danger{color:var(--red);border-color:var(--red-bg);background:var(--red-bg)}
-.btn.danger:hover{border-color:var(--red);background:rgba(248,81,73,.2)}
-.btn.ghost{background:transparent;border-color:transparent;color:var(--text2)}
-.btn.ghost:hover{background:var(--bg3);color:var(--text)}
-.btn.sm{padding:5px 12px;font-size:12px}
+/* ─ Buttons ─ */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:var(--r);font-size:13px;font-weight:500;border:1px solid var(--bd2);background:var(--s2);color:var(--tx);cursor:pointer;transition:.15s;white-space:nowrap}
+.btn:hover{background:var(--s3);border-color:var(--bd2)}
+.btn.primary{background:var(--bl);color:#fff;border-color:var(--bl)}
+.btn.primary:hover{background:var(--bl2)}
+.btn.danger{color:var(--rd);border-color:var(--rd-dim);background:var(--rd-dim)}
+.btn.danger:hover{border-color:var(--rd);background:rgba(248,81,73,.2)}
+.btn.ghost{background:transparent;border-color:transparent;color:var(--tx2)}
+.btn.ghost:hover{background:var(--s2);color:var(--tx)}
+.btn.sm{padding:5px 10px;font-size:12px}
+.btn.full{width:100%;justify-content:center;padding:10px}
 
-/* ── Auth ── */
-#authScreen{height:100vh;display:flex;align-items:center;justify-content:center;background:var(--bg)}
-.auth-card{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:32px;width:380px;box-shadow:var(--shadow)}
-.auth-logo{display:flex;align-items:center;gap:10px;margin-bottom:24px}
-.auth-logo-icon{width:36px;height:36px;border-radius:10px;background:var(--blue);display:flex;align-items:center;justify-content:center;font-size:18px}
-.auth-logo-text{font-size:18px;font-weight:600;color:var(--text)}
-.auth-step{display:flex;flex-direction:column;gap:14px}
-.field-label{font-size:12px;font-weight:500;color:var(--text2);margin-bottom:4px;display:block}
-.field-input{width:100%;padding:10px 12px;border-radius:var(--r);border:1px solid var(--border2);background:var(--bg3);color:var(--text);font:inherit;outline:none;transition:.15s}
-.field-input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(47,129,247,.15)}
-.field-input::placeholder{color:var(--text3)}
-.pw-wrap{position:relative}.pw-wrap .field-input{padding-right:40px}
-.pw-eye{position:absolute;right:10px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:15px;cursor:pointer;background:none;border:none;padding:2px;line-height:1}
-.pw-eye:hover{color:var(--text2)}
-.pw-meter{height:3px;border-radius:2px;background:var(--bg4);margin-top:5px;overflow:hidden}
-.pw-bar{height:100%;width:0;border-radius:2px;transition:width .25s,background .25s}
-.auth-btn{width:100%;padding:10px;border-radius:var(--r);background:var(--blue);color:#fff;border:none;font:inherit;font-size:14px;font-weight:500;cursor:pointer;transition:.15s}
-.auth-btn:hover{background:var(--blue2)}
-.auth-back{background:none;border:none;color:var(--text2);font:inherit;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:4px;padding:0}
-.auth-back:hover{color:var(--text)}
-.auth-err{font-size:13px;font-weight:500;color:#ff6b6b;min-height:18px;padding:8px 0;word-break:break-word}
-.auth-hint{font-size:11px;color:var(--text3);line-height:1.5;padding:10px 12px;background:var(--bg3);border-radius:var(--r);border:1px solid var(--border)}
+/* ─ Auth ─ */
+#authWrap{height:100vh;display:flex;align-items:center;justify-content:center;background:var(--bg)}
+.auth-card{background:var(--s1);border:1px solid var(--bd);border-radius:14px;padding:30px;width:370px;box-shadow:var(--shadow)}
+.auth-logo{display:flex;align-items:center;gap:10px;margin-bottom:22px}
+.auth-logo-ico{width:34px;height:34px;background:var(--bl);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.auth-logo-txt{font-size:17px;font-weight:600}
+.auth-form{display:flex;flex-direction:column;gap:14px}
+.f-label{font-size:12px;font-weight:500;color:var(--tx2);margin-bottom:4px;display:block}
+.f-input{width:100%;padding:9px 12px;border-radius:var(--r);border:1px solid var(--bd2);background:var(--s2);color:var(--tx);font:inherit;outline:none}
+.f-input:focus{border-color:var(--bl);box-shadow:0 0 0 3px rgba(47,129,247,.18)}
+.pw-wrap{position:relative}
+.pw-wrap .f-input{padding-right:38px}
+.eye-btn{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--tx3);font-size:14px;cursor:pointer;padding:2px;line-height:1}
+.eye-btn:hover{color:var(--tx2)}
+.pw-meter{height:2px;background:var(--s3);border-radius:1px;margin-top:5px;overflow:hidden}
+.pw-bar{height:100%;width:0;border-radius:1px;transition:width .25s,background .25s}
+.auth-back{display:flex;align-items:center;gap:5px;background:none;border:none;color:var(--tx2);font:inherit;font-size:13px;cursor:pointer;padding:0}
+.auth-back:hover{color:var(--tx)}
+.auth-err{font-size:12px;min-height:16px;font-weight:500;word-break:break-word}
+.auth-err.bad{color:var(--rd)}
+.auth-err.info{color:var(--tx2)}
+.auth-hint{font-size:11px;color:var(--tx3);line-height:1.5;padding:9px 11px;background:var(--s2);border:1px solid var(--bd);border-radius:var(--r)}
 
-/* ── App shell ── */
-#appScreen{height:100vh;display:flex;flex-direction:column;overflow:hidden}
+/* ─ App shell ─ */
+#appWrap{height:100vh;display:flex;flex-direction:column;overflow:hidden}
 
-/* ── Topbar ── */
-#topbar{height:56px;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;padding:0 16px;flex-shrink:0;z-index:40}
-.topbar-logo{display:flex;align-items:center;gap:8px;width:216px;flex-shrink:0}
-.topbar-logo-icon{width:28px;height:28px;border-radius:7px;background:var(--blue);display:flex;align-items:center;justify-content:center;font-size:14px}
-.topbar-logo-text{font-size:16px;font-weight:600;color:var(--text)}
-.topbar-search{flex:1;max-width:640px;display:flex;align-items:center;gap:8px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:7px 12px;transition:.15s}
-.topbar-search:focus-within{border-color:var(--blue);box-shadow:0 0 0 3px rgba(47,129,247,.15)}
-.topbar-search input{flex:1;background:transparent;border:none;outline:none;font-size:14px;color:var(--text)}
-.topbar-search-icon{color:var(--text3);font-size:16px;flex-shrink:0}
-.topbar-right{display:flex;align-items:center;gap:6px;margin-left:auto}
-.topbar-icon-btn{width:34px;height:34px;border-radius:var(--r);display:flex;align-items:center;justify-content:center;color:var(--text2);font-size:16px;cursor:pointer;transition:.12s}
-.topbar-icon-btn:hover{background:var(--bg3);color:var(--text)}
-.topbar-avatar{width:32px;height:32px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:600;font-size:13px;cursor:pointer;border:2px solid transparent;transition:.12s}
-.topbar-avatar:hover{border-color:var(--blue2)}
+/* ─ Topbar ─ */
+#topbar{height:54px;background:var(--s1);border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:10px;padding:0 14px;flex-shrink:0;z-index:40}
+.tb-logo{display:flex;align-items:center;gap:8px;width:210px;flex-shrink:0}
+.tb-logo-ico{width:26px;height:26px;background:var(--bl);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px}
+.tb-logo-txt{font-size:15px;font-weight:600}
+.tb-search{flex:1;max-width:600px;display:flex;align-items:center;gap:8px;background:var(--s2);border:1px solid var(--bd);border-radius:var(--r);padding:7px 12px}
+.tb-search:focus-within{border-color:var(--bl);box-shadow:0 0 0 3px rgba(47,129,247,.15)}
+.tb-search input{flex:1;background:transparent;border:none;outline:none;font-size:14px;color:var(--tx)}
+.tb-search-ico{color:var(--tx3);font-size:15px;flex-shrink:0}
+.tb-actions{display:flex;align-items:center;gap:5px;margin-left:auto}
+.tb-ico-btn{width:32px;height:32px;border-radius:var(--r);display:flex;align-items:center;justify-content:center;color:var(--tx2);font-size:16px;cursor:pointer;transition:.12s}
+.tb-ico-btn:hover{background:var(--s2);color:var(--tx)}
+.tb-avatar{width:30px;height:30px;border-radius:50%;background:var(--bl);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:600;font-size:13px;cursor:pointer;transition:.12s}
+.tb-avatar:hover{opacity:.85}
 
-/* ── Body ── */
-#body{flex:1;display:flex;overflow:hidden}
+/* ─ Body ─ */
+#bodyWrap{flex:1;display:flex;overflow:hidden}
 
-/* ── Sidebar ── */
-#sidebar{width:220px;flex-shrink:0;background:var(--bg2);border-right:1px solid var(--border);padding:12px 0;overflow-y:auto;display:flex;flex-direction:column}
-.sb-upload-btn{margin:0 12px 12px;padding:10px 16px;border-radius:var(--r);border:1px solid var(--border2);background:var(--bg3);display:flex;align-items:center;gap:8px;font-size:13px;font-weight:500;color:var(--text);cursor:pointer;transition:.15s}
-.sb-upload-btn:hover{background:var(--bg4);border-color:var(--border2)}
-.sb-section{padding:4px 0}
-.sb-section-label{font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;padding:6px 16px 3px}
-.sb-item{display:flex;align-items:center;gap:8px;padding:7px 12px;cursor:pointer;transition:.12s;font-size:13px;font-weight:400;color:var(--text2);border-radius:var(--r);margin:1px 8px;border:1px solid transparent}
-.sb-item:hover{background:var(--bg3);color:var(--text)}
-.sb-item.active{background:var(--blue-bg);color:var(--blue);border-color:rgba(47,129,247,.25);font-weight:500}
-.sb-item-icon{font-size:15px;width:18px;text-align:center;flex-shrink:0}
-.sb-item-label{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.sb-count{font-size:11px;color:var(--text3);background:var(--bg3);padding:1px 7px;border-radius:10px;flex-shrink:0}
-.sb-item.active .sb-count{background:rgba(47,129,247,.2);color:var(--blue)}
-.sb-item.err{color:var(--red)}
-.sb-trash{display:flex;align-items:center;gap:8px;padding:5px 12px 5px 38px;cursor:pointer;font-size:12px;color:var(--text3);border-radius:var(--r);margin:1px 8px;transition:.12s;border:1px solid transparent}
-.sb-trash:hover{background:rgba(248,81,73,.1);color:var(--red)}
-.sb-trash.active{background:rgba(248,81,73,.1);color:var(--red);border-color:rgba(248,81,73,.2)}
-.sb-divider{height:1px;background:var(--border);margin:8px 0}
+/* ─ Sidebar ─ */
+#sidebar{width:210px;flex-shrink:0;background:var(--s1);border-right:1px solid var(--bd);padding:10px 0;overflow-y:auto;display:flex;flex-direction:column}
+.sb-upload{margin:0 10px 10px;padding:9px 14px;border-radius:var(--r);border:1px solid var(--bd2);background:var(--s2);display:flex;align-items:center;gap:8px;font-size:13px;font-weight:500;color:var(--tx);cursor:pointer;transition:.15s}
+.sb-upload:hover{background:var(--s3)}
+.sb-sec-lbl{font-size:11px;font-weight:600;color:var(--tx3);text-transform:uppercase;letter-spacing:.07em;padding:8px 14px 3px}
+.sb-item{display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:var(--r);margin:1px 6px;cursor:pointer;transition:.12s;font-size:13px;color:var(--tx2);border:1px solid transparent}
+.sb-item:hover{background:var(--s2);color:var(--tx)}
+.sb-item.on{background:var(--bl-dim);color:var(--bl);border-color:rgba(47,129,247,.2);font-weight:500}
+.sb-item.err{color:var(--rd)}
+.sb-item-ico{font-size:14px;width:16px;text-align:center;flex-shrink:0}
+.sb-item-lbl{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sb-cnt{font-size:11px;color:var(--tx3);background:var(--s2);padding:1px 6px;border-radius:8px;flex-shrink:0}
+.sb-item.on .sb-cnt{background:rgba(47,129,247,.2);color:var(--bl)}
+.sb-trash{display:flex;align-items:center;gap:7px;padding:5px 10px 5px 34px;cursor:pointer;font-size:12px;color:var(--tx3);border-radius:var(--r);margin:1px 6px;transition:.12s;border:1px solid transparent}
+.sb-trash:hover{background:var(--rd-dim);color:var(--rd)}
+.sb-trash.on{background:var(--rd-dim);color:var(--rd);border-color:rgba(248,81,73,.2)}
+.sb-divider{height:1px;background:var(--bd);margin:8px 0}
 
-/* ── Main ── */
-#main{flex:1;display:flex;flex-direction:column;overflow:hidden;position:relative}
-#toolbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:10px 16px;display:flex;align-items:center;gap:8px;flex-shrink:0}
-#breadcrumb{background:var(--bg2);border-bottom:1px solid var(--border);padding:7px 16px;display:flex;align-items:center;gap:2px;flex-shrink:0;font-size:13px}
-#breadcrumb.hidden{display:none!important}
-.bc-seg{padding:3px 8px;border-radius:6px;color:var(--text2);cursor:pointer;transition:.1s}
-.bc-seg:hover{background:var(--bg3);color:var(--text)}
-.bc-seg.cur{color:var(--text);font-weight:500;cursor:default}
-.bc-seg.cur:hover{background:transparent}
-.bc-sep{color:var(--text3);padding:0 2px;font-size:16px}
+/* ─ Main ─ */
+#mainWrap{flex:1;display:flex;flex-direction:column;overflow:hidden;position:relative;background:var(--bg)}
+#toolbar{background:var(--s1);border-bottom:1px solid var(--bd);padding:8px 14px;display:flex;align-items:center;gap:7px;flex-shrink:0}
+#breadcrumb{background:var(--s1);border-bottom:1px solid var(--bd);padding:6px 14px;display:flex;align-items:center;gap:2px;font-size:13px;flex-shrink:0;flex-wrap:wrap}
+#breadcrumb.h{display:none!important}
+.bc{padding:3px 7px;border-radius:5px;color:var(--tx2);cursor:pointer;transition:.1s}
+.bc:hover{background:var(--s2);color:var(--tx)}
+.bc.cur{color:var(--tx);font-weight:500;cursor:default}
+.bc.cur:hover{background:transparent}
+.bc-sep{color:var(--tx3);font-size:15px;padding:0 1px}
 
-#fileArea{flex:1;overflow-y:auto;background:var(--bg)}
+#fileArea{flex:1;overflow-y:auto}
 
-/* file grid */
-.fg{display:grid;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));gap:4px;padding:8px}
-
-.fc{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;cursor:pointer;transition:.12s;display:flex;flex-direction:column}
-.fc:hover{background:var(--bg3);border-color:var(--border2)}
-.fc.sel{background:var(--blue-bg);border-color:rgba(47,129,247,.4)}
+/* Grid */
+.fg{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:4px;padding:6px}
+.fc{background:var(--s1);border:1px solid var(--bd);border-radius:var(--r);overflow:hidden;cursor:pointer;transition:.12s;display:flex;flex-direction:column}
+.fc:hover{background:var(--s2);border-color:var(--bd2)}
+.fc.sel{background:var(--bl-dim);border-color:rgba(47,129,247,.35)}
 .fc.folder{background:transparent;border-color:transparent;box-shadow:none}
-.fc.folder:hover{background:var(--bg3);border-color:var(--border)}
-
-.fc-thumb{aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;font-size:36px;position:relative;overflow:hidden;background:var(--bg3)}
-.fc-thumb.ti{background:#0d1117}
-.fc-thumb.tv{background:#0f1a0d}
-.fc-thumb.ta{background:#1a0d0d}
+.fc.folder:hover{background:var(--s2);border-color:var(--bd)}
+.fc-thumb{aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;font-size:34px;position:relative;overflow:hidden;background:var(--s2)}
 .fc-thumb img,.fc-thumb video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.fc-chk{position:absolute;top:6px;left:6px;width:18px;height:18px;border-radius:50%;border:2px solid rgba(255,255,255,.3);background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;opacity:0;transition:.12s;z-index:5}
+.fc-chk{position:absolute;top:6px;left:6px;width:17px;height:17px;border-radius:50%;border:2px solid rgba(255,255,255,.3);background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff;opacity:0;transition:.12s;z-index:3}
 .fc:hover .fc-chk,.fc.sel .fc-chk{opacity:1}
-.fc.sel .fc-chk{background:var(--blue);border-color:var(--blue)}
-.fc-info{padding:8px 10px}
-.fc-name{font-size:12px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text);margin-bottom:3px}
-.fc-meta{font-size:11px;color:var(--text3);display:flex;align-items:center;gap:4px}
-.fc-badge{font-size:10px;font-weight:500;background:var(--bg4);color:var(--text2);padding:1px 5px;border-radius:4px}
+.fc.sel .fc-chk{background:var(--bl);border-color:var(--bl)}
+.fc-info{padding:7px 9px}
+.fc-name{font-size:12px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--tx);margin-bottom:2px}
+.fc-meta{font-size:11px;color:var(--tx3);display:flex;gap:4px;align-items:center}
+.fc-badge{font-size:10px;background:var(--s3);color:var(--tx2);padding:1px 4px;border-radius:3px}
 
-/* file list */
-#fileList{width:100%;border-collapse:collapse}
-.fl-head{position:sticky;top:0;background:var(--bg2);z-index:5}
-.fl-head th{padding:8px 12px;text-align:left;font-size:12px;font-weight:500;color:var(--text2);border-bottom:1px solid var(--border);white-space:nowrap;cursor:pointer;user-select:none}
-.fl-head th:hover{color:var(--text)}
-.fl tbody tr{border-bottom:1px solid rgba(48,54,61,.6);cursor:pointer;transition:.1s}
-.fl tbody tr:hover{background:var(--bg2)}
-.fl tbody tr.sel{background:var(--blue-bg)}
-.fl td{padding:7px 12px;font-size:13px;color:var(--text);white-space:nowrap}
-.fl td.name-td{max-width:0;width:100%}
-.fl-chk{width:16px;height:16px;border-radius:50%;border:1.5px solid var(--border2);background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff;transition:.12s}
-tr:hover .fl-chk,.fl tr.sel .fl-chk{border-color:var(--blue)}
-.fl tr.sel .fl-chk{background:var(--blue);border-color:var(--blue)}
-.fl-icon{font-size:15px;color:var(--text2)}
+/* List */
+#flTable{width:100%;border-collapse:collapse}
+.fl-head{position:sticky;top:0;background:var(--s1);z-index:4}
+.fl-head th{padding:7px 12px;text-align:left;font-size:11px;font-weight:600;color:var(--tx3);border-bottom:1px solid var(--bd);white-space:nowrap;text-transform:uppercase;letter-spacing:.05em}
+.fl tbody tr{border-bottom:1px solid rgba(48,54,61,.5);cursor:pointer;transition:.1s}
+.fl tbody tr:hover{background:var(--s1)}
+.fl tbody tr.sel{background:var(--bl-dim)}
+.fl td{padding:7px 12px;font-size:13px;color:var(--tx);white-space:nowrap}
+.fl td.nm{max-width:0;width:100%;overflow:hidden;text-overflow:ellipsis}
+.fl-chk{width:16px;height:16px;border-radius:50%;border:1.5px solid var(--bd2);background:var(--s2);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff;transition:.12s}
+tr:hover .fl-chk,.fl tr.sel .fl-chk{border-color:var(--bl)}
+.fl tr.sel .fl-chk{background:var(--bl);border-color:var(--bl)}
 
-/* state boxes */
+/* States */
 .state{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;padding:60px 20px;text-align:center}
-.state-ico{font-size:56px;margin-bottom:16px;opacity:.6}
-.state-title{font-size:18px;font-weight:500;color:var(--text);margin-bottom:6px}
-.state-sub{font-size:13px;color:var(--text2);max-width:300px;line-height:1.6}
+.state-ico{font-size:52px;margin-bottom:14px;opacity:.55}
+.state-title{font-size:17px;font-weight:500;margin-bottom:6px}
+.state-sub{font-size:13px;color:var(--tx2);max-width:280px;line-height:1.6}
 
-/* drop overlay */
-#dropOverlay{position:absolute;inset:0;z-index:20;background:rgba(47,129,247,.08);border:2px solid var(--blue);pointer-events:none;opacity:0;transition:opacity .12s;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px}
-#dropOverlay.vis{opacity:1}
-.drop-icon{font-size:48px}
-.drop-text{font-size:16px;font-weight:500;color:var(--blue)}
+/* Drop overlay */
+#dropOvl{position:absolute;inset:0;background:rgba(47,129,247,.07);border:2px solid var(--bl);pointer-events:none;opacity:0;transition:opacity .12s;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;z-index:10}
+#dropOvl.vis{opacity:1}
+.drop-ico{font-size:44px}
+.drop-txt{font-size:15px;font-weight:500;color:var(--bl)}
 
-/* statusbar */
-#statusbar{height:26px;background:var(--bg2);border-top:1px solid var(--border);display:flex;align-items:center;padding:0 14px;gap:8px;font-size:11px;color:var(--text2);flex-shrink:0}
-.sdot{width:6px;height:6px;border-radius:50%;background:var(--text3);flex-shrink:0;transition:background .25s}
-.sdot.ok{background:var(--green)}.sdot.warn{background:var(--yellow)}.sdot.bad{background:var(--red)}
-#sb-text{font-weight:500;color:var(--text)}
-#sb-sub{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-#sb-count{margin-left:auto;white-space:nowrap}
+/* Status bar */
+#statusbar{height:25px;background:var(--s1);border-top:1px solid var(--bd);display:flex;align-items:center;padding:0 12px;gap:7px;font-size:11px;color:var(--tx2);flex-shrink:0}
+.sdot{width:6px;height:6px;border-radius:50%;background:var(--tx3);flex-shrink:0;transition:background .25s}
+.sdot.ok{background:var(--gn)}.sdot.warn{background:var(--yw)}.sdot.bad{background:var(--rd)}
+#sb-t{font-weight:500;color:var(--tx)}
+#sb-s{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#sb-c{margin-left:auto;white-space:nowrap}
 
-/* ── Modals ── */
-.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:100;display:flex;align-items:center;justify-content:center;padding:16px}
-.modal{background:var(--bg2);border:1px solid var(--border);border-radius:14px;max-height:90vh;display:flex;flex-direction:column;box-shadow:var(--shadow);overflow:hidden}
-.modal-head{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-shrink:0}
-.modal-title{font-size:15px;font-weight:600;color:var(--text);flex:1;overflow:hidden;text-overflow:ellipsis}
-.modal-body{overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:14px}
-.modal-foot{padding:12px 18px;border-top:1px solid var(--border);display:flex;align-items:center;gap:8px;flex-shrink:0;flex-wrap:wrap}
-.modal-foot .spacer{flex:1}
-.mclose{width:32px;height:32px;border-radius:var(--r);display:flex;align-items:center;justify-content:center;color:var(--text2);font-size:18px;cursor:pointer;flex-shrink:0}
-.mclose:hover{background:var(--bg3);color:var(--text)}
+/* ─ Modals ─ */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:100;display:flex;align-items:center;justify-content:center;padding:14px}
+.modal{background:var(--s1);border:1px solid var(--bd);border-radius:12px;max-height:92vh;display:flex;flex-direction:column;box-shadow:var(--shadow);overflow:hidden}
+.modal-hd{padding:13px 16px;border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:10px;flex-shrink:0}
+.modal-hd-title{font-size:14px;font-weight:600;flex:1;overflow:hidden;text-overflow:ellipsis}
+.modal-body{overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:12px}
+.modal-ft{padding:10px 16px;border-top:1px solid var(--bd);display:flex;align-items:center;gap:8px;flex-shrink:0;flex-wrap:wrap}
+.modal-ft .sp{flex:1}
+.x-btn{width:30px;height:30px;border-radius:var(--r);display:flex;align-items:center;justify-content:center;color:var(--tx2);font-size:16px;cursor:pointer;flex-shrink:0}
+.x-btn:hover{background:var(--s2);color:var(--tx)}
 
 /* Preview */
-#prevModal .modal{width:min(860px,100%)}
-.prev-body{background:var(--bg);overflow:auto;display:flex;align-items:center;justify-content:center;min-height:240px;max-height:65vh}
-.prev-body img{max-width:100%;max-height:65vh;display:block}
-.prev-body video{max-width:100%;max-height:65vh;display:block}
-.prev-body audio{width:100%;padding:36px 20px;display:block}
-.prev-body embed{width:100%;height:65vh;border:none;display:block}
-.prev-body pre{padding:20px;font-family:'Fira Code',monospace;font-size:12px;line-height:1.6;color:var(--text);background:var(--bg);white-space:pre-wrap;word-break:break-all;width:100%;height:65vh;overflow:auto;margin:0}
-.prev-body .doc-wrap{width:100%;height:65vh;overflow:auto;padding:32px;background:#fff;color:#000;font-size:13px;line-height:1.7}
-.prev-body .xl-wrap{width:100%;height:65vh;overflow:auto;background:var(--bg2)}
-.xl-wrap table{border-collapse:collapse;font-size:12px;color:var(--text)}
-.xl-wrap th,.xl-wrap td{border:1px solid var(--border);padding:4px 10px;white-space:nowrap;min-width:70px}
-.xl-wrap th{background:var(--bg3);font-weight:500;color:var(--text2);position:sticky;top:0}
-.xl-wrap td:first-child{background:var(--bg3);font-weight:500;color:var(--text2);position:sticky;left:0}
-.dl-card{padding:44px 28px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:12px;background:var(--bg)}
-.dl-card-icon{font-size:64px}
-.dl-card-name{font-size:15px;font-weight:500;color:var(--text);max-width:360px;word-break:break-all}
-.dl-card-meta{font-size:12px;color:var(--text2)}
-.rename-row{display:flex;align-items:center;gap:8px;flex:1;min-width:180px}
-.rename-row input{flex:1;padding:7px 10px;border-radius:var(--r);border:1px solid var(--blue);background:var(--bg3);color:var(--text);font:inherit;outline:none;min-width:0}
+.prev-body{background:var(--bg);overflow:auto;display:flex;align-items:center;justify-content:center;min-height:220px;max-height:62vh}
+.prev-body img{max-width:100%;max-height:62vh;display:block}
+.prev-body video{max-width:100%;max-height:62vh;display:block}
+.prev-body audio{width:100%;padding:34px 16px;display:block}
+.prev-body embed,.prev-body iframe{width:100%;height:62vh;border:none;display:block}
+.prev-body pre{padding:18px;font-family:'DM Mono',monospace;font-size:12px;line-height:1.6;color:var(--tx);background:var(--bg);white-space:pre-wrap;word-break:break-all;width:100%;height:62vh;overflow:auto;margin:0}
+.prev-body .doc-wrap{width:100%;height:62vh;overflow:auto;padding:28px;background:#fff;color:#000;font-size:13px;line-height:1.7}
+.prev-body .xl-wrap{width:100%;height:62vh;overflow:auto;background:var(--s1)}
+.xl-wrap table{border-collapse:collapse;font-size:12px;color:var(--tx)}
+.xl-wrap th,.xl-wrap td{border:1px solid var(--bd);padding:4px 8px;white-space:nowrap;min-width:60px}
+.xl-wrap th{background:var(--s2);font-weight:500;color:var(--tx2);position:sticky;top:0;z-index:2}
+.dl-card{padding:40px 24px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px;background:var(--bg);width:100%}
+.dl-card-ico{font-size:60px}
+.dl-card-name{font-size:14px;font-weight:500;color:var(--tx);max-width:320px;word-break:break-all}
+.dl-card-meta{font-size:12px;color:var(--tx2)}
+.ren-row{display:flex;align-items:center;gap:7px;flex:1;min-width:160px}
+.ren-row input{flex:1;padding:6px 9px;border-radius:var(--r);border:1px solid var(--bl);background:var(--s2);color:var(--tx);font:inherit;outline:none;min-width:0}
 
 /* Move modal */
-#moveModal .modal{width:min(440px,100%)}
-.msc{padding:12px 14px;border:1px solid var(--border);border-radius:var(--r);cursor:pointer;transition:.12s;display:flex;align-items:center;gap:10px}
-.msc:hover{border-color:var(--blue);background:var(--blue-bg)}
-.msc.sel{border-color:var(--blue);background:var(--blue-bg)}
-.msc.dis{opacity:.35;cursor:not-allowed;pointer-events:none}
-.msc-icon{font-size:22px}
-.msc-name{font-size:13px;font-weight:500;color:var(--text)}
-.msc-meta{font-size:12px;color:var(--text2);margin-top:1px}
+.msc{padding:11px 13px;border:1px solid var(--bd);border-radius:var(--r);cursor:pointer;transition:.12s;display:flex;align-items:center;gap:9px}
+.msc:hover{border-color:var(--bl);background:var(--bl-dim)}
+.msc.on{border-color:var(--bl);background:var(--bl-dim)}
+.msc.dis{opacity:.3;cursor:not-allowed;pointer-events:none}
+.msc-ico{font-size:20px}
+.msc-name{font-size:13px;font-weight:500}
+.msc-meta{font-size:11px;color:var(--tx2);margin-top:1px}
 
 /* Settings */
-#settingsModal .modal{width:min(680px,100%);max-height:85vh}
-.stabs{display:flex;border-bottom:1px solid var(--border);flex-shrink:0;padding:0 18px}
-.stab{padding:10px 14px;font-size:13px;font-weight:500;color:var(--text2);border-bottom:2px solid transparent;margin-bottom:-1px;cursor:pointer;transition:.12s}
-.stab:hover{color:var(--text)}
-.stab.on{color:var(--blue);border-bottom-color:var(--blue)}
-.spanel{display:none;flex-direction:column;gap:14px;padding:16px}
+.stabs{display:flex;border-bottom:1px solid var(--bd);flex-shrink:0;padding:0 16px}
+.stab{padding:9px 12px;font-size:13px;font-weight:500;color:var(--tx2);border-bottom:2px solid transparent;margin-bottom:-1px;cursor:pointer;transition:.12s}
+.stab:hover{color:var(--tx)}
+.stab.on{color:var(--bl);border-bottom-color:var(--bl)}
+.spanel{display:none;flex-direction:column;gap:12px;padding:14px}
 .spanel.on{display:flex}
-.acct{border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
-.acct-head{padding:12px 14px;display:flex;align-items:center;gap:10px;background:var(--bg3)}
-.acct-prov{font-size:24px}
-.acct-info{flex:1;min-width:0}.acct-pname{font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.05em}.acct-email{font-size:13px;font-weight:500;color:var(--text)}
-.acct-slot{font-size:20px;font-weight:600;color:var(--blue);font-family:monospace}
-.acct-foot{padding:8px 14px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.acct-tos{font-size:11px;color:var(--text3);flex:1}
-.tos-ok{color:var(--green)}.tos-warn{color:var(--yellow)}.tos-bad{color:var(--red)}
-.acct-edit{display:none;padding:12px 14px;border-top:1px solid var(--border);background:var(--bg2);flex-direction:column;gap:10px}
+.acct{border:1px solid var(--bd);border-radius:var(--r);overflow:hidden}
+.acct-hd{padding:11px 13px;display:flex;align-items:center;gap:10px;background:var(--s2)}
+.acct-pico{font-size:22px}
+.acct-pname{font-size:11px;font-weight:600;color:var(--tx3);text-transform:uppercase;letter-spacing:.05em}
+.acct-email{font-size:13px;font-weight:500;color:var(--tx);margin-top:1px}
+.acct-slot{font-size:18px;font-weight:600;color:var(--bl);font-family:'DM Mono',monospace;margin-left:auto}
+.acct-ft{padding:7px 13px;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.acct-tos{font-size:11px;flex:1}
+.acct-edit{display:none;padding:11px 13px;border-top:1px solid var(--bd);background:var(--bg);flex-direction:column;gap:10px}
 .acct-edit.on{display:flex}
-.add-wrap{background:var(--bg3);border:1px dashed var(--border2);border-radius:var(--r);padding:16px;display:none;flex-direction:column;gap:14px}
+.add-wrap{background:var(--s2);border:1px dashed var(--bd2);border-radius:var(--r);padding:14px;display:none;flex-direction:column;gap:12px}
 .add-wrap.on{display:flex}
-.prov-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px}
-.prov-card{border:1px solid var(--border);border-radius:var(--r);padding:12px 8px;cursor:pointer;transition:.12s;text-align:center;display:flex;flex-direction:column;align-items:center;gap:5px;background:var(--bg2)}
-.prov-card:hover{border-color:var(--blue);background:var(--blue-bg)}
-.prov-card.on{border-color:var(--blue);background:var(--blue-bg)}
-.prov-icon{font-size:26px}.prov-name{font-size:12px;font-weight:500;color:var(--text)}.prov-note{font-size:10px;color:var(--text3)}.prov-warn{font-size:10px;color:var(--yellow)}
-.connect-section{display:none;flex-direction:column;gap:12px}.connect-section.on{display:flex}
-.connect-info{padding:10px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);font-size:13px;color:var(--text2);line-height:1.6}
-.connect-info code{background:var(--bg4);padding:1px 5px;border-radius:4px;font-size:11px;color:var(--text);font-family:monospace}
-.popup-note{padding:8px 12px;background:var(--blue-bg);border:1px solid rgba(47,129,247,.25);border-radius:var(--r);font-size:12px;color:var(--blue);line-height:1.5}
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.f-field{display:flex;flex-direction:column;gap:5px}
-.f-label{font-size:12px;font-weight:500;color:var(--text2)}
-.f-inp{padding:8px 10px;border-radius:var(--r);border:1px solid var(--border2);background:var(--bg2);color:var(--text);font:inherit;outline:none;width:100%;transition:.12s}
-.f-inp:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(47,129,247,.12)}
-.cpw-form{display:flex;flex-direction:column;gap:12px}
-.err-msg{font-size:12px;color:var(--red);min-height:16px}
-.ok-msg{font-size:12px;color:var(--green)}
+.prov-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:7px}
+.prov-card{border:1px solid var(--bd);border-radius:var(--r);padding:11px 7px;cursor:pointer;transition:.12s;text-align:center;display:flex;flex-direction:column;align-items:center;gap:5px;background:var(--s1)}
+.prov-card:hover{border-color:var(--bl);background:var(--bl-dim)}
+.prov-card.on{border-color:var(--bl);background:var(--bl-dim)}
+.prov-ico{font-size:24px}
+.prov-name{font-size:12px;font-weight:500}
+.prov-note{font-size:10px;color:var(--tx3)}
+.prov-warn{font-size:10px;color:var(--yw)}
+.conn-sec{display:none;flex-direction:column;gap:10px}
+.conn-sec.on{display:flex}
+.conn-info{padding:9px 11px;background:var(--s1);border:1px solid var(--bd);border-radius:var(--r);font-size:12px;color:var(--tx2);line-height:1.6}
+.conn-info code{background:var(--s3);padding:1px 5px;border-radius:4px;font-size:11px;color:var(--tx);font-family:'DM Mono',monospace}
+.popup-note{padding:7px 10px;background:var(--bl-dim);border:1px solid rgba(47,129,247,.2);border-radius:var(--r);font-size:12px;color:var(--bl);line-height:1.5}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.ff{display:flex;flex-direction:column;gap:4px}
+.ff-lbl{font-size:12px;font-weight:500;color:var(--tx2)}
+.ff-inp{padding:7px 9px;border-radius:var(--r);border:1px solid var(--bd2);background:var(--s1);color:var(--tx);font:inherit;outline:none;width:100%;transition:.12s}
+.ff-inp:focus{border-color:var(--bl);box-shadow:0 0 0 3px rgba(47,129,247,.12)}
+.err-msg{font-size:12px;font-weight:500;word-break:break-word;min-height:15px}
+.err-msg.bad{color:var(--rd)}
+.err-msg.ok{color:var(--gn)}
 
 /* Context menu */
-.ctx{position:fixed;z-index:200;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);overflow:hidden;min-width:170px;box-shadow:var(--shadow);padding:4px}
-.ctx-item{padding:8px 12px;font-size:13px;color:var(--text);cursor:pointer;display:flex;align-items:center;gap:8px;border-radius:5px;transition:.1s}
-.ctx-item:hover{background:var(--bg4)}
-.ctx-item.danger{color:var(--red)}
-.ctx-sep{height:1px;background:var(--border);margin:4px 0}
+.ctx{position:fixed;z-index:200;background:var(--s2);border:1px solid var(--bd2);border-radius:var(--r);overflow:hidden;min-width:165px;box-shadow:var(--shadow);padding:4px}
+.ctx-item{padding:7px 11px;font-size:13px;color:var(--tx);cursor:pointer;display:flex;align-items:center;gap:8px;border-radius:5px;transition:.1s}
+.ctx-item:hover{background:var(--s3)}
+.ctx-item.danger{color:var(--rd)}
+.ctx-sep{height:1px;background:var(--bd);margin:3px 0}
 
-/* Upload toast */
-#toast{position:fixed;bottom:20px;right:20px;z-index:300;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;min-width:260px;box-shadow:var(--shadow)}
-.toast-title{font-size:13px;font-weight:500;color:var(--text);margin-bottom:4px}
-.toast-sub{font-size:12px;color:var(--text2);margin-bottom:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.toast-bar{height:3px;background:var(--bg4);border-radius:2px;overflow:hidden}
-.toast-fill{height:100%;background:var(--blue);border-radius:2px;transition:width .2s}
+/* Toast */
+#toast{position:fixed;bottom:18px;right:18px;z-index:300;background:var(--s1);border:1px solid var(--bd);border-radius:var(--r);padding:12px 14px;min-width:240px;box-shadow:var(--shadow)}
+.t-title{font-size:13px;font-weight:500;margin-bottom:3px}
+.t-sub{font-size:12px;color:var(--tx2);margin-bottom:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.t-bar{height:3px;background:var(--s3);border-radius:1px;overflow:hidden}
+.t-fill{height:100%;background:var(--bl);border-radius:1px;transition:width .2s}
 
-/* Trash rows */
-.trash-list{padding:8px}
-.tr-row{display:flex;align-items:center;padding:9px 10px;border:1px solid var(--border);border-radius:var(--r);margin-bottom:4px;gap:10px;background:var(--bg2);transition:.1s}
-.tr-row:hover{background:var(--bg3)}
-.tr-icon{font-size:16px;color:var(--text2);flex-shrink:0;width:20px;text-align:center}
-.tr-name{flex:1;font-size:13px;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.tr-size{font-size:12px;color:var(--text3);width:72px;text-align:right;flex-shrink:0}
-.tr-date{font-size:12px;color:var(--text3);width:110px;text-align:right;flex-shrink:0}
-.tr-acts{display:flex;gap:5px;flex-shrink:0}
+/* Trash */
+.tr-list{padding:6px}
+.tr-row{display:flex;align-items:center;padding:8px 9px;border:1px solid var(--bd);border-radius:var(--r);margin-bottom:4px;gap:9px;background:var(--s1);transition:.1s}
+.tr-row:hover{background:var(--s2)}
+.tr-ico{font-size:15px;color:var(--tx2);flex-shrink:0;width:18px;text-align:center}
+.tr-name{flex:1;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tr-size{font-size:11px;color:var(--tx3);width:65px;text-align:right;flex-shrink:0}
+.tr-acts{display:flex;gap:4px;flex-shrink:0}
 </style>
 </head>
 <body>
-<!-- JS error overlay — shows any crash visibly on mobile -->
-<div id="jsErrBox" style="display:none;position:fixed;inset:0;z-index:9999;background:#1a0000;color:#ff6b6b;padding:24px;font-family:monospace;font-size:14px;overflow:auto;white-space:pre-wrap"></div>
-<script>
-window.onerror=function(msg,src,line,col,err){
-  var b=document.getElementById('jsErrBox');
-  b.style.display='block';
-  b.textContent='JS ERROR:\n'+msg+'\nLine: '+line+'\nSource: '+src+'\n\n'+(err&&err.stack?err.stack:'');
-  return false;
-};
-window.addEventListener('unhandledrejection',function(e){
-  var b=document.getElementById('jsErrBox');
-  b.style.display='block';
-  b.textContent=(b.textContent||'')+'\nUNHANDLED PROMISE:\n'+(e.reason?.stack||e.reason||e);
-});
-</script>
 
-<!-- ═══════ AUTH ══════════════════════════════════════════════════════════ -->
-<div id="authScreen">
+<!-- AUTH -->
+<div id="authWrap">
   <div class="auth-card">
     <div class="auth-logo">
-      <div class="auth-logo-icon">🗄</div>
-      <div class="auth-logo-text">Storage Vault</div>
+      <div class="auth-logo-ico">🗄</div>
+      <div class="auth-logo-txt">Storage Vault</div>
     </div>
 
-    <div id="stepEmail" class="auth-step">
+    <div id="stepEmail" class="auth-form">
       <div>
-        <label class="field-label">Email address</label>
-        <input id="inEmail" class="field-input" type="email" placeholder="you@example.com" autocomplete="email"/>
+        <label class="f-label">Email address</label>
+        <input id="inEmail" class="f-input" type="email" placeholder="you@example.com" autocomplete="email"/>
       </div>
-      <button id="btnNext" class="auth-btn">Continue</button>
-      <div class="auth-err" id="errEmail"></div>
+      <button id="btnNext" class="btn primary full">Continue</button>
+      <div id="errEmail" class="auth-err bad"></div>
     </div>
 
-    <div id="stepRegister" class="auth-step hidden">
-      <button class="auth-back" id="btnRegBack">← <span id="regEmail"></span></button>
+    <div id="stepReg" class="auth-form h">
+      <button class="auth-back" id="btnRegBack">← <span id="regEmailLbl"></span></button>
       <div>
-        <label class="field-label">Create password</label>
-        <div class="pw-wrap">
-          <input id="inReg1" class="field-input" type="password" placeholder="Minimum 8 characters" autocomplete="new-password"/>
-          <button class="pw-eye" data-t="inReg1">👁</button>
-        </div>
-        <div class="pw-meter"><div class="pw-bar" id="regBar"></div></div>
+        <label class="f-label">Create password</label>
+        <div class="pw-wrap"><input id="inReg1" class="f-input" type="password" placeholder="Min 8 characters" autocomplete="new-password"/><button class="eye-btn" data-t="inReg1">👁</button></div>
+        <div class="pw-meter"><div class="pw-bar" id="regPwBar"></div></div>
       </div>
       <div>
-        <label class="field-label">Confirm password</label>
-        <div class="pw-wrap">
-          <input id="inReg2" class="field-input" type="password" placeholder="Repeat password" autocomplete="new-password"/>
-          <button class="pw-eye" data-t="inReg2">👁</button>
-        </div>
+        <label class="f-label">Confirm password</label>
+        <div class="pw-wrap"><input id="inReg2" class="f-input" type="password" placeholder="Repeat password" autocomplete="new-password"/><button class="eye-btn" data-t="inReg2">👁</button></div>
       </div>
-      <button id="btnRegister" class="auth-btn">Create account</button>
-      <div class="auth-err" id="errReg"></div>
-      <div class="auth-hint">Password is hashed in your browser — the server never sees the raw password.</div>
+      <button id="btnReg" class="btn primary full">Create account</button>
+      <div id="errReg" class="auth-err bad"></div>
+      <div class="auth-hint">Password is hashed in your browser — the server never sees it.</div>
     </div>
 
-    <div id="stepLogin" class="auth-step hidden">
-      <button class="auth-back" id="btnLoginBack">← <span id="loginEmail"></span></button>
+    <div id="stepLogin" class="auth-form h">
+      <button class="auth-back" id="btnLoginBack">← <span id="loginEmailLbl"></span></button>
       <div>
-        <label class="field-label">Password</label>
-        <div class="pw-wrap">
-          <input id="inLogin" class="field-input" type="password" placeholder="Your vault password" autocomplete="current-password"/>
-          <button class="pw-eye" data-t="inLogin">👁</button>
-        </div>
+        <label class="f-label">Password</label>
+        <div class="pw-wrap"><input id="inLogin" class="f-input" type="password" placeholder="Your vault password" autocomplete="current-password"/><button class="eye-btn" data-t="inLogin">👁</button></div>
       </div>
-      <button id="btnLogin" class="auth-btn">Sign in</button>
-      <div class="auth-err" id="errLogin"></div>
+      <button id="btnLogin" class="btn primary full">Sign in</button>
+      <div id="errLogin" class="auth-err bad"></div>
     </div>
   </div>
 </div>
 
-<!-- ═══════ APP ═══════════════════════════════════════════════════════════ -->
-<div id="appScreen" class="hidden">
-
+<!-- APP -->
+<div id="appWrap" class="h">
   <div id="topbar">
-    <div class="topbar-logo">
-      <div class="topbar-logo-icon">🗄</div>
-      <div class="topbar-logo-text">Storage Vault</div>
-    </div>
-    <div class="topbar-search">
-      <span class="topbar-search-icon">🔍</span>
-      <input id="searchInput" type="search" placeholder="Search files and folders"/>
-    </div>
-    <div class="topbar-right">
-      <div class="topbar-icon-btn" id="btnSettings" title="Settings">⚙️</div>
-      <div class="topbar-icon-btn" id="btnRefresh" title="Refresh">🔄</div>
-      <div class="topbar-avatar" id="avatarBtn" title="Sign out">?</div>
+    <div class="tb-logo"><div class="tb-logo-ico">🗄</div><div class="tb-logo-txt">Storage Vault</div></div>
+    <div class="tb-search"><span class="tb-search-ico">🔍</span><input id="searchIn" type="search" placeholder="Search files"/></div>
+    <div class="tb-actions">
+      <div class="tb-ico-btn" id="btnSettings" title="Settings">⚙️</div>
+      <div class="tb-ico-btn" id="btnRefresh" title="Refresh">🔄</div>
+      <div class="tb-avatar" id="btnAvatar" title="Sign out">?</div>
     </div>
   </div>
 
-  <div id="body">
+  <div id="bodyWrap">
     <div id="sidebar">
-      <label class="sb-upload-btn">
-        <span>＋</span>
-        <span>Upload files</span>
-        <input id="uploadInput" type="file" multiple style="display:none"/>
-      </label>
-
-      <div class="sb-section">
-        <div class="sb-item active" id="sbAll">
-          <span class="sb-item-icon">🏠</span>
-          <span class="sb-item-label">My Drive</span>
-          <span class="sb-count" id="sbAllCount">0</span>
-        </div>
-      </div>
-
-      <div class="sb-section">
-        <div class="sb-section-label">Storage</div>
-        <div id="sbSlots"></div>
-      </div>
-
+      <label class="sb-upload"><span>＋</span><span>Upload files</span><input id="upInput" type="file" multiple style="display:none"/></label>
+      <div class="sb-item on" id="sbAll"><span class="sb-item-ico">🏠</span><span class="sb-item-lbl">My Drive</span><span class="sb-cnt" id="sbAllCnt">0</span></div>
+      <div class="sb-sec-lbl">Storage</div>
+      <div id="sbSlots"></div>
       <div class="sb-divider"></div>
-
-      <div class="sb-section">
-        <div class="sb-item" id="sbTrashAll" style="display:none">
-          <span class="sb-item-icon">🗑️</span>
-          <span class="sb-item-label">Trash</span>
-        </div>
-      </div>
     </div>
 
-    <div id="main">
+    <div id="mainWrap">
       <div id="toolbar">
         <button class="btn ghost sm" id="btnNewFolder">📁 New folder</button>
-        <div id="selDiv" style="display:none;width:1px;height:20px;background:var(--border);margin:0 2px"></div>
-        <button class="btn ghost sm hidden" id="btnMoveSelected">📂 Move</button>
-        <button class="btn danger sm hidden" id="btnDelSelected">🗑 Delete</button>
-        <span class="hidden" id="selInfo" style="font-size:12px;color:var(--text2)"></span>
+        <div id="selDiv" style="display:none;width:1px;height:18px;background:var(--bd);margin:0 1px"></div>
+        <button class="btn ghost sm h" id="btnMoveSel">📂 Move</button>
+        <button class="btn danger sm h" id="btnDelSel">🗑 Delete</button>
+        <span class="h" id="selInfo" style="font-size:12px;color:var(--tx2)"></span>
         <div style="flex:1"></div>
-        <select id="uploadSlot" style="font-size:12px;padding:5px 8px;border-radius:var(--r);border:1px solid var(--border);display:none"></select>
-        <div style="display:flex;border:1px solid var(--border);border-radius:var(--r);overflow:hidden">
-          <button id="vGrid" style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;color:var(--text2);font-size:14px;background:var(--blue-bg);color:var(--blue)">⊞</button>
-          <button id="vList" style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;color:var(--text2);font-size:14px;border-left:1px solid var(--border)">≡</button>
+        <select id="upSlot" style="font-size:12px;padding:4px 8px;display:none"></select>
+        <div style="display:flex;border:1px solid var(--bd);border-radius:var(--r);overflow:hidden">
+          <button id="vGrid" style="width:30px;height:30px;display:flex;align-items:center;justify-content:center;color:var(--bl);font-size:14px;background:var(--bl-dim)">⊞</button>
+          <button id="vList" style="width:30px;height:30px;display:flex;align-items:center;justify-content:center;color:var(--tx2);font-size:14px;border-left:1px solid var(--bd)">≡</button>
         </div>
       </div>
-
-      <div id="breadcrumb" class="hidden"></div>
-
+      <div id="breadcrumb" class="h"></div>
       <div id="fileArea">
         <div id="fgWrap"><div id="fgGrid" class="fg"></div></div>
-        <div id="flWrap" style="display:none"><table id="flTable" class="fl"><thead class="fl-head"><tr><th style="width:28px"></th><th style="width:22px"></th><th class="name-td">Name</th><th style="width:80px">Size</th><th style="width:130px">Modified</th><th style="width:90px">Storage</th></tr></thead><tbody id="flBody"></tbody></table></div>
-        <div id="emptyState" class="state hidden"><div class="state-ico" id="emptyIco">🗂️</div><div class="state-title" id="emptyTitle">No files</div><div class="state-sub" id="emptySub">Upload files using the button above</div></div>
-        <div id="loadingState" class="state"><div class="state-ico">⏳</div><div class="state-title">Connecting…</div><div class="state-sub" id="loadMsg">Logging in to storage accounts</div></div>
+        <div id="flWrap" style="display:none"><table id="flTable" class="fl"><thead class="fl-head"><tr><th style="width:26px"></th><th style="width:20px"></th><th class="nm">Name</th><th style="width:75px">Size</th><th style="width:120px">Modified</th><th style="width:85px">Storage</th></tr></thead><tbody id="flBody"></tbody></table></div>
+        <div id="emptyState" class="state h"><div class="state-ico" id="emptyIco">🗂️</div><div class="state-title" id="emptyTitle">No files</div><div class="state-sub" id="emptySub"></div></div>
+        <div id="loadState" class="state"><div class="state-ico">⏳</div><div class="state-title">Connecting…</div><div class="state-sub" id="loadMsg">Logging in to storage accounts</div></div>
       </div>
-
-      <div id="dropOverlay">
-        <div class="drop-icon">📂</div>
-        <div class="drop-text">Drop files to upload</div>
-      </div>
+      <div id="dropOvl"><div class="drop-ico">📂</div><div class="drop-txt">Drop to upload</div></div>
     </div>
   </div>
 
-  <div id="statusbar">
-    <div class="sdot warn" id="sdot"></div>
-    <span id="sb-text">Not connected</span>
-    <span id="sb-sub"></span>
-    <span id="sb-count"></span>
-  </div>
+  <div id="statusbar"><div class="sdot warn" id="sdot"></div><span id="sb-t">Not connected</span><span id="sb-s"></span><span id="sb-c"></span></div>
 </div>
 
-<!-- ═══════ PREVIEW ════════════════════════════════════════════════════════ -->
-<div id="prevModal" class="modal-bg hidden">
-  <div class="modal" style="width:min(860px,100%)">
-    <div class="modal-head">
-      <div style="flex:1;min-width:0">
-        <div class="modal-title" id="pName">—</div>
-        <div style="font-size:12px;color:var(--text2);margin-top:1px" id="pMeta"></div>
-      </div>
-      <button class="btn ghost sm" id="btnPrevDl">⬇️ Download</button>
-      <div class="mclose" id="btnPrevClose">✕</div>
+<!-- PREVIEW -->
+<div id="prevModal" class="modal-bg h">
+  <div class="modal" style="width:min(820px,100%)">
+    <div class="modal-hd">
+      <div style="flex:1;min-width:0"><div class="modal-hd-title" id="pName">—</div><div style="font-size:11px;color:var(--tx2);margin-top:1px" id="pMeta"></div></div>
+      <button class="btn ghost sm" id="btnPrevDl">⬇️</button>
+      <div class="x-btn" id="btnPrevX">✕</div>
     </div>
     <div class="prev-body" id="prevBody"><div class="state"><div class="state-ico">⏳</div></div></div>
-    <div class="modal-foot">
-      <div class="rename-row hidden" id="renameRow">
-        <input type="text" id="renameIn" placeholder="New name…"/>
-        <button class="btn sm primary" id="btnRenOk">✓ Save</button>
-        <button class="btn sm ghost" id="btnRenCancel">Cancel</button>
-      </div>
-      <span style="font-size:12px;color:var(--text2);flex:1" id="pSlot"></span>
-      <button class="btn sm ghost" id="btnPrevRename">✏️ Rename</button>
-      <button class="btn sm ghost" id="btnPrevMove">📂 Move</button>
-      <button class="btn sm danger" id="btnPrevDel">🗑 Delete</button>
+    <div class="modal-ft">
+      <div class="ren-row h" id="renRow"><input type="text" id="renIn" placeholder="New name…"/><button class="btn sm primary" id="btnRenOk">✓</button><button class="btn sm ghost" id="btnRenX">Cancel</button></div>
+      <span style="font-size:11px;color:var(--tx2);flex:1;overflow:hidden;text-overflow:ellipsis" id="pSlot"></span>
+      <button class="btn ghost sm" id="btnPrevRen">✏️ Rename</button>
+      <button class="btn ghost sm" id="btnPrevMove">📂 Move</button>
+      <button class="btn danger sm" id="btnPrevDel">🗑 Delete</button>
     </div>
   </div>
 </div>
 
-<!-- ═══════ MOVE ════════════════════════════════════════════════════════════ -->
-<div id="moveModal" class="modal-bg hidden">
-  <div class="modal" style="width:min(420px,100%)">
-    <div class="modal-head"><div class="modal-title">Move to storage</div><div class="mclose" id="btnMoveClose">✕</div></div>
-    <div class="modal-body">
-      <div style="font-size:13px;color:var(--text2)" id="moveInfo"></div>
-      <div style="display:flex;flex-direction:column;gap:8px" id="moveSlots"></div>
-    </div>
-    <div class="modal-foot">
-      <div class="spacer"></div>
-      <button class="btn ghost sm" id="btnMoveCancel">Cancel</button>
-      <button class="btn primary sm" id="btnDoMove" disabled>Move here</button>
-    </div>
+<!-- MOVE -->
+<div id="moveModal" class="modal-bg h">
+  <div class="modal" style="width:min(400px,100%)">
+    <div class="modal-hd"><div class="modal-hd-title">Move to storage</div><div class="x-btn" id="btnMoveX">✕</div></div>
+    <div class="modal-body"><div style="font-size:12px;color:var(--tx2)" id="moveInfo"></div><div style="display:flex;flex-direction:column;gap:7px" id="moveSlots"></div></div>
+    <div class="modal-ft"><div class="sp"></div><button class="btn ghost sm" id="btnMoveCancel">Cancel</button><button class="btn primary sm" id="btnDoMove" disabled>Move here</button></div>
   </div>
 </div>
 
-<!-- ═══════ SETTINGS ═══════════════════════════════════════════════════════ -->
-<div id="settingsModal" class="modal-bg hidden">
-  <div class="modal" style="width:min(660px,100%);max-height:85vh">
-    <div class="modal-head"><div class="modal-title">Settings</div><div class="mclose" id="btnSettingsClose">✕</div></div>
-    <div class="stabs">
-      <div class="stab on" data-p="storage">Storage accounts</div>
-      <div class="stab" data-p="security">Security</div>
-    </div>
+<!-- SETTINGS -->
+<div id="settingsModal" class="modal-bg h">
+  <div class="modal" style="width:min(620px,100%);max-height:86vh">
+    <div class="modal-hd"><div class="modal-hd-title">Settings</div><div class="x-btn" id="btnSettingsX">✕</div></div>
+    <div class="stabs"><div class="stab on" data-p="storage">Storage accounts</div><div class="stab" data-p="security">Security</div></div>
     <div id="panelStorage" class="spanel on">
-      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px">
-        <div><div style="font-size:14px;font-weight:600;color:var(--text)">Your storage accounts</div><div style="font-size:12px;color:var(--text2);margin-top:2px">Up to 10 slots · credentials AES-256-GCM encrypted in browser</div></div>
-        <button class="btn primary sm" id="btnAddAccount">+ Add account</button>
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+        <div><div style="font-size:14px;font-weight:600">Your storage accounts</div><div style="font-size:12px;color:var(--tx2);margin-top:1px">Up to 10 slots · AES-256-GCM encrypted</div></div>
+        <button class="btn primary sm" id="btnAddAcct">+ Add account</button>
       </div>
       <div id="acctList"></div>
       <div class="add-wrap" id="addWrap">
-        <!-- step 1 -->
         <div id="addStep1">
           <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
-            <span style="font-size:14px;font-weight:500;color:var(--text)">Choose provider</span>
-            <select id="slotSelect" style="margin-left:auto;font-size:12px;padding:4px 8px;border-radius:var(--r);border:1px solid var(--border2)"></select>
+            <span style="font-size:13px;font-weight:500">Choose provider</span>
+            <select id="slotSel" style="margin-left:auto;font-size:12px;padding:4px 7px"></select>
           </div>
           <div class="prov-grid" id="provGrid"></div>
-          <div class="err-msg" id="addErr1"></div>
+          <div id="addErr1" class="err-msg bad" style="margin-top:6px"></div>
         </div>
-        <!-- step 2 -->
-        <div id="addStep2" class="connect-section">
-          <div style="display:flex;align-items:center;gap:8px">
+        <div id="addStep2" class="conn-sec">
+          <div style="display:flex;align-items:center;gap:7px">
             <button class="btn ghost sm" id="btnBackProv">← Back</button>
-            <span id="connectTitle" style="font-size:14px;font-weight:500;color:var(--text)">Connect</span>
+            <span id="connTitle" style="font-size:13px;font-weight:500"></span>
           </div>
-          <div class="connect-info" id="connectInfo"></div>
-          <div id="megaFields" style="display:none;flex-direction:column;gap:10px">
-            <div class="form-grid">
-              <div class="f-field"><label class="f-label">MEGA email</label><input id="addMegaEmail" class="f-inp" type="email" placeholder="your@email.com"/></div>
-              <div class="f-field"><label class="f-label">MEGA password</label><div class="pw-wrap"><input id="addMegaPw" class="f-inp" type="password" placeholder="Password"/><button class="pw-eye" data-t="addMegaPw">👁</button></div></div>
+          <div class="conn-info" id="connInfo"></div>
+          <div id="megaFlds" style="display:none;flex-direction:column;gap:9px">
+            <div class="fgrid">
+              <div class="ff"><label class="ff-lbl">MEGA email</label><input id="addMegaEmail" class="ff-inp" type="email" placeholder="your@email.com"/></div>
+              <div class="ff"><label class="ff-lbl">MEGA password</label><div class="pw-wrap"><input id="addMegaPw" class="ff-inp" type="password" placeholder="Password"/><button class="eye-btn" data-t="addMegaPw">👁</button></div></div>
             </div>
           </div>
-          <div id="oauthFields" style="display:none;flex-direction:column;gap:10px">
-            <div class="popup-note">🪟 A popup window will open for authorization. Make sure popups are allowed for this site. <strong>You will NOT be signed out.</strong></div>
+          <div id="oauthFlds" style="display:none;flex-direction:column;gap:9px">
+            <div class="popup-note">🪟 A popup will open for authorization. Allow popups for this site. <strong>You stay signed in.</strong></div>
             <button class="btn primary" id="btnDoOAuth">🔗 Authorize →</button>
           </div>
-          <div style="display:flex;gap:8px;justify-content:flex-end">
+          <div style="display:flex;gap:7px;justify-content:flex-end">
             <button class="btn ghost sm" id="btnCancelAdd">Cancel</button>
             <button class="btn primary sm" id="btnSaveMega" style="display:none">Save</button>
           </div>
-          <div class="err-msg" id="addErr2"></div>
+          <div id="addErr2" class="err-msg bad"></div>
         </div>
       </div>
     </div>
     <div id="panelSecurity" class="spanel">
-      <div><div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:2px">Change vault password</div><div style="font-size:12px;color:var(--text2)">Re-encrypts all stored credentials. Other sessions are signed out.</div></div>
-      <div class="cpw-form">
-        <div class="f-field"><label class="f-label">Current password</label><div class="pw-wrap"><input id="cpwOld" class="f-inp" type="password"/><button class="pw-eye" data-t="cpwOld">👁</button></div></div>
-        <div class="f-field"><label class="f-label">New password</label><div class="pw-wrap"><input id="cpwNew1" class="f-inp" type="password"/><button class="pw-eye" data-t="cpwNew1">👁</button></div><div class="pw-meter"><div class="pw-bar" id="cpwBar"></div></div></div>
-        <div class="f-field"><label class="f-label">Confirm new password</label><div class="pw-wrap"><input id="cpwNew2" class="f-inp" type="password"/><button class="pw-eye" data-t="cpwNew2">👁</button></div></div>
+      <div style="font-size:14px;font-weight:600;margin-bottom:2px">Change vault password</div>
+      <div style="font-size:12px;color:var(--tx2);margin-bottom:4px">Re-encrypts all stored credentials.</div>
+      <div style="display:flex;flex-direction:column;gap:11px">
+        <div class="ff"><label class="ff-lbl">Current password</label><div class="pw-wrap"><input id="cpwOld" class="ff-inp" type="password"/><button class="eye-btn" data-t="cpwOld">👁</button></div></div>
+        <div class="ff"><label class="ff-lbl">New password</label><div class="pw-wrap"><input id="cpwNew1" class="ff-inp" type="password"/><button class="eye-btn" data-t="cpwNew1">👁</button></div><div class="pw-meter"><div class="pw-bar" id="cpwBar"></div></div></div>
+        <div class="ff"><label class="ff-lbl">Confirm new password</label><div class="pw-wrap"><input id="cpwNew2" class="ff-inp" type="password"/><button class="eye-btn" data-t="cpwNew2">👁</button></div></div>
         <button class="btn primary sm" id="btnChangePw" style="align-self:flex-start">Update password</button>
         <div id="cpwMsg" class="err-msg"></div>
       </div>
@@ -544,330 +453,218 @@ window.addEventListener('unhandledrejection',function(e){
   </div>
 </div>
 
-<!-- ═══════ UPLOAD TOAST ════════════════════════════════════════════════════ -->
-<div id="toast" class="hidden">
-  <div class="toast-title" id="toastTitle">Uploading…</div>
-  <div class="toast-sub" id="toastSub">Preparing…</div>
-  <div class="toast-bar"><div class="toast-fill" id="toastFill" style="width:0%"></div></div>
-</div>
+<!-- TOAST -->
+<div id="toast" class="h"><div class="t-title" id="tTitle">Uploading…</div><div class="t-sub" id="tSub">Preparing…</div><div class="t-bar"><div class="t-fill" id="tFill" style="width:0%"></div></div></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+<script>
+// ── Safe storage helpers (never throw) ───────────────────────────────────────
+const LS={
+  get:(k,d='')=>{try{return localStorage.getItem(k)||d;}catch{return d;}},
+  set:(k,v)=>{try{localStorage.setItem(k,v);}catch{}},
+  del:(k)=>{try{localStorage.removeItem(k);}catch{}}
+};
+const SS={
+  get:(k,d='')=>{try{return sessionStorage.getItem(k)||d;}catch{return d;}},
+  set:(k,v)=>{try{sessionStorage.setItem(k,v);}catch{}},
+  del:(k)=>{try{sessionStorage.removeItem(k);}catch{}}
+};
+
+// ── Popup callback detection ──────────────────────────────────────────────────
+(function(){
+  var p=new URLSearchParams(location.search);
+  var code=p.get('code'),err=p.get('error');
+  if((code||err)&&window.opener){
+    window.opener.postMessage({type:'vault_oauth',code:code,error:err},location.origin);
+    window.close();
+  }
+})();
+</script>
+
 <script type="module">
-// megajs loaded dynamically inside connectMega only when needed
+const BACKEND='https://script.google.com/macros/s/AKfycbzict1PB8A-nDDI0Rq44heHJcLoHwYLTUO7ckNcoeeHMdA5tm1dxmTgsUkW4CttOCWugQ/exec';
 
-const BACKEND = 'https://script.google.com/macros/s/AKfycbzict1PB8A-nDDI0Rq44heHJcLoHwYLTUO7ckNcoeeHMdA5tm1dxmTgsUkW4CttOCWugQ/exec';
-
-// Safe storage — never throws even in private/restricted mode
-const LS = {
-  get:(k,d='')=>{ try{ return localStorage.getItem(k)||d; }catch{ return d; } },
-  set:(k,v)=>{ try{ localStorage.setItem(k,v); }catch{} },
-  del:(k)=>{ try{ localStorage.removeItem(k); }catch{} },
-};
-const SS = {
-  get:(k,d='')=>{ try{ return sessionStorage.getItem(k)||d; }catch{ return d; } },
-  set:(k,v)=>{ try{ sessionStorage.setItem(k,v); }catch{} },
-  del:(k)=>{ try{ sessionStorage.removeItem(k); }catch{} },
+const PROVIDERS={
+  mega:{id:'mega',name:'MEGA',icon:'🔷',auth:'password',multi:false,inactivity:'3 months (free)',tosLevel:'bad',tos:'⛔ 1 account per person only. Free data deleted after 3 months inactivity — using this vault resets the clock.'},
+  gdrive:{id:'gdrive',name:'Google Drive',icon:'🟢',auth:'google',multi:true,inactivity:'2 years',tosLevel:'ok',tos:'✅ Multiple Google accounts fine. 15 GB free per account.'},
+  box:{id:'box',name:'Box',icon:'🗃️',auth:'box',multi:true,inactivity:'No stated policy',tosLevel:'ok',tos:'✅ Box allows multiple accounts. 10 GB free.<br><br><strong>Required:</strong> In Box Developer Console → your app → Configuration → CORS Domains → add <code>https://n0nam3-bot.github.io</code>'},
+  dropbox:{id:'dropbox',name:'Dropbox',icon:'📦',auth:'dropbox',multi:false,inactivity:'12 months (free)',tosLevel:'warn',tos:'⚠️ 1 Dropbox per person. Inactivity limit 12 months — vault usage resets it. 2 GB free.',authUrl:'https://www.dropbox.com/oauth2/authorize',tokenUrl:'https://api.dropboxapi.com/oauth2/token',scopes:['files.metadata.read','files.metadata.write','files.content.read','files.content.write','account_info.read']},
 };
 
-// ── POPUP CALLBACK (runs before anything else, exits cleanly) ─────────────────
-const _urlP = new URLSearchParams(window.location.search);
-if ((_urlP.get('code') || _urlP.get('error')) && window.opener) {
-  window.opener.postMessage({ type:'vault_oauth', code:_urlP.get('code'), error:_urlP.get('error') }, window.location.origin);
-  window.close();
-} else {
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Everything inside this else block — the full app
-// ─────────────────────────────────────────────────────────────────────────────
-
-const PROVIDERS = {
-  mega:    { id:'mega',    name:'MEGA',         icon:'🔷', auth:'password', multi:false, inactivity:'3 months (free)', tosLevel:'bad',
-    tos:'⛔ 1 account per person — MEGA bans multiple accounts. Free data deleted after 3 months inactivity; using this vault resets the clock.' },
-  gdrive:  { id:'gdrive',  name:'Google Drive', icon:'🟢', auth:'google',   multi:true,  inactivity:'2 years',         tosLevel:'ok',
-    tos:'✅ Multiple Google accounts under different emails are fine. 15 GB free per account.' },
-  box:     { id:'box',     name:'Box',          icon:'🗃️', auth:'box',      multi:true,  inactivity:'No stated policy', tosLevel:'ok',
-    tos:'✅ Box allows multiple accounts. 10 GB free per account.<br><br><strong>Required:</strong> In your Box app → Configuration → CORS Domains → add <code>https://n0nam3-bot.github.io</code> then click Save.' },
-  dropbox: { id:'dropbox', name:'Dropbox',      icon:'📦', auth:'dropbox',  multi:false, inactivity:'12 months (free)', tosLevel:'warn',
-    tos:'⚠️ 1 Dropbox per person. Free accounts inactive for 12 months may be deleted; using this vault resets the clock. 2 GB free.',
-    authUrl:'https://www.dropbox.com/oauth2/authorize', tokenUrl:'https://api.dropboxapi.com/oauth2/token',
-    scopes:['files.metadata.read','files.metadata.write','files.content.read','files.content.write','account_info.read'] },
+const S={
+  email:null,pw:null,salt:null,key:null,hash:null,
+  encAccts:[],accts:[],stores:[],
+  files:[],folders:[],
+  slot:'all',path:null,q:'',sel:new Set(),
+  preview:null,prevUrl:null,
+  moveTarget:null,moveIds:[],
+  view:LS.get('vv','grid'),
+  trash:false,trashSlot:null,trashItems:[],
+  cfg:{},popup:null,popupHandler:null,
 };
 
-const S = {
-  email:null, pw:null, salt:null, key:null, hash:null,
-  encAccts:[], accts:[], stores:[],
-  files:[], folders:[],
-  slot:'all', path:null, q:'', sel:new Set(),
-  preview:null, prevUrl:null,
-  moveTarget:null, moveIds:[],
-  view: LS.get('vv','grid'),
-  trash:false, trashSlot:null, trashItems:[],
-  cfg:{}, popup:null, popupHandler:null,
-};
-
-// ── CRYPTO ────────────────────────────────────────────────────────────────────
-const h2u = h => { const a=new Uint8Array(h.length/2); for(let i=0;i<a.length;i++) a[i]=parseInt(h.slice(i*2,i*2+2),16); return a; };
-const u2h = b => [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('');
-const rnd = n => u2h(crypto.getRandomValues(new Uint8Array(n)));
-const rndIV = () => crypto.getRandomValues(new Uint8Array(12));
-async function sha256(s){ return u2h(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s))); }
-async function mkKey(pw, saltHex){
-  const km = await crypto.subtle.importKey('raw', new TextEncoder().encode(pw), 'PBKDF2', false, ['deriveKey']);
-  return crypto.subtle.deriveKey({name:'PBKDF2',salt:h2u(saltHex),iterations:100000,hash:'SHA-256'}, km, {name:'AES-GCM',length:256}, false, ['encrypt','decrypt']);
-}
-async function aesEnc(key, pt){ const iv=rndIV(); const c=await crypto.subtle.encrypt({name:'AES-GCM',iv},key,new TextEncoder().encode(pt)); return {ct:u2h(new Uint8Array(c)),iv:u2h(iv)}; }
-async function aesDec(key, ct, iv){ const d=await crypto.subtle.decrypt({name:'AES-GCM',iv:h2u(iv)},key,h2u(ct)); return new TextDecoder().decode(d); }
-const mkHash = (pw, salt) => sha256(pw + salt);
-const mkCV = () => { const a=crypto.getRandomValues(new Uint8Array(48)); return btoa(String.fromCharCode(...a)).replace(/\+/g,'-').replace(/\//g,'_').replace(/=/g,'').slice(0,128); };
-async function mkCC(v){ const h=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(v)); return btoa(String.fromCharCode(...new Uint8Array(h))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=/g,''); }
+// ── Crypto ────────────────────────────────────────────────────────────────────
+const h2u=h=>{const a=new Uint8Array(h.length/2);for(let i=0;i<a.length;i++)a[i]=parseInt(h.slice(i*2,i*2+2),16);return a;};
+const u2h=b=>[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('');
+const rnd=n=>u2h(crypto.getRandomValues(new Uint8Array(n)));
+async function sha256(s){return u2h(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s)));}
+async function mkKey(pw,saltHex){const km=await crypto.subtle.importKey('raw',new TextEncoder().encode(pw),'PBKDF2',false,['deriveKey']);return crypto.subtle.deriveKey({name:'PBKDF2',salt:h2u(saltHex),iterations:100000,hash:'SHA-256'},km,{name:'AES-GCM',length:256},false,['encrypt','decrypt']);}
+async function aesEnc(key,pt){const iv=crypto.getRandomValues(new Uint8Array(12));const c=await crypto.subtle.encrypt({name:'AES-GCM',iv},key,new TextEncoder().encode(pt));return{ct:u2h(new Uint8Array(c)),iv:u2h(iv)};}
+async function aesDec(key,ct,iv){const d=await crypto.subtle.decrypt({name:'AES-GCM',iv:h2u(iv)},key,h2u(ct));return new TextDecoder().decode(d);}
+const mkHash=(pw,salt)=>sha256(pw+salt);
+const mkCV=()=>{const a=crypto.getRandomValues(new Uint8Array(48));return btoa(String.fromCharCode(...a)).replace(/\+/g,'-').replace(/\//g,'_').replace(/=/g,'').slice(0,128);};
+async function mkCC(v){const h=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(v));return btoa(String.fromCharCode(...new Uint8Array(h))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=/g,'');}
 
 // ── API ───────────────────────────────────────────────────────────────────────
-async function api(action, payload={}){
-  const url = new URL(BACKEND);
-  url.searchParams.set('action', action);
-  for (const [k,v] of Object.entries(payload))
-    url.searchParams.set(k, typeof v==='object' ? JSON.stringify(v) : String(v));
-  let res, text;
-  try { res=await fetch(url.toString(),{redirect:'follow'}); text=await res.text(); }
-  catch(e){ throw new Error('Network error: '+e.message); }
-  text = text.trim().replace(/^\uFEFF/,'');
-  let d; try { d=JSON.parse(text); } catch { throw new Error('Server returned non-JSON — re-deploy Apps Script.'); }
-  if (d.ok===false) throw new Error(d.error||'Server error');
+async function api(action,payload={}){
+  const url=new URL(BACKEND);
+  url.searchParams.set('action',action);
+  for(const[k,v]of Object.entries(payload))url.searchParams.set(k,typeof v==='object'?JSON.stringify(v):String(v));
+  let res,text;
+  try{res=await fetch(url.toString(),{redirect:'follow'});text=await res.text();}
+  catch(e){throw new Error('Network error: '+e.message);}
+  text=text.trim().replace(/^\uFEFF/,'');
+  let d;try{d=JSON.parse(text);}catch{throw new Error('Server error — redeploy Apps Script as "Anyone".');}
+  if(d.ok===false)throw new Error(d.error||'Server error');
   return d;
 }
 
-// ── HELPERS ───────────────────────────────────────────────────────────────────
-const $ = id => document.getElementById(id);
-const esc = s => String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-const norm = s => String(s??'').trim().toLowerCase();
-function fmtSz(b){ if(!b)return'—'; const u=['B','KB','MB','GB','TB']; let i=0,n=b; while(n>=1024&&i<4){n/=1024;i++;} return n.toFixed(i?1:0)+' '+u[i]; }
-function fmtDt(ts){ if(!ts)return'—'; return new Date(ts).toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'}); }
-function mime(n=''){
-  const e=(n||'').split('.').pop().toLowerCase();
-  if(['jpg','jpeg','png','gif','webp','avif','bmp','heic','svg'].includes(e)) return 'image/'+e;
-  if(['mp4','mov','webm','mkv','avi','m4v'].includes(e)) return 'video/mp4';
-  if(['mp3','ogg','wav','flac','aac','m4a','opus'].includes(e)) return 'audio/mpeg';
-  if(e==='pdf') return 'application/pdf';
-  if(['doc','docx'].includes(e)) return 'application/msword';
-  if(['xls','xlsx'].includes(e)) return 'application/vnd.ms-excel';
-  if(['ppt','pptx'].includes(e)) return 'application/vnd.ms-powerpoint';
-  if(['txt','md','csv','json','xml','html','js','ts','css','py','rb','sh','yaml','yml','log','sql','php','jsx','tsx'].includes(e)) return 'text/plain';
-  return 'application/octet-stream';
-}
-function ftype(f){
-  const m=(f.mime||'').toLowerCase(), e=(f.name||'').split('.').pop().toLowerCase();
-  if(m.startsWith('image/')||['jpg','jpeg','png','gif','webp','avif','bmp','heic','svg'].includes(e)) return 'image';
-  if(m.startsWith('video/')||['mp4','mov','webm','mkv','avi','m4v'].includes(e)) return 'video';
-  if(m.startsWith('audio/')||['mp3','ogg','wav','flac','aac','m4a','opus'].includes(e)) return 'audio';
-  if(e==='pdf'||m==='application/pdf') return 'pdf';
-  if(['doc','docx'].includes(e)||m.includes('word')) return 'word';
-  if(['xls','xlsx'].includes(e)||m.includes('excel')||m.includes('spreadsheet')) return 'excel';
-  if(['ppt','pptx'].includes(e)||m.includes('powerpoint')||m.includes('presentation')) return 'ppt';
-  if(m.startsWith('text/')||['txt','md','csv','json','xml','html','js','ts','css','py','rb','sh','yaml','yml','log','sql','php','jsx','tsx','md'].includes(e)) return 'text';
-  if(m==='application/vnd.google-apps.document') return 'word';
-  if(m==='application/vnd.google-apps.spreadsheet') return 'excel';
-  if(m==='application/vnd.google-apps.presentation') return 'ppt';
-  return 'file';
-}
-const FICON = {image:'🖼️',video:'🎬',audio:'🎵',pdf:'📕',word:'📝',excel:'📊',ppt:'📑',text:'📄',file:'📄',folder:'📁'};
-const ficon = f => FICON[ftype(f)]||'📄';
-const provOf = slot => PROVIDERS[S.encAccts.find(a=>a.slot===slot)?.provider]||PROVIDERS.mega;
-const provIcon = slot => provOf(slot).icon;
-function slotLabel(slot){
-  const a=S.encAccts.find(x=>x.slot===slot); if(!a) return 'Slot '+slot;
-  const p=PROVIDERS[a.provider]||PROVIDERS.mega;
-  const peers=S.encAccts.filter(x=>x.provider===a.provider).sort((a,b)=>a.slot-b.slot);
-  return peers.length===1 ? p.name : p.name+' #'+(peers.findIndex(x=>x.slot===slot)+1);
-}
-function setStatus(k,t,s=''){$('sdot').className='sdot '+k;$('sb-text').textContent=t;$('sb-sub').textContent=s;}
-function updToken(slot,tokens){ const t=JSON.parse(SS.get('vt','{}')); t[slot]={...t[slot],...tokens}; SS.set('vt',JSON.stringify(t)); const a=S.accts.find(x=>x.slot===slot); if(a)Object.assign(a,tokens); }
+// ── Helpers ───────────────────────────────────────────────────────────────────
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const norm=s=>String(s??'').trim().toLowerCase();
+const show=id=>$(id)&&$(id).classList.remove('h');
+const hide=id=>$(id)&&$(id).classList.add('h');
+function fmtSz(b){if(!b||b<0)return'—';const u=['B','KB','MB','GB','TB'];let i=0,n=b;while(n>=1024&&i<4){n/=1024;i++;}return n.toFixed(i?1:0)+' '+u[i];}
+function fmtDt(ts){if(!ts)return'—';return new Date(ts).toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'});}
+function fileMime(n=''){const e=(n||'').split('.').pop().toLowerCase();const map={jpg:'image/jpeg',jpeg:'image/jpeg',png:'image/png',gif:'image/gif',webp:'image/webp',svg:'image/svg+xml',mp4:'video/mp4',mov:'video/mp4',webm:'video/webm',mp3:'audio/mpeg',ogg:'audio/ogg',wav:'audio/wav',flac:'audio/flac',aac:'audio/aac',m4a:'audio/mp4',pdf:'application/pdf',doc:'application/msword',docx:'application/vnd.openxmlformats-officedocument.wordprocessingml.document',xls:'application/vnd.ms-excel',xlsx:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',ppt:'application/vnd.ms-powerpoint',pptx:'application/vnd.openxmlformats-officedocument.presentationml.presentation'};return map[e]||'text/plain';}
+function ftype(f){const m=(f.mime||'').toLowerCase(),e=(f.name||'').split('.').pop().toLowerCase();if(m.startsWith('image/')||['jpg','jpeg','png','gif','webp','avif','bmp','heic','svg'].includes(e))return'image';if(m.startsWith('video/')||['mp4','mov','webm','mkv','avi','m4v'].includes(e))return'video';if(m.startsWith('audio/')||['mp3','ogg','wav','flac','aac','m4a','opus'].includes(e))return'audio';if(e==='pdf'||m==='application/pdf')return'pdf';if(['doc','docx'].includes(e)||m.includes('word'))return'word';if(['xls','xlsx'].includes(e)||m.includes('excel')||m.includes('spreadsheet'))return'excel';if(['ppt','pptx'].includes(e)||m.includes('powerpoint')||m.includes('presentation'))return'ppt';if(['txt','md','csv','json','xml','html','htm','js','ts','jsx','tsx','css','scss','py','rb','sh','yaml','yml','log','sql','php'].includes(e)||m.startsWith('text/'))return'text';if(m.includes('google-apps.document'))return'word';if(m.includes('google-apps.spreadsheet'))return'excel';if(m.includes('google-apps.presentation'))return'ppt';return'file';}
+const FICO={image:'🖼️',video:'🎬',audio:'🎵',pdf:'📕',word:'📝',excel:'📊',ppt:'📑',text:'📄',file:'📄',folder:'📁'};
+const ficon=f=>FICO[ftype(f)]||'📄';
+const provOf=slot=>PROVIDERS[S.encAccts.find(a=>a.slot===slot)?.provider]||PROVIDERS.mega;
+const provIco=slot=>provOf(slot).icon;
+function slotLabel(slot){const a=S.encAccts.find(x=>x.slot===slot);if(!a)return'Slot '+slot;const p=PROVIDERS[a.provider]||PROVIDERS.mega;const peers=S.encAccts.filter(x=>x.provider===a.provider).sort((a,b)=>a.slot-b.slot);return peers.length===1?p.name:p.name+' #'+(peers.findIndex(x=>x.slot===slot)+1);}
+function setSt(k,t,s=''){$('sdot').className='sdot '+k;$('sb-t').textContent=t;$('sb-s').textContent=s;}
+function updTok(slot,tokens){const t=JSON.parse(SS.get('vt','{}'));t[slot]={...(t[slot]||{}),...tokens};SS.set('vt',JSON.stringify(t));const a=S.accts.find(x=>x.slot===slot);if(a)Object.assign(a,tokens);}
 
-// ── AUTH ──────────────────────────────────────────────────────────────────────
-let _pendingEmail='', _pendingSalt='';
-const showStep = id => ['stepEmail','stepRegister','stepLogin'].forEach(x=>$(x).classList.toggle('hidden',x!==id));
+// ── Auth ──────────────────────────────────────────────────────────────────────
+let _email='',_salt='';
+const showStep=id=>['stepEmail','stepReg','stepLogin'].forEach(x=>$(x).classList.toggle('h',x!==id));
 
-async function stepEmail(){
-  // Clear any leftover OAuth state that might hijack finishLogin
-  LS.del('oauthResume');
-  LS.del('oauthPending');
+async function doEmail(){
+  LS.del('oauthResume');LS.del('oauthPending');
   const email=$('inEmail').value.trim().toLowerCase();
   $('errEmail').textContent='';
   if(!email){$('errEmail').textContent='Enter your email address.';return;}
-  $('btnNext').textContent='Checking…'; $('btnNext').disabled=true;
-  $('errEmail').textContent='Contacting server…';
-  $('errEmail').style.color='var(--text2)';
+  $('btnNext').textContent='Checking…';$('btnNext').disabled=true;
   try{
     const r=await api('checkEmail',{email});
-    $('errEmail').textContent='';
-    $('errEmail').style.color='';
-    if(!r.allowed) throw new Error('This email is not on the access list. Contact the vault owner.');
-    _pendingEmail=email;
-    if(r.registered){
-      _pendingSalt=r.salt;
-      $('loginEmail').textContent=email;
-      showStep('stepLogin');
-      setTimeout(()=>$('inLogin').focus(),100);
-    } else {
-      $('regEmail').textContent=email;
-      showStep('stepRegister');
-      setTimeout(()=>$('inReg1').focus(),100);
-    }
-  }catch(e){
-    $('errEmail').style.color='';
-    $('errEmail').textContent=e.message;
-  }
-  finally{$('btnNext').textContent='Continue'; $('btnNext').disabled=false;}
+    if(!r.allowed)throw new Error('This email is not on the access list.');
+    _email=email;
+    if(r.registered){_salt=r.salt;$('loginEmailLbl').textContent=email;showStep('stepLogin');setTimeout(()=>$('inLogin').focus(),80);}
+    else{$('regEmailLbl').textContent=email;showStep('stepReg');setTimeout(()=>$('inReg1').focus(),80);}
+  }catch(e){$('errEmail').textContent=e.message;}
+  finally{$('btnNext').textContent='Continue';$('btnNext').disabled=false;}
 }
 
-async function doRegister(){
-  const pw1=$('inReg1').value, pw2=$('inReg2').value;
+async function doReg(){
+  const pw1=$('inReg1').value,pw2=$('inReg2').value;
   $('errReg').textContent='';
-  if(pw1.length<8){$('errReg').textContent='Minimum 8 characters.';return;}
+  if(pw1.length<8){$('errReg').textContent='At least 8 characters.';return;}
   if(pw1!==pw2){$('errReg').textContent='Passwords do not match.';return;}
-  $('btnRegister').textContent='Creating…'; $('btnRegister').disabled=true;
-  try{
-    const salt=rnd(16), hash=await mkHash(pw1,salt);
-    await api('register',{email:_pendingEmail,passwordHash:hash,salt});
-    await finishLogin(_pendingEmail,pw1,salt,[]);
-  }catch(e){$('errReg').textContent=e.message; $('btnRegister').textContent='Create account'; $('btnRegister').disabled=false;}
+  $('btnReg').textContent='Creating…';$('btnReg').disabled=true;
+  try{const salt=rnd(16),hash=await mkHash(pw1,salt);await api('register',{email:_email,passwordHash:hash,salt});await finishLogin(_email,pw1,salt,[]);}
+  catch(e){$('errReg').textContent=e.message;$('btnReg').textContent='Create account';$('btnReg').disabled=false;}
 }
 
 async function doLogin(){
   const pw=$('inLogin').value;
   $('errLogin').textContent='';
   if(!pw){$('errLogin').textContent='Enter your password.';return;}
-  $('btnLogin').textContent='Signing in…'; $('btnLogin').disabled=true;
-  $('errLogin').style.color='var(--text2)';
-  $('errLogin').textContent='Verifying…';
+  $('btnLogin').textContent='Signing in…';$('btnLogin').disabled=true;
   try{
-    const hash=await mkHash(pw,_pendingSalt);
-    $('errLogin').textContent='Connecting to server…';
-    const r=await api('login',{email:_pendingEmail,passwordHash:hash});
-    $('errLogin').textContent='Decrypting credentials…';
-    await finishLogin(_pendingEmail,pw,r.salt,r.accounts||[]);
-  }catch(e){
-    $('errLogin').style.color='';
-    $('errLogin').textContent=e.message;
-    $('btnLogin').textContent='Sign in';
-    $('btnLogin').disabled=false;
-  }
+    const hash=await mkHash(pw,_salt);
+    const r=await api('login',{email:_email,passwordHash:hash});
+    await finishLogin(_email,pw,r.salt,r.accounts||[]);
+  }catch(e){$('errLogin').textContent=e.message;$('btnLogin').textContent='Sign in';$('btnLogin').disabled=false;}
 }
 
 async function finishLogin(email,pw,salt,encAccts){
-  S.email=email; S.pw=pw; S.salt=salt;
-  S.key=await mkKey(pw,salt);
-  S.hash=await mkHash(pw,salt);
-  S.encAccts=encAccts;
+  S.email=email;S.pw=pw;S.salt=salt;
+  S.key=await mkKey(pw,salt);S.hash=await mkHash(pw,salt);S.encAccts=encAccts;
   S.accts=[];
-  for(const a of encAccts){
-    try{ const c=JSON.parse(await aesDec(S.key,a.encryptedCredentials,a.iv)); S.accts.push({slot:a.slot,provider:a.provider||'mega',identifier:a.identifier,...c}); }catch{}
-  }
+  for(const a of encAccts){try{const c=JSON.parse(await aesDec(S.key,a.encryptedCredentials,a.iv));S.accts.push({slot:a.slot,provider:a.provider||'mega',identifier:a.identifier,...c});}catch{}}
   const stored=JSON.parse(SS.get('vt','{}'));
   for(const a of S.accts){const t=stored[a.slot];if(t)Object.assign(a,t);}
-  $('avatarBtn').textContent=(email[0]||'?').toUpperCase();
-  $('authScreen').classList.add('hidden');
-  $('appScreen').classList.remove('hidden');
+  $('btnAvatar').textContent=(email[0]||'?').toUpperCase();
+  hide('authWrap');show('appWrap');
   applyView();
-  await loadCfg();
-  // Resume interrupted OAuth (only if code looks valid)
+  try{S.cfg=await api('getConfig',{});}catch{}
   const resume=JSON.parse(LS.get('oauthResume','null'));
-  if(resume&&resume.code&&resume.slot&&resume.provider&&S.key){
-    LS.del('oauthResume');
-    try{ await finishOAuth(resume.code,resume.slot,resume.provider); }catch(e){ console.warn('Resume failed:',e); }
-  }
-  if(!S.accts.length){
-    setStatus('warn','No storage configured','Open ⚙️ Settings to add accounts');
-    $('loadingState').classList.remove('hidden');
-    $('loadMsg').textContent='No storage slots yet — open Settings ⚙️ to add your first account.';
-    buildSidebar();
-  } else {
-    await connectAll();
-  }
+  if(resume&&resume.code&&resume.slot&&resume.provider&&S.key){LS.del('oauthResume');try{await finishOAuth(resume.code,resume.slot,resume.provider);}catch(e){console.warn('OAuth resume failed:',e);}}
+  if(!S.accts.length){setSt('warn','No storage configured','Open ⚙️ Settings to add accounts');show('loadState');$('loadMsg').textContent='No storage slots yet — open Settings to add your first account.';buildSidebar();}
+  else{await connectAll();}
 }
 
 function signOut(){
-  if(S.prevUrl){URL.revokeObjectURL(S.prevUrl);}
+  if(S.prevUrl)URL.revokeObjectURL(S.prevUrl);
   if(S.popup&&!S.popup.closed)S.popup.close();
   if(S.popupHandler)window.removeEventListener('message',S.popupHandler);
-  LS.del('oauthPending'); LS.del('oauthResume');
-  SS.del('vt');
+  LS.del('oauthResume');LS.del('oauthPending');SS.del('vt');
   Object.assign(S,{email:null,pw:null,salt:null,key:null,hash:null,encAccts:[],accts:[],stores:[],files:[],folders:[],slot:'all',path:null,q:'',sel:new Set(),preview:null,prevUrl:null,moveTarget:null,moveIds:[],trash:false,trashSlot:null,trashItems:[],cfg:{},popup:null,popupHandler:null});
-  $('appScreen').classList.add('hidden');
-  $('authScreen').classList.remove('hidden');
-  showStep('stepEmail');
+  hide('appWrap');show('authWrap');showStep('stepEmail');
   ['inEmail','inLogin','inReg1','inReg2'].forEach(id=>$(id).value='');
-  $('btnNext').textContent='Continue'; $('btnNext').disabled=false;
-  $('btnLogin').textContent='Sign in'; $('btnLogin').disabled=false;
-  $('btnRegister').textContent='Create account'; $('btnRegister').disabled=false;
+  $('btnNext').textContent='Continue';$('btnNext').disabled=false;
+  $('btnLogin').textContent='Sign in';$('btnLogin').disabled=false;
+  $('btnReg').textContent='Create account';$('btnReg').disabled=false;
 }
 
-$('btnNext').addEventListener('click',stepEmail);
-$('inEmail').addEventListener('keydown',e=>{if(e.key==='Enter')stepEmail();});
+$('btnNext').addEventListener('click',doEmail);
+$('inEmail').addEventListener('keydown',e=>{if(e.key==='Enter')doEmail();});
 $('inLogin').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
 $('btnRegBack').addEventListener('click',()=>showStep('stepEmail'));
 $('btnLoginBack').addEventListener('click',()=>showStep('stepEmail'));
-$('btnRegister').addEventListener('click',doRegister);
+$('btnReg').addEventListener('click',doReg);
 $('btnLogin').addEventListener('click',doLogin);
-$('avatarBtn').addEventListener('click',()=>{if(confirm('Sign out of Storage Vault?'))signOut();});
+$('btnAvatar').addEventListener('click',()=>{if(confirm('Sign out?'))signOut();});
 
-// ── CONFIG ────────────────────────────────────────────────────────────────────
-async function loadCfg(){ try{S.cfg=await api('getConfig',{});}catch(e){S.cfg={};console.warn('getConfig:',e.message);} }
-const cid = p => ({gdrive:S.cfg.googleClientId,box:S.cfg.boxClientId,dropbox:S.cfg.dropboxClientId}[p]||'');
+// ── Config ────────────────────────────────────────────────────────────────────
+const cid=p=>({gdrive:S.cfg.googleClientId,box:S.cfg.boxClientId,dropbox:S.cfg.dropboxClientId}[p]||'');
 
 // ── MEGA ──────────────────────────────────────────────────────────────────────
 async function connectMega(a){
-  // Dynamic import — only loads if user has MEGA storage
-  let Storage;
-  try {
-    const mod = await import('https://unpkg.com/megajs/dist/main.browser-es.mjs');
-    Storage = mod.Storage;
-  } catch(e) {
-    throw new Error('Failed to load MEGA library: ' + e.message);
-  }
-  const st=await new Storage({email:a.megaEmail||a.identifier,password:a.megaPassword||a.password,userAgent:'StorageVault/1.0'}).ready;
+  let Stor;
+  try{const m=await import('https://unpkg.com/megajs/dist/main.browser-es.mjs');Stor=m.Storage;}
+  catch(e){throw new Error('Could not load MEGA library: '+e.message);}
+  const st=await new Stor({email:a.megaEmail||a.identifier,password:a.megaPassword||a.password,userAgent:'StorageVault/1.0'}).ready;
   const files=[],folders=[];
-  function walk(node,slot,path){ for(const c of(node.children||[])){ if(c.directory){folders.push({id:c.nodeId||c.handle||'d'+Math.random(),name:c.name,slot,path,node:c});walk(c,slot,path?path+'/'+c.name:c.name);}else{files.push({id:c.nodeId||c.handle||Math.random()+'',name:c.name||'unnamed',size:c.size||0,mime:c.mime||mime(c.name),slot,path,ts:c.timestamp?c.timestamp*1000:Date.now(),node:c});} } }
+  function walk(node,slot,path){for(const c of(node.children||[])){if(c.directory){folders.push({id:c.nodeId||c.handle||'d'+Math.random(),name:c.name,slot,path,node:c});walk(c,slot,path?path+'/'+c.name:c.name);}else{files.push({id:c.nodeId||c.handle||Math.random()+'',name:c.name||'unnamed',size:c.size||0,mime:c.mime||fileMime(c.name),slot,path,ts:c.timestamp?c.timestamp*1000:Date.now(),node:c});}}}
   walk(st.root,a.slot,'');
-  return{ slot:a.slot,provider:'mega',identifier:a.identifier,_st:st,
+  return{slot:a.slot,provider:'mega',identifier:a.identifier,_st:st,
     list:async()=>({files,folders}),
     upload:async(parent,name,size,data)=>(await parent.upload({name,size},data).complete),
-    download:async(node)=>{ const b=await node.downloadBuffer(); return b instanceof Uint8Array?b:new Uint8Array(b); },
-    del:async(node)=>node.delete(true), delDir:async(node)=>node.delete(true),
-    rename:async(node,name)=>node.rename(name), renameDir:async(node,name)=>node.rename(name),
+    download:async(node)=>{const b=await node.downloadBuffer();return b instanceof Uint8Array?b:new Uint8Array(b);},
+    del:async(node)=>node.delete(true),delDir:async(node)=>node.delete(true),
+    rename:async(node,name)=>node.rename(name),renameDir:async(node,name)=>node.rename(name),
     mkdir:async(parent,name)=>parent.mkdir(name),
-    resolve:(parts)=>{ let n=st.root; for(const p of parts){const c=(n.children||[]).find(x=>x.directory&&x.name===p);if(!c)return null;n=c;} return n; },
+    resolve:(parts)=>{let n=st.root;for(const p of parts){const c=(n.children||[]).find(x=>x.directory&&x.name===p);if(!c)return null;n=c;}return n;},
     trashNode:st.trash,
   };
 }
 
-// ── DROPBOX ───────────────────────────────────────────────────────────────────
+// ── Dropbox ───────────────────────────────────────────────────────────────────
 async function connectDropbox(a){
   let{accessToken,refreshToken,expiresAt}=a;
-  async function tok(){
-    if(Date.now()>expiresAt-60000){
-      // Dropbox PKCE public client refresh: client_id in body, no Authorization header
-      const r=await fetch('https://api.dropboxapi.com/oauth2/token',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({grant_type:'refresh_token',refresh_token:refreshToken,client_id:cid('dropbox')})});
-      const d=await r.json(); if(d.error)throw new Error('Dropbox refresh: '+d.error_description);
-      accessToken=d.access_token; expiresAt=Date.now()+(d.expires_in||14400)*1000;
-      updToken(a.slot,{accessToken,expiresAt});
-    }
-    return accessToken;
-  }
-  async function call(ep,opts={}){ const t=await tok(); const r=await fetch('https://api.dropboxapi.com/2/'+ep,{...opts,headers:{Authorization:'Bearer '+t,'Content-Type':'application/json',...(opts.headers||{})}}); if(!r.ok)throw new Error('Dropbox: '+(await r.text())); return r.json(); }
+  async function tok(){if(Date.now()>expiresAt-60000){const r=await fetch('https://api.dropboxapi.com/oauth2/token',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({grant_type:'refresh_token',refresh_token:refreshToken,client_id:cid('dropbox')})});const d=await r.json();if(d.error)throw new Error('Dropbox refresh: '+d.error_description);accessToken=d.access_token;expiresAt=Date.now()+(d.expires_in||14400)*1000;updTok(a.slot,{accessToken,expiresAt});}return accessToken;}
+  async function call(ep,opts={}){const t=await tok();const r=await fetch('https://api.dropboxapi.com/2/'+ep,{...opts,headers:{Authorization:'Bearer '+t,'Content-Type':'application/json',...(opts.headers||{})}});if(!r.ok)throw new Error('Dropbox: '+(await r.text()));return r.json();}
   const files=[],folders=[];
-  async function walk(path,parentPath){
-    let res=await call('files/list_folder',{method:'POST',body:JSON.stringify({path:path||'',recursive:false})});
-    function proc(es){ for(const e of es){ if(e['.tag']==='folder'){folders.push({id:e.id,name:e.name,slot:a.slot,path:parentPath,node:e});}else{files.push({id:e.id,name:e.name,size:e.size||0,mime:mime(e.name),slot:a.slot,path:parentPath,ts:new Date(e.client_modified||e.server_modified).getTime(),node:e});} } }
-    proc(res.entries);
-    while(res.has_more){res=await call('files/list_folder/continue',{method:'POST',body:JSON.stringify({cursor:res.cursor})});proc(res.entries);}
-    for(const f of folders.filter(x=>x.path===parentPath)){ await walk(f.node.path_display||('/'+f.name),(parentPath?parentPath+'/':'')+f.name); }
-  }
+  async function walk(path,parentPath){let res=await call('files/list_folder',{method:'POST',body:JSON.stringify({path:path||'',recursive:false})});function proc(es){for(const e of es){if(e['.tag']==='folder'){folders.push({id:e.id,name:e.name,slot:a.slot,path:parentPath,node:e});}else{files.push({id:e.id,name:e.name,size:e.size||0,mime:fileMime(e.name),slot:a.slot,path:parentPath,ts:new Date(e.client_modified||e.server_modified).getTime(),node:e});}}}proc(res.entries);while(res.has_more){res=await call('files/list_folder/continue',{method:'POST',body:JSON.stringify({cursor:res.cursor})});proc(res.entries);}for(const f of folders.filter(x=>x.path===parentPath)){await walk(f.node.path_display||('/'+f.name),(parentPath?parentPath+'/':'')+f.name);}}
   await walk('','');
-  return{ slot:a.slot,provider:'dropbox',identifier:a.identifier,_tok:tok,
+  return{slot:a.slot,provider:'dropbox',identifier:a.identifier,_tok:tok,
     list:async()=>({files,folders}),
-    upload:async(parent,name,size,data)=>{ const t=await tok(); const path=(parent.path_display||'')+'/'+name; const r=await fetch('https://content.dropboxapi.com/2/files/upload',{method:'POST',headers:{Authorization:'Bearer '+t,'Content-Type':'application/octet-stream','Dropbox-API-Arg':JSON.stringify({path,mode:'add',autorename:true})},body:data}); return r.json(); },
-    download:async(node)=>{ const t=await tok(); const r=await fetch('https://content.dropboxapi.com/2/files/download',{method:'POST',headers:{Authorization:'Bearer '+t,'Dropbox-API-Arg':JSON.stringify({path:node.path_display||node.id})}}); return new Uint8Array(await r.arrayBuffer()); },
+    upload:async(parent,name,size,data)=>{const t=await tok();const path=(parent.path_display||'')+'/'+name;const r=await fetch('https://content.dropboxapi.com/2/files/upload',{method:'POST',headers:{Authorization:'Bearer '+t,'Content-Type':'application/octet-stream','Dropbox-API-Arg':JSON.stringify({path,mode:'add',autorename:true})},body:data});return r.json();},
+    download:async(node)=>{const t=await tok();const r=await fetch('https://content.dropboxapi.com/2/files/download',{method:'POST',headers:{Authorization:'Bearer '+t,'Dropbox-API-Arg':JSON.stringify({path:node.path_display||node.id})}});return new Uint8Array(await r.arrayBuffer());},
     del:async(node)=>call('files/delete_v2',{method:'POST',body:JSON.stringify({path:node.path_display||node.id})}),
     delDir:async(node)=>call('files/delete_v2',{method:'POST',body:JSON.stringify({path:node.path_display||node.id})}),
     rename:async(node,name)=>call('files/move_v2',{method:'POST',body:JSON.stringify({from_path:node.path_display,to_path:(node.path_display||'').split('/').slice(0,-1).join('/')+'/'+name})}),
@@ -877,55 +674,40 @@ async function connectDropbox(a){
   };
 }
 
-// ── GOOGLE DRIVE ─────────────────────────────────────────────────────────────
+// ── Google Drive ──────────────────────────────────────────────────────────────
 async function connectGoogle(a){
   let{accessToken,refreshToken,expiresAt}=a;
-  async function tok(){ if(Date.now()>expiresAt-60000){const r=await api('grefresh',{refreshToken});accessToken=r.accessToken;expiresAt=r.expiresAt;updToken(a.slot,{accessToken,expiresAt});}return accessToken; }
-  async function gf(ep,opts={}){ const t=await tok(); const url=ep.startsWith('http')?ep:'https://www.googleapis.com'+ep; const r=await fetch(url,{...opts,headers:{Authorization:'Bearer '+t,...(opts.headers||{})}}); if(r.status===204)return{}; if(!r.ok)throw new Error('Drive: '+(await r.text())); const ct=r.headers.get('content-type')||''; if(ct.includes('json'))return r.json(); return r.arrayBuffer(); }
+  async function tok(){if(Date.now()>expiresAt-60000){const r=await api('grefresh',{refreshToken});accessToken=r.accessToken;expiresAt=r.expiresAt;updTok(a.slot,{accessToken,expiresAt});}return accessToken;}
+  async function gf(ep,opts={}){const t=await tok();const url=ep.startsWith('http')?ep:'https://www.googleapis.com'+ep;const r=await fetch(url,{...opts,headers:{Authorization:'Bearer '+t,...(opts.headers||{})}});if(r.status===204)return{};if(!r.ok)throw new Error('Drive: '+(await r.text()));const ct=r.headers.get('content-type')||'';if(ct.includes('json'))return r.json();return r.arrayBuffer();}
   const EXP={'application/vnd.google-apps.document':'application/vnd.openxmlformats-officedocument.wordprocessingml.document','application/vnd.google-apps.spreadsheet':'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet','application/vnd.google-apps.presentation':'application/vnd.openxmlformats-officedocument.presentationml.presentation','application/vnd.google-apps.drawing':'image/png'};
   const files=[],folders=[];
-  async function walk(fid,path){
-    let pt='';
-    do{
-      const qs=new URLSearchParams({q:`'${fid}' in parents and trashed=false`,fields:'nextPageToken,files(id,name,mimeType,size,modifiedTime)',pageSize:'200',...(pt?{pageToken:pt}:{})});
-      const r=await gf('/drive/v3/files?'+qs);
-      for(const f of r.files||[]){
-        if(f.mimeType==='application/vnd.google-apps.folder'){folders.push({id:f.id,name:f.name,slot:a.slot,path,node:f});await walk(f.id,path?path+'/'+f.name:f.name);}
-        else{ const expMime=EXP[f.mimeType]; files.push({id:f.id,name:f.name,size:parseInt(f.size)||0,mime:expMime||f.mimeType||mime(f.name),slot:a.slot,path,ts:new Date(f.modifiedTime).getTime(),node:{...f}}); }
-      }
-      pt=r.nextPageToken||'';
-    }while(pt);
-  }
+  async function walk(fid,path){let pt='';do{const qs=new URLSearchParams({q:`'${fid}' in parents and trashed=false`,fields:'nextPageToken,files(id,name,mimeType,size,modifiedTime)',pageSize:'200',...(pt?{pageToken:pt}:{})});const r=await gf('/drive/v3/files?'+qs);for(const f of r.files||[]){if(f.mimeType==='application/vnd.google-apps.folder'){folders.push({id:f.id,name:f.name,slot:a.slot,path,node:f});await walk(f.id,path?path+'/'+f.name:f.name);}else{const expMime=EXP[f.mimeType];files.push({id:f.id,name:f.name,size:parseInt(f.size)||0,mime:expMime||f.mimeType||fileMime(f.name),slot:a.slot,path,ts:new Date(f.modifiedTime).getTime(),node:{...f}});}}pt=r.nextPageToken||'';}while(pt);}
   await walk('root','');
-  const EXP2=EXP;
-  return{ slot:a.slot,provider:'gdrive',identifier:a.identifier,_tok:tok,_gf:gf,
+  return{slot:a.slot,provider:'gdrive',identifier:a.identifier,_tok:tok,_gf:gf,
     list:async()=>({files,folders}),
-    upload:async(parent,name,size,data)=>{ const t=await tok(); const meta=JSON.stringify({name,parents:[parent.id||'root']}); const b='--VB'; const head=`--${b}\r\nContent-Type: application/json\r\n\r\n${meta}\r\n--${b}\r\nContent-Type: application/octet-stream\r\n\r\n`; const end=`\r\n--${b}--`; const he=new TextEncoder().encode(head),ee=new TextEncoder().encode(end); const c=new Uint8Array(he.length+data.length+ee.length); c.set(he,0);c.set(data,he.length);c.set(ee,he.length+data.length); const r=await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart',{method:'POST',headers:{Authorization:'Bearer '+t,'Content-Type':`multipart/related; boundary=${b}`},body:c}); return r.json(); },
-    download:async(node)=>{ const exp=EXP2[node.mimeType]; const ep=exp?`/drive/v3/files/${node.id}/export?mimeType=${encodeURIComponent(exp)}`:`/drive/v3/files/${node.id}?alt=media`; const buf=await gf(ep); return new Uint8Array(buf); },
+    upload:async(parent,name,size,data)=>{const t=await tok();const meta=JSON.stringify({name,parents:[parent.id||'root']});const b='--VB';const head=`--${b}\r\nContent-Type: application/json\r\n\r\n${meta}\r\n--${b}\r\nContent-Type: application/octet-stream\r\n\r\n`;const end=`\r\n--${b}--`;const he=new TextEncoder().encode(head),ee=new TextEncoder().encode(end);const c=new Uint8Array(he.length+data.length+ee.length);c.set(he,0);c.set(data,he.length);c.set(ee,he.length+data.length);const r=await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart',{method:'POST',headers:{Authorization:'Bearer '+t,'Content-Type':`multipart/related; boundary=${b}`},body:c});return r.json();},
+    download:async(node)=>{const exp=EXP[node.mimeType];const ep=exp?`/drive/v3/files/${node.id}/export?mimeType=${encodeURIComponent(exp)}`:`/drive/v3/files/${node.id}?alt=media`;const buf=await gf(ep);return new Uint8Array(buf);},
     del:async(node)=>gf(`/drive/v3/files/${node.id}`,{method:'DELETE'}),
     delDir:async(node)=>gf(`/drive/v3/files/${node.id}`,{method:'DELETE'}),
-    rename:async(node,name)=>{ const t=await tok(); const r=await fetch(`https://www.googleapis.com/drive/v3/files/${node.id}`,{method:'PATCH',headers:{Authorization:'Bearer '+t,'Content-Type':'application/json'},body:JSON.stringify({name})}); return r.json(); },
-    renameDir:async(node,name)=>{ const t=await tok(); const r=await fetch(`https://www.googleapis.com/drive/v3/files/${node.id}`,{method:'PATCH',headers:{Authorization:'Bearer '+t,'Content-Type':'application/json'},body:JSON.stringify({name})}); return r.json(); },
-    mkdir:async(parent,name)=>{ const t=await tok(); const r=await fetch('https://www.googleapis.com/drive/v3/files',{method:'POST',headers:{Authorization:'Bearer '+t,'Content-Type':'application/json'},body:JSON.stringify({name,mimeType:'application/vnd.google-apps.folder',parents:[parent.id||'root']})}); return r.json(); },
+    rename:async(node,name)=>{const t=await tok();const r=await fetch(`https://www.googleapis.com/drive/v3/files/${node.id}`,{method:'PATCH',headers:{Authorization:'Bearer '+t,'Content-Type':'application/json'},body:JSON.stringify({name})});return r.json();},
+    renameDir:async(node,name)=>{const t=await tok();const r=await fetch(`https://www.googleapis.com/drive/v3/files/${node.id}`,{method:'PATCH',headers:{Authorization:'Bearer '+t,'Content-Type':'application/json'},body:JSON.stringify({name})});return r.json();},
+    mkdir:async(parent,name)=>{const t=await tok();const r=await fetch('https://www.googleapis.com/drive/v3/files',{method:'POST',headers:{Authorization:'Bearer '+t,'Content-Type':'application/json'},body:JSON.stringify({name,mimeType:'application/vnd.google-apps.folder',parents:[parent.id||'root']})});return r.json();},
     resolve:()=>({id:'root'}),
   };
 }
 
-// ── BOX ───────────────────────────────────────────────────────────────────────
+// ── Box ───────────────────────────────────────────────────────────────────────
 async function connectBox(a){
   let{accessToken,refreshToken,expiresAt}=a;
-  async function tok(){ if(Date.now()>expiresAt-60000){const r=await api('brefresh',{refreshToken});accessToken=r.accessToken;if(r.refreshToken)refreshToken=r.refreshToken;expiresAt=r.expiresAt;updToken(a.slot,{accessToken,refreshToken,expiresAt});}return accessToken; }
-  async function bf(ep,opts={}){ const t=await tok(); const url=ep.startsWith('http')?ep:'https://api.box.com/2.0'+ep; const r=await fetch(url,{...opts,headers:{Authorization:'Bearer '+t,'Content-Type':'application/json',...(opts.headers||{})}}); if(r.status===204||r.status===202)return{}; if(!r.ok)throw new Error('Box: '+(await r.text())); const ct=r.headers.get('content-type')||''; if(ct.includes('json'))return r.json(); return r.arrayBuffer(); }
+  async function tok(){if(Date.now()>expiresAt-60000){const r=await api('brefresh',{refreshToken});accessToken=r.accessToken;if(r.refreshToken)refreshToken=r.refreshToken;expiresAt=r.expiresAt;updTok(a.slot,{accessToken,refreshToken,expiresAt});}return accessToken;}
+  async function bf(ep,opts={}){const t=await tok();const url=ep.startsWith('http')?ep:'https://api.box.com/2.0'+ep;const r=await fetch(url,{...opts,headers:{Authorization:'Bearer '+t,'Content-Type':'application/json',...(opts.headers||{})}});if(r.status===204||r.status===202)return{};if(!r.ok)throw new Error('Box: '+(await r.text()));const ct=r.headers.get('content-type')||'';if(ct.includes('json'))return r.json();return r.arrayBuffer();}
   const files=[],folders=[];
-  async function walk(fid,path){
-    let off=0,total=1;
-    while(off<total){const r=await bf(`/folders/${fid}/items?fields=id,name,type,size,modified_at,created_at&limit=200&offset=${off}`);total=r.total_count||0;for(const e of r.entries||[]){if(e.type==='folder'){folders.push({id:e.id,name:e.name,slot:a.slot,path,node:e});await walk(e.id,path?path+'/'+e.name:e.name);}else{files.push({id:e.id,name:e.name,size:e.size||0,mime:mime(e.name),slot:a.slot,path,ts:new Date(e.modified_at||e.created_at).getTime(),node:e});}}off+=(r.entries?.length||0);if(!r.entries?.length)break;}
-  }
+  async function walk(fid,path){let off=0,total=1;while(off<total){const r=await bf(`/folders/${fid}/items?fields=id,name,type,size,modified_at,created_at&limit=200&offset=${off}`);total=r.total_count||0;for(const e of r.entries||[]){if(e.type==='folder'){folders.push({id:e.id,name:e.name,slot:a.slot,path,node:e});await walk(e.id,path?path+'/'+e.name:e.name);}else{files.push({id:e.id,name:e.name,size:e.size||0,mime:fileMime(e.name),slot:a.slot,path,ts:new Date(e.modified_at||e.created_at).getTime(),node:e});}}off+=(r.entries?.length||0);if(!r.entries?.length)break;}}
   await walk('0','');
-  return{ slot:a.slot,provider:'box',identifier:a.identifier,_tok:tok,_bf:bf,
+  return{slot:a.slot,provider:'box',identifier:a.identifier,_tok:tok,_bf:bf,
     list:async()=>({files,folders}),
-    upload:async(parent,name,size,data)=>{ const t=await tok(); const fd=new FormData(); fd.append('attributes',JSON.stringify({name,parent:{id:parent.id||'0'}})); fd.append('file',new Blob([data]),name); const r=await fetch('https://upload.box.com/api/2.0/files/content',{method:'POST',headers:{Authorization:'Bearer '+t},body:fd}); const d=await r.json(); return d.entries?.[0]||d; },
-    download:async(node)=>{ const t=await tok(); const r=await fetch(`https://api.box.com/2.0/files/${node.id}/content`,{headers:{Authorization:'Bearer '+t}}); return new Uint8Array(await r.arrayBuffer()); },
+    upload:async(parent,name,size,data)=>{const t=await tok();const fd=new FormData();fd.append('attributes',JSON.stringify({name,parent:{id:parent.id||'0'}}));fd.append('file',new Blob([data]),name);const r=await fetch('https://upload.box.com/api/2.0/files/content',{method:'POST',headers:{Authorization:'Bearer '+t},body:fd});const d=await r.json();return d.entries?.[0]||d;},
+    download:async(node)=>{const t=await tok();const r=await fetch(`https://api.box.com/2.0/files/${node.id}/content`,{headers:{Authorization:'Bearer '+t}});return new Uint8Array(await r.arrayBuffer());},
     del:async(node)=>bf(`/files/${node.id}`,{method:'DELETE'}),
     delDir:async(node)=>bf(`/folders/${node.id}?recursive=true`,{method:'DELETE'}),
     rename:async(node,name)=>bf(`/files/${node.id}`,{method:'PUT',body:JSON.stringify({name})}),
@@ -935,44 +717,36 @@ async function connectBox(a){
   };
 }
 
-async function connectOne(a){ switch(a.provider){case'dropbox':return connectDropbox(a);case'gdrive':return connectGoogle(a);case'box':return connectBox(a);default:return connectMega(a);} }
+async function connectOne(a){switch(a.provider){case'dropbox':return connectDropbox(a);case'gdrive':return connectGoogle(a);case'box':return connectBox(a);default:return connectMega(a);}}
 
-// ── CONNECT ALL ───────────────────────────────────────────────────────────────
+// ── Connect all ───────────────────────────────────────────────────────────────
 async function connectAll(){
-  setStatus('warn','Connecting…','');
-  $('loadingState').classList.remove('hidden');
-  $('emptyState').classList.add('hidden');
-  $('fgGrid').innerHTML=''; $('flBody').innerHTML='';
-  S.stores=[]; S.files=[]; S.folders=[]; S.path=null;
+  setSt('warn','Connecting…','');
+  show('loadState');hide('emptyState');$('fgGrid').innerHTML='';$('flBody').innerHTML='';
+  S.stores=[];S.files=[];S.folders=[];S.path=null;
   const results=await Promise.allSettled(S.accts.map(connectOne));
   const failed=[];
-  for(const r of results){ if(r.status==='fulfilled'&&r.value)S.stores.push(r.value); else if(r.status==='rejected')failed.push(r.reason?.message||String(r.reason)); }
-  if(!S.stores.length){ setStatus('bad','No slots connected',failed[0]||''); $('loadMsg').textContent='Connection failed: '+(failed[0]||'unknown error'); buildSidebar(); return; }
-  setStatus('warn','Loading files…','');
-  for(const st of S.stores){
-    $('loadMsg').textContent='Scanning '+provIcon(st.slot)+' '+slotLabel(st.slot)+'…';
-    try{ const{files,folders}=await st.list(); S.files.push(...files); S.folders.push(...folders); }
-    catch(e){ console.error('Scan failed slot',st.slot,e); }
-  }
-  $('loadingState').classList.add('hidden');
-  buildSidebar(); buildUploadSel(); render();
-  const w=failed.length?' ('+failed.length+' failed)':'';
-  setStatus(failed.length?'warn':'ok',S.files.length+' files across '+S.stores.length+' slot(s)',w||S.accts.length+' slot(s) active');
+  for(const r of results){if(r.status==='fulfilled'&&r.value)S.stores.push(r.value);else if(r.status==='rejected')failed.push(r.reason?.message||String(r.reason));}
+  if(!S.stores.length){setSt('bad','No slots connected',failed[0]||'');$('loadMsg').textContent='Connection failed: '+(failed[0]||'unknown');buildSidebar();return;}
+  setSt('warn','Loading files…','');
+  for(const st of S.stores){$('loadMsg').textContent='Scanning '+provIco(st.slot)+' '+slotLabel(st.slot)+'…';try{const{files,folders}=await st.list();S.files.push(...files);S.folders.push(...folders);}catch(e){console.error('Scan failed',st.slot,e);}}
+  hide('loadState');buildSidebar();buildUpSel();render();
+  setSt(failed.length?'warn':'ok',S.files.length+' files · '+S.stores.length+' slot(s)',failed.length?failed.length+' failed':'');
 }
 
-// ── OAUTH POPUP ───────────────────────────────────────────────────────────────
+// ── OAuth ─────────────────────────────────────────────────────────────────────
 function openPopup(url,slot,provider){
   if(S.popup&&!S.popup.closed)S.popup.close();
   if(S.popupHandler)window.removeEventListener('message',S.popupHandler);
-  const w=520,h=640,left=Math.round(window.screenX+(window.outerWidth-w)/2),top=Math.round(window.screenY+(window.outerHeight-h)/2);
+  const w=520,h=640,left=Math.round(screenX+(outerWidth-w)/2),top=Math.round(screenY+(outerHeight-h)/2);
   S.popup=window.open(url,'vault_oauth',`width=${w},height=${h},left=${left},top=${top},scrollbars=yes`);
-  if(!S.popup){alert('Popup blocked — please allow popups for this site, then try again.');return;}
-  setStatus('warn','Waiting for authorization…','Authorize in the popup window, then return here.');
+  if(!S.popup){alert('Popup blocked — allow popups for this site, then try again.');return;}
+  setSt('warn','Waiting for authorization…','Authorize in the popup, then return here.');
   S.popupHandler=async e=>{
-    if(e.origin!==window.location.origin||e.data?.type!=='vault_oauth')return;
-    window.removeEventListener('message',S.popupHandler); S.popupHandler=null;
+    if(e.origin!==location.origin||e.data?.type!=='vault_oauth')return;
+    window.removeEventListener('message',S.popupHandler);S.popupHandler=null;
     if(S.popup&&!S.popup.closed){S.popup.close();S.popup=null;}
-    if(e.data.error){setStatus('bad','Authorization denied',e.data.error);return;}
+    if(e.data.error){setSt('bad','Authorization denied',e.data.error);return;}
     await finishOAuth(e.data.code,slot,provider);
   };
   window.addEventListener('message',S.popupHandler);
@@ -981,455 +755,283 @@ function openPopup(url,slot,provider){
 async function finishOAuth(code,slot,provider){
   const pending=JSON.parse(LS.get('oauthPending','null'));
   LS.del('oauthPending');
-  const cv=pending?.cv||'';
-  const redir=pending?.redir||window.location.href.split('?')[0].split('#')[0];
-  setStatus('warn','Completing '+( PROVIDERS[provider]?.name||provider)+' connection…','');
+  const cv=pending?.cv||'',redir=pending?.redir||location.href.split('?')[0].split('#')[0];
+  setSt('warn','Completing '+( PROVIDERS[provider]?.name||provider)+' connection…','');
   try{
     let tokens;
-    if(provider==='gdrive'){
-      const r=await api('gexchange',{code,codeVerifier:cv,redirectUri:redir});
-      tokens={accessToken:r.accessToken,refreshToken:r.refreshToken,expiresAt:r.expiresAt,identifier:r.identifier||r.email};
-    } else if(provider==='box'){
-      const r=await api('bexchange',{code,redirectUri:redir});
-      tokens={accessToken:r.accessToken,refreshToken:r.refreshToken,expiresAt:r.expiresAt,identifier:r.identifier};
-    } else if(provider==='dropbox'){
-      const k=cid('dropbox');
-      // Dropbox PKCE public client: client_id goes in body, NO Authorization header, NO secret
-      const r=await fetch('https://api.dropboxapi.com/oauth2/token',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({code,grant_type:'authorization_code',redirect_uri:redir,code_verifier:cv,client_id:k})});
-      const d=await r.json(); if(d.error)throw new Error(d.error_description||d.error);
-      const u=await(await fetch('https://api.dropboxapi.com/2/users/get_current_account',{method:'POST',headers:{Authorization:'Bearer '+d.access_token,'Content-Type':'application/json'}})).json();
-      tokens={accessToken:d.access_token,refreshToken:d.refresh_token||'',expiresAt:Date.now()+(d.expires_in||14400)*1000,identifier:u.email||'dropbox'};
-    } else { throw new Error('Unknown provider: '+provider); }
+    if(provider==='gdrive'){const r=await api('gexchange',{code,codeVerifier:cv,redirectUri:redir});tokens={accessToken:r.accessToken,refreshToken:r.refreshToken,expiresAt:r.expiresAt,identifier:r.identifier||r.email};}
+    else if(provider==='box'){const r=await api('bexchange',{code,redirectUri:redir});tokens={accessToken:r.accessToken,refreshToken:r.refreshToken,expiresAt:r.expiresAt,identifier:r.identifier};}
+    else if(provider==='dropbox'){const k=cid('dropbox');if(!k)throw new Error('DROPBOX_CLIENT_ID not set in Script Properties.');const r=await fetch('https://api.dropboxapi.com/oauth2/token',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({code,grant_type:'authorization_code',redirect_uri:redir,code_verifier:cv,client_id:k})});const d=await r.json();if(d.error)throw new Error(d.error_description||d.error);const u=await(await fetch('https://api.dropboxapi.com/2/users/get_current_account',{method:'POST',headers:{Authorization:'Bearer '+d.access_token,'Content-Type':'application/json'}})).json();tokens={accessToken:d.access_token,refreshToken:d.refresh_token||'',expiresAt:Date.now()+(d.expires_in||14400)*1000,identifier:u.email||'dropbox'};}
+    else throw new Error('Unknown provider: '+provider);
     const{ct,iv}=await aesEnc(S.key,JSON.stringify(tokens));
     await api('addStorage',{email:S.email,passwordHash:S.hash,slot,provider,identifier:tokens.identifier,encryptedCredentials:ct,iv});
     S.encAccts.push({slot,provider,identifier:tokens.identifier,encryptedCredentials:ct,iv});
     S.accts.push({slot,provider,identifier:tokens.identifier,...tokens});
-    updToken(slot,tokens);
-    setStatus('warn','Loading '+( PROVIDERS[provider]?.name)+' files…','');
+    updTok(slot,tokens);
+    setSt('warn','Loading '+(PROVIDERS[provider]?.name)+' files…','');
     const store=await connectOne(S.accts.find(a=>a.slot===slot));
     if(store){S.stores.push(store);const{files,folders}=await store.list();S.files.push(...files);S.folders.push(...folders);}
-    buildSidebar(); buildUploadSel(); render();
-    setStatus('ok',(PROVIDERS[provider]?.name)+' connected',tokens.identifier);
+    buildSidebar();buildUpSel();render();
+    setSt('ok',(PROVIDERS[provider]?.name)+' connected',tokens.identifier);
     setTimeout(()=>{openSettings();renderAccounts();},400);
-  }catch(e){ setStatus('bad','Connection failed',e.message); console.error(e); }
+  }catch(e){setSt('bad','Connection failed',e.message);console.error(e);}
 }
 
-async function oauthGoogle(slot){
-  const k=cid('gdrive'); if(!k){alert('GOOGLE_CLIENT_ID not set in Script Properties.');return;}
-  const cv=mkCV(),cc=await mkCC(cv);
-  const redir=window.location.href.split('?')[0].split('#')[0];
-  LS.set('oauthPending',JSON.stringify({cv,slot,provider:'gdrive',redir}));
-  const params=new URLSearchParams({client_id:k,response_type:'code',redirect_uri:redir,scope:'https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/userinfo.email',state:'gdrive',code_challenge:cc,code_challenge_method:'S256',access_type:'offline',prompt:'consent'});
-  openPopup('https://accounts.google.com/o/oauth2/v2/auth?'+params,slot,'gdrive');
-}
-async function oauthBox(slot){
-  const k=cid('box'); if(!k){alert('BOX_CLIENT_ID not set in Script Properties.');return;}
-  const redir=window.location.href.split('?')[0].split('#')[0];
-  LS.set('oauthPending',JSON.stringify({cv:'',slot,provider:'box',redir}));
-  openPopup('https://account.box.com/api/oauth2/authorize?'+new URLSearchParams({client_id:k,response_type:'code',redirect_uri:redir,state:'box'}),slot,'box');
-}
-async function oauthDropbox(slot){
-  const k=cid('dropbox'); if(!k){alert('DROPBOX_CLIENT_ID not set in Script Properties.');return;}
-  const cv=mkCV(),cc=await mkCC(cv);
-  const redir=window.location.href.split('?')[0].split('#')[0];
-  LS.set('oauthPending',JSON.stringify({cv,slot,provider:'dropbox',redir}));
-  const prov=PROVIDERS.dropbox;
-  const params=new URLSearchParams({client_id:k,response_type:'code',redirect_uri:redir,scope:prov.scopes.join(' '),state:'dropbox',code_challenge:cc,code_challenge_method:'S256',token_access_type:'offline'});
-  openPopup(prov.authUrl+'?'+params,slot,'dropbox');
-}
+async function oauthGoogle(slot){const k=cid('gdrive');if(!k){alert('GOOGLE_CLIENT_ID not set in Script Properties.');return;}const cv=mkCV(),cc=await mkCC(cv);const redir=location.href.split('?')[0].split('#')[0];LS.set('oauthPending',JSON.stringify({cv,slot,provider:'gdrive',redir}));const p=new URLSearchParams({client_id:k,response_type:'code',redirect_uri:redir,scope:'https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/userinfo.email',state:'gdrive',code_challenge:cc,code_challenge_method:'S256',access_type:'offline',prompt:'consent'});openPopup('https://accounts.google.com/o/oauth2/v2/auth?'+p,slot,'gdrive');}
+async function oauthBox(slot){const k=cid('box');if(!k){alert('BOX_CLIENT_ID not set in Script Properties.');return;}const redir=location.href.split('?')[0].split('#')[0];LS.set('oauthPending',JSON.stringify({cv:'',slot,provider:'box',redir}));openPopup('https://account.box.com/api/oauth2/authorize?'+new URLSearchParams({client_id:k,response_type:'code',redirect_uri:redir,state:'box'}),slot,'box');}
+async function oauthDropbox(slot){const k=cid('dropbox');if(!k){alert('DROPBOX_CLIENT_ID not set in Script Properties.');return;}const cv=mkCV(),cc=await mkCC(cv);const redir=location.href.split('?')[0].split('#')[0];LS.set('oauthPending',JSON.stringify({cv,slot,provider:'dropbox',redir}));const prov=PROVIDERS.dropbox;const p=new URLSearchParams({client_id:k,response_type:'code',redirect_uri:redir,scope:prov.scopes.join(' '),state:'dropbox',code_challenge:cc,code_challenge_method:'S256',token_access_type:'offline'});openPopup(prov.authUrl+'?'+p,slot,'dropbox');}
 
-// ── SIDEBAR ───────────────────────────────────────────────────────────────────
+// ── Sidebar ───────────────────────────────────────────────────────────────────
 function buildSidebar(){
-  const counts={};for(const f of S.files)counts[f.slot]=(counts[f.slot]||0)+1;
-  $('sbAllCount').textContent=S.files.length;
-  $('sbAll').classList.toggle('active',S.slot==='all'&&!S.trash);
+  const cnt={};for(const f of S.files)cnt[f.slot]=(cnt[f.slot]||0)+1;
+  $('sbAllCnt').textContent=S.files.length;
+  $('sbAll').classList.toggle('on',S.slot==='all'&&!S.trash);
   const failed=S.accts.filter(a=>!S.stores.find(s=>s.slot===a.slot));
   let html='';
   for(const st of S.stores){
-    const active=String(S.slot)===String(st.slot)&&!S.trash;
-    const tactive=S.trash&&S.trashSlot===st.slot;
-    html+=`<div class="sb-item ${active?'active':''}" data-slot="${st.slot}"><span class="sb-item-icon">${provIcon(st.slot)}</span><span class="sb-item-label">${esc(slotLabel(st.slot))}</span><span class="sb-count">${counts[st.slot]||0}</span></div>
-    <div class="sb-trash ${tactive?'active':''}" data-tslot="${st.slot}">🗑 Trash</div>`;
+    const on=String(S.slot)===String(st.slot)&&!S.trash;
+    const ton=S.trash&&S.trashSlot===st.slot;
+    html+=`<div class="sb-item ${on?'on':''}" data-sl="${st.slot}"><span class="sb-item-ico">${provIco(st.slot)}</span><span class="sb-item-lbl">${esc(slotLabel(st.slot))}</span><span class="sb-cnt">${cnt[st.slot]||0}</span></div>
+    <div class="sb-trash ${ton?'on':''}" data-ts="${st.slot}">🗑 Trash</div>`;
   }
-  for(const a of failed) html+=`<div class="sb-item err" data-slot="${a.slot}"><span class="sb-item-icon">${PROVIDERS[a.provider]?.icon||'❓'}</span><span class="sb-item-label">${esc(slotLabel(a.slot))} ⚠</span></div>`;
+  for(const a of failed)html+=`<div class="sb-item err" data-sl="${a.slot}"><span class="sb-item-ico">${PROVIDERS[a.provider]?.icon||'❓'}</span><span class="sb-item-lbl">${esc(slotLabel(a.slot))} ⚠</span></div>`;
   $('sbSlots').innerHTML=html;
-  $('sbSlots').querySelectorAll('.sb-item[data-slot]').forEach(el=>el.addEventListener('click',()=>{S.slot=el.dataset.slot;S.path=null;S.trash=false;S.trashSlot=null;buildSidebar();render();}));
-  $('sbSlots').querySelectorAll('[data-tslot]').forEach(el=>el.addEventListener('click',()=>openTrash(Number(el.dataset.tslot))));
+  $('sbSlots').querySelectorAll('[data-sl]').forEach(el=>el.addEventListener('click',()=>{S.slot=el.dataset.sl;S.path=null;S.trash=false;S.trashSlot=null;buildSidebar();render();}));
+  $('sbSlots').querySelectorAll('[data-ts]').forEach(el=>el.addEventListener('click',()=>openTrash(Number(el.dataset.ts))));
   $('sbAll').onclick=()=>{S.slot='all';S.path=null;S.trash=false;S.trashSlot=null;buildSidebar();render();};
 }
-function buildUploadSel(){
-  const sel=$('uploadSlot');
-  sel.innerHTML=S.stores.map(s=>`<option value="${s.slot}">${provIcon(s.slot)} ${esc(slotLabel(s.slot))}</option>`).join('');
-  sel.style.display=S.stores.length>1?'':'none';
-}
+function buildUpSel(){const sel=$('upSlot');sel.innerHTML=S.stores.map(s=>`<option value="${s.slot}">${provIco(s.slot)} ${esc(slotLabel(s.slot))}</option>`).join('');sel.style.display=S.stores.length>1?'':'none';}
 
-// ── BREADCRUMB ────────────────────────────────────────────────────────────────
-function buildBreadcrumb(){
+// ── Breadcrumb ────────────────────────────────────────────────────────────────
+function buildBc(){
   const bc=$('breadcrumb');
-  if(S.trash){
-    bc.classList.remove('hidden');
-    bc.innerHTML=`<div class="bc-seg" id="bcHome">🏠 My Drive</div><span class="bc-sep">›</span><div class="bc-seg" id="bcSlotCrumb">${provIcon(S.trashSlot)} ${esc(slotLabel(S.trashSlot))}</div><span class="bc-sep">›</span><div class="bc-seg cur">🗑 Trash</div>`;
-    $('bcHome').onclick=()=>{S.slot='all';S.path=null;S.trash=false;S.trashSlot=null;buildSidebar();render();};
-    $('bcSlotCrumb').onclick=()=>{S.slot=String(S.trashSlot);S.path='';S.trash=false;S.trashSlot=null;buildSidebar();render();};
-    return;
-  }
-  if(S.slot==='all'){bc.classList.add('hidden');return;}
-  bc.classList.remove('hidden');
+  if(S.trash){bc.classList.remove('h');bc.innerHTML=`<div class="bc" id="bcHome">🏠 My Drive</div><span class="bc-sep">›</span><div class="bc" id="bcSlotB">${provIco(S.trashSlot)} ${esc(slotLabel(S.trashSlot))}</div><span class="bc-sep">›</span><div class="bc cur">🗑 Trash</div>`;$('bcHome').onclick=()=>{S.slot='all';S.path=null;S.trash=false;S.trashSlot=null;buildSidebar();render();};$('bcSlotB').onclick=()=>{S.slot=String(S.trashSlot);S.path='';S.trash=false;S.trashSlot=null;buildSidebar();render();};return;}
+  if(S.slot==='all'){bc.classList.add('h');return;}
+  bc.classList.remove('h');
   const bp=S.path===null?'':S.path;
   const segs=bp===''?[]:bp.split('/');
-  let html=`<div class="bc-seg ${segs.length===0?'cur':''}" data-bp="">${provIcon(Number(S.slot))} ${esc(slotLabel(Number(S.slot)))}</div>`;
+  let html=`<div class="bc ${segs.length===0?'cur':''}" data-bp="">${provIco(Number(S.slot))} ${esc(slotLabel(Number(S.slot)))}</div>`;
   let built='';
-  for(let i=0;i<segs.length;i++){built=built?built+'/'+segs[i]:segs[i];const last=i===segs.length-1;html+=`<span class="bc-sep">›</span><div class="bc-seg ${last?'cur':''}" data-bp="${esc(built)}">${esc(segs[i])}</div>`;}
+  for(let i=0;i<segs.length;i++){built=built?built+'/'+segs[i]:segs[i];const last=i===segs.length-1;html+=`<span class="bc-sep">›</span><div class="bc ${last?'cur':''}" data-bp="${esc(built)}">${esc(segs[i])}</div>`;}
   bc.innerHTML=html;
-  bc.querySelectorAll('[data-bp]').forEach(el=>el.addEventListener('click',()=>{S.path=el.dataset.bp;buildBreadcrumb();render();}));
+  bc.querySelectorAll('[data-bp]').forEach(el=>el.addEventListener('click',()=>{S.path=el.dataset.bp;buildBc();render();}));
 }
 
-// ── RENDER ────────────────────────────────────────────────────────────────────
+// ── Render ────────────────────────────────────────────────────────────────────
 function render(){
   if(S.trash){renderTrash();return;}
-  S.q=norm($('searchInput').value);
+  S.q=norm($('searchIn').value);
   let files=S.files,folders=S.folders;
   if(S.slot!=='all'){const n=Number(S.slot);files=files.filter(f=>f.slot===n);folders=folders.filter(f=>f.slot===n);}
   if(!S.q){const bp=S.path===null?'':S.path;files=files.filter(f=>f.path===bp);folders=folders.filter(f=>f.path===bp);if(S.slot!=='all'&&S.path===null)S.path='';}
   else{files=files.filter(f=>norm(f.name).includes(S.q));folders=[];}
-  buildBreadcrumb();
+  buildBc();
   const total=files.length+folders.length;
-  $('sb-count').textContent=total?total+' item'+(total!==1?'s':''):'';
-  if(!total){
-    hide('fgWrap');hide('flWrap');show('emptyState');
-    if(!S.stores.length&&S.accts.length){$('emptyIco').textContent='⚠️';$('emptyTitle').textContent='Slots not connected';$('emptySub').textContent='Check Settings for errors.';}
-    else if(!S.accts.length){$('emptyIco').textContent='☁️';$('emptyTitle').textContent='No storage added';$('emptySub').innerHTML='Open <button onclick="openSettings()" style="color:var(--blue);background:none;border:none;cursor:pointer;font:inherit;padding:0;text-decoration:underline">Settings</button> to add your first account.';}
-    else{$('emptyIco').textContent=S.q?'🔍':'🗂️';$('emptyTitle').textContent=S.q?'No results':'No files here';$('emptySub').textContent=S.q?'Try a different search':'Upload files using the button above.';}
-    updateSelUI();return;
-  }
+  $('sb-c').textContent=total?total+' item'+(total!==1?'s':''):'';
+  if(!total){$('fgGrid').innerHTML='';$('flBody').innerHTML='';hide('fgWrap');hide('flWrap');show('emptyState');
+    if(!S.stores.length&&S.accts.length){$('emptyIco').textContent='⚠️';$('emptyTitle').textContent='Not connected';$('emptySub').textContent='Check Settings for errors.';}
+    else if(!S.accts.length){$('emptyIco').textContent='☁️';$('emptyTitle').textContent='No storage yet';$('emptySub').textContent='Open Settings ⚙️ to add your first account.';}
+    else{$('emptyIco').textContent=S.q?'🔍':'🗂️';$('emptyTitle').textContent=S.q?'No results':'Empty folder';$('emptySub').textContent=S.q?'Try a different search.':'Upload files or create a folder.';}
+    updateSelUI();return;}
   hide('emptyState');
   S.view==='grid'?renderGrid(folders,files):renderList(folders,files);
   updateSelUI();
 }
-const show = id => $(id).classList.remove('hidden');
-const hide = id => $(id).classList.add('hidden');
-
 function renderGrid(folders,files){
   show('fgWrap');hide('flWrap');
-  $('fgGrid').innerHTML=folders.map(f=>`
-    <div class="fc folder" data-fid="${esc(f.id)}">
-      <div class="fc-thumb"><span>${FICON.folder}</span></div>
-      <div class="fc-info"><div class="fc-name" title="${esc(f.name)}">${esc(f.name)}</div><div class="fc-meta">${provIcon(f.slot)} Folder</div></div>
-    </div>`).join('')+files.map(f=>{
-      const t=ftype(f),sel=S.sel.has(f.id);
-      const tc=t==='image'?'ti':t==='video'?'tv':t==='audio'?'ta':'';
-      return`<div class="fc${sel?' sel':''}" data-id="${esc(f.id)}">
-        <div class="fc-thumb ${tc}"><div class="fc-chk">${sel?'✓':''}</div><span>${ficon(f)}</span></div>
-        <div class="fc-info"><div class="fc-name" title="${esc(f.name)}">${esc(f.name)}</div><div class="fc-meta"><span class="fc-badge">${provIcon(f.slot)}</span>${fmtSz(f.size)}</div></div>
-      </div>`;
-    }).join('');
+  $('fgGrid').innerHTML=folders.map(f=>`<div class="fc folder" data-fid="${esc(f.id)}"><div class="fc-thumb" style="font-size:40px">${FICO.folder}</div><div class="fc-info"><div class="fc-name" title="${esc(f.name)}">${esc(f.name)}</div><div class="fc-meta">${provIco(f.slot)} Folder</div></div></div>`).join('')+
+  files.map(f=>{const t=ftype(f),s=S.sel.has(f.id);return`<div class="fc${s?' sel':''}" data-id="${esc(f.id)}"><div class="fc-thumb"><div class="fc-chk">${s?'✓':''}</div><span>${ficon(f)}</span></div><div class="fc-info"><div class="fc-name" title="${esc(f.name)}">${esc(f.name)}</div><div class="fc-meta"><span class="fc-badge">${provIco(f.slot)}</span>${fmtSz(f.size)}</div></div></div>`;}).join('');
   wire($('fgGrid'));
 }
-
 function renderList(folders,files){
   hide('fgWrap');show('flWrap');
-  $('flBody').innerHTML=folders.map(f=>`
-    <tr data-fid="${esc(f.id)}">
-      <td><div class="fl-chk"></div></td><td><span class="fl-icon">${FICON.folder}</span></td>
-      <td class="name-td">${esc(f.name)}</td><td>—</td><td>—</td><td>${provIcon(f.slot)} ${esc(slotLabel(f.slot))}</td>
-    </tr>`).join('')+files.map(f=>{
-      const sel=S.sel.has(f.id);
-      return`<tr data-id="${esc(f.id)}" class="${sel?'sel':''}">
-        <td><div class="fl-chk${sel?' sel':''}">${sel?'✓':''}</div></td><td><span class="fl-icon">${ficon(f)}</span></td>
-        <td class="name-td">${esc(f.name)}</td><td>${fmtSz(f.size)}</td><td>${fmtDt(f.ts)}</td><td>${provIcon(f.slot)} ${esc(slotLabel(f.slot))}</td>
-      </tr>`;
-    }).join('');
+  $('flBody').innerHTML=folders.map(f=>`<tr data-fid="${esc(f.id)}"><td><div class="fl-chk"></div></td><td><span>${FICO.folder}</span></td><td class="nm">${esc(f.name)}</td><td>—</td><td>—</td><td>${provIco(f.slot)} ${esc(slotLabel(f.slot))}</td></tr>`).join('')+
+  files.map(f=>{const s=S.sel.has(f.id);return`<tr data-id="${esc(f.id)}" class="${s?'sel':''}"><td><div class="fl-chk${s?' sel':''}">${s?'✓':''}</div></td><td><span>${ficon(f)}</span></td><td class="nm">${esc(f.name)}</td><td>${fmtSz(f.size)}</td><td>${fmtDt(f.ts)}</td><td>${provIco(f.slot)} ${esc(slotLabel(f.slot))}</td></tr>`;}).join('');
   wire($('flBody'));
 }
-
-function wire(container){
-  container.querySelectorAll('[data-id]').forEach(el=>el.addEventListener('click',e=>{
-    if(e.target.closest('.fc-chk,.fl-chk')||e.ctrlKey||e.metaKey) toggleSel(el.dataset.id);
-    else{const f=S.files.find(x=>x.id===el.dataset.id);if(f)openPreview(f);}
-  }));
-  container.querySelectorAll('[data-id]').forEach(el=>el.addEventListener('contextmenu',e=>{e.preventDefault();const f=S.files.find(x=>x.id===el.dataset.id);if(f)ctxMenu(f,null,e.clientX,e.clientY);}));
-  container.querySelectorAll('[data-fid]').forEach(el=>{
-    el.addEventListener('click',e=>{if(e.target.closest('.fl-chk'))return;const d=S.folders.find(x=>x.id===el.dataset.fid);if(!d)return;S.path=(d.path?d.path+'/':'')+d.name;if(S.slot==='all')S.slot=String(d.slot);buildSidebar();buildBreadcrumb();render();});
+function wire(c){
+  c.querySelectorAll('[data-id]').forEach(el=>el.addEventListener('click',e=>{if(e.target.closest('.fc-chk,.fl-chk')||e.ctrlKey||e.metaKey)toggleSel(el.dataset.id);else{const f=S.files.find(x=>x.id===el.dataset.id);if(f)openPreview(f);}}));
+  c.querySelectorAll('[data-id]').forEach(el=>el.addEventListener('contextmenu',e=>{e.preventDefault();const f=S.files.find(x=>x.id===el.dataset.id);if(f)ctxMenu(f,null,e.clientX,e.clientY);}));
+  c.querySelectorAll('[data-fid]').forEach(el=>{
+    el.addEventListener('click',e=>{if(e.target.closest('.fl-chk'))return;const d=S.folders.find(x=>x.id===el.dataset.fid);if(!d)return;S.path=(d.path?d.path+'/':'')+d.name;if(S.slot==='all')S.slot=String(d.slot);buildSidebar();buildBc();render();});
     el.addEventListener('contextmenu',e=>{e.preventDefault();const d=S.folders.find(x=>x.id===el.dataset.fid);if(d)ctxMenu(null,d,e.clientX,e.clientY);});
   });
 }
-
 function toggleSel(id){S.sel.has(id)?S.sel.delete(id):S.sel.add(id);updateSelUI();render();}
-function updateSelUI(){
-  const n=S.sel.size;
-  $('btnDelSelected').classList.toggle('hidden',!n);
-  $('btnMoveSelected').classList.toggle('hidden',!n||S.stores.length<2);
-  $('selInfo').classList.toggle('hidden',!n);
-  $('selDiv').style.display=n?'':'none';
-  if(n)$('selInfo').textContent=n+' selected';
-}
-
-$('searchInput').addEventListener('input',()=>{S.path=null;render();});
-$('btnRefresh').addEventListener('click',async()=>{S.files=[];S.folders=[];S.sel.clear();S.slot='all';S.path=null;S.trash=false;S.trashSlot=null;S.trashItems=[];await connectAll();});
-$('btnNewFolder').addEventListener('click',newFolder);
-$('btnDelSelected').addEventListener('click',delSelected);
-$('btnMoveSelected').addEventListener('click',()=>openMove([...S.sel]));
+function updateSelUI(){const n=S.sel.size;$('btnDelSel').classList.toggle('h',!n);$('btnMoveSel').classList.toggle('h',!n||S.stores.length<2);$('selInfo').classList.toggle('h',!n);$('selDiv').style.display=n?'':'none';if(n)$('selInfo').textContent=n+' selected';}
+function applyView(){const g=S.view==='grid';$('vGrid').style.background=g?'var(--bl-dim)':'transparent';$('vGrid').style.color=g?'var(--bl)':'var(--tx2)';$('vList').style.background=g?'transparent':'var(--bl-dim)';$('vList').style.color=g?'var(--tx2)':'var(--bl)';}
 $('vGrid').addEventListener('click',()=>{S.view='grid';LS.set('vv','grid');applyView();render();});
 $('vList').addEventListener('click',()=>{S.view='list';LS.set('vv','list');applyView();render();});
-function applyView(){const g=S.view==='grid';$('vGrid').style.background=g?'var(--blue-bg)':'transparent';$('vGrid').style.color=g?'var(--blue)':'var(--text2)';$('vList').style.background=g?'transparent':'var(--blue-bg)';$('vList').style.color=g?'var(--text2)':'var(--blue)';}
+$('searchIn').addEventListener('input',()=>{S.path=null;render();});
+$('btnRefresh').addEventListener('click',async()=>{S.files=[];S.folders=[];S.sel.clear();S.slot='all';S.path=null;S.trash=false;S.trashSlot=null;S.trashItems=[];await connectAll();});
+$('btnNewFolder').addEventListener('click',newFolder);
+$('btnDelSel').addEventListener('click',delSelected);
+$('btnMoveSel').addEventListener('click',()=>openMove([...S.sel]));
 
-// ── CONTEXT MENU ─────────────────────────────────────────────────────────────
+// ── Context menu ─────────────────────────────────────────────────────────────
 let _ctx=null;
 function closeCtx(){if(_ctx){_ctx.remove();_ctx=null;}}
 function ctxMenu(file,folder,x,y){
   closeCtx();_ctx=document.createElement('div');_ctx.className='ctx';
-  const items=file?[
-    {i:'👁',l:'Preview',f:()=>openPreview(file)},
-    {i:'⬇️',l:'Download',f:()=>dlFile(file)},
-    'sep',
-    {i:'✏️',l:'Rename',f:()=>{openPreview(file);setTimeout(startRename,150);}},
-    {i:'📂',l:'Move to…',f:()=>openMove([file.id])},
-    'sep',
-    {i:'🗑',l:'Delete',f:()=>delFile(file),d:true},
-  ]:[
-    {i:'📂',l:'Open',f:()=>{S.path=(folder.path?folder.path+'/':'')+folder.name;if(S.slot==='all')S.slot=String(folder.slot);buildSidebar();buildBreadcrumb();render();}},
-    'sep',
-    {i:'✏️',l:'Rename',f:()=>renameFolder(folder)},
-    {i:'🗑',l:'Delete folder',f:()=>deleteFolder(folder),d:true},
-  ];
+  const items=file?[{i:'👁',l:'Preview',f:()=>openPreview(file)},{i:'⬇️',l:'Download',f:()=>dlFile(file)},'sep',{i:'✏️',l:'Rename',f:()=>{openPreview(file);setTimeout(startRename,150);}},{i:'📂',l:'Move to…',f:()=>openMove([file.id])},'sep',{i:'🗑',l:'Delete',f:()=>delFile(file),d:true}]:[{i:'📂',l:'Open',f:()=>{S.path=(folder.path?folder.path+'/':'')+folder.name;if(S.slot==='all')S.slot=String(folder.slot);buildSidebar();buildBc();render();}},'sep',{i:'✏️',l:'Rename',f:()=>renameFolder(folder)},{i:'🗑',l:'Delete folder',f:()=>deleteFolder(folder),d:true}];
   _ctx.innerHTML=items.map((it,i)=>it==='sep'?'<div class="ctx-sep"></div>':`<div class="ctx-item${it.d?' danger':''}" data-i="${i}">${it.i} ${it.l}</div>`).join('');
   _ctx.querySelectorAll('[data-i]').forEach(el=>{const it=items[+el.dataset.i];if(it?.f)el.addEventListener('click',()=>{closeCtx();it.f();});});
-  _ctx.style.left=Math.min(x,window.innerWidth-190)+'px';
-  _ctx.style.top=Math.min(y,window.innerHeight-200)+'px';
-  document.body.appendChild(_ctx);
-  setTimeout(()=>document.addEventListener('click',closeCtx,{once:true}),0);
+  _ctx.style.left=Math.min(x,innerWidth-185)+'px';_ctx.style.top=Math.min(y,innerHeight-180)+'px';
+  document.body.appendChild(_ctx);setTimeout(()=>document.addEventListener('click',closeCtx,{once:true}),0);
 }
 
-// ── FOLDERS ───────────────────────────────────────────────────────────────────
-async function newFolder(){
-  if(S.slot==='all'){alert('Select a storage slot first.');return;}
-  const st=S.stores.find(s=>s.slot==S.slot);if(!st){alert('Slot not connected.');return;}
-  const name=prompt('Folder name:');if(!name?.trim())return;
-  try{
-    const parts=S.path?S.path.split('/').filter(Boolean):[];
-    const parent=st.resolve(parts)||st._st?.root||{id:'root'};
-    const node=await st.mkdir(parent,name.trim());
-    S.folders.push({id:node.id||node.nodeId||'d'+Date.now(),name:name.trim(),slot:Number(S.slot),path:S.path||'',node});
-    buildSidebar();render();setStatus('ok','Folder created','');
-  }catch(e){alert('Failed: '+e.message);}
-}
-async function renameFolder(folder){
-  const name=prompt('New name:',folder.name);if(!name?.trim()||name.trim()===folder.name)return;
-  const st=S.stores.find(s=>s.slot===folder.slot);if(!st)return;
-  try{
-    await(st.renameDir||st.rename)(folder.node,name.trim());
-    const oldFull=(folder.path?folder.path+'/':'')+folder.name;
-    const newFull=(folder.path?folder.path+'/':'')+name.trim();
-    const f=S.folders.find(x=>x.id===folder.id);if(f)f.name=name.trim();
-    S.files.forEach(x=>{if(x.path===oldFull)x.path=newFull;else if(x.path.startsWith(oldFull+'/'))x.path=newFull+x.path.slice(oldFull.length);});
-    S.folders.forEach(x=>{if(x.path===oldFull)x.path=newFull;else if(x.path.startsWith(oldFull+'/'))x.path=newFull+x.path.slice(oldFull.length);});
-    if(S.path===oldFull)S.path=newFull;
-    render();setStatus('ok','Renamed','');
-  }catch(e){alert('Rename failed: '+e.message);}
-}
-async function deleteFolder(folder){
-  if(!confirm('Delete folder "'+folder.name+'" and all its contents?'))return;
-  const st=S.stores.find(s=>s.slot===folder.slot);if(!st)return;
-  try{
-    await(st.delDir||st.del)(folder.node);
-    const full=(folder.path?folder.path+'/':'')+folder.name;
-    S.files=S.files.filter(x=>x.path!==full&&!x.path.startsWith(full+'/'));
-    S.folders=S.folders.filter(x=>x.id!==folder.id&&x.path!==full&&!x.path.startsWith(full+'/'));
-    if(S.path===full||S.path?.startsWith(full+'/'))S.path=folder.path||'';
-    buildSidebar();render();setStatus('ok','Deleted','');
-  }catch(e){alert('Delete failed: '+e.message);}
-}
+// ── Folders ───────────────────────────────────────────────────────────────────
+async function newFolder(){if(S.slot==='all'){alert('Select a storage slot first.');return;}const st=S.stores.find(s=>s.slot==S.slot);if(!st){alert('Slot not connected.');return;}const name=prompt('Folder name:');if(!name?.trim())return;try{const parts=S.path?S.path.split('/').filter(Boolean):[];const parent=st.resolve(parts)||st._st?.root||{id:'root'};const node=await st.mkdir(parent,name.trim());S.folders.push({id:node.id||node.nodeId||'d'+Date.now(),name:name.trim(),slot:Number(S.slot),path:S.path||'',node});buildSidebar();render();setSt('ok','Folder created','');}catch(e){alert('Failed: '+e.message);}}
+async function renameFolder(folder){const name=prompt('New name:',folder.name);if(!name?.trim()||name.trim()===folder.name)return;const st=S.stores.find(s=>s.slot===folder.slot);if(!st)return;try{await(st.renameDir||st.rename)(folder.node,name.trim());const oldFull=(folder.path?folder.path+'/':'')+folder.name;const newFull=(folder.path?folder.path+'/':'')+name.trim();const f=S.folders.find(x=>x.id===folder.id);if(f)f.name=name.trim();S.files.forEach(x=>{if(x.path===oldFull)x.path=newFull;else if(x.path.startsWith(oldFull+'/'))x.path=newFull+x.path.slice(oldFull.length);});S.folders.forEach(x=>{if(x.path===oldFull)x.path=newFull;else if(x.path.startsWith(oldFull+'/'))x.path=newFull+x.path.slice(oldFull.length);});if(S.path===oldFull)S.path=newFull;render();setSt('ok','Renamed','');}catch(e){alert('Rename failed: '+e.message);}}
+async function deleteFolder(folder){if(!confirm('Delete folder "'+folder.name+'" and all contents?'))return;const st=S.stores.find(s=>s.slot===folder.slot);if(!st)return;try{await(st.delDir||st.del)(folder.node);const full=(folder.path?folder.path+'/':'')+folder.name;S.files=S.files.filter(x=>x.path!==full&&!x.path.startsWith(full+'/'));S.folders=S.folders.filter(x=>x.id!==folder.id&&x.path!==full&&!x.path.startsWith(full+'/'));if(S.path===full||S.path?.startsWith(full+'/'))S.path=folder.path||'';buildSidebar();render();setSt('ok','Deleted','');}catch(e){alert('Delete failed: '+e.message);}}
 
-// ── FILE DELETE ───────────────────────────────────────────────────────────────
-async function delFile(file){
-  if(!confirm('Delete "'+file.name+'"?'))return;
-  const st=S.stores.find(s=>s.slot===file.slot);if(!st)return;
-  try{await st.del(file.node);S.files=S.files.filter(x=>x.id!==file.id);S.sel.delete(file.id);closePrev();buildSidebar();render();setStatus('ok','Deleted','');}
-  catch(e){alert('Delete failed: '+e.message);}
-}
-async function delSelected(){
-  const n=S.sel.size;if(!n)return;if(!confirm('Delete '+n+' file'+(n!==1?'s':'')+'?'))return;
-  const ids=[...S.sel];let done=0;
-  for(const id of ids){const f=S.files.find(x=>x.id===id);if(!f)continue;try{const st=S.stores.find(s=>s.slot===f.slot);if(st)await st.del(f.node);done++;}catch{}S.files=S.files.filter(x=>x.id!==id);}
-  S.sel.clear();buildSidebar();render();setStatus('ok','Deleted '+done,'');
-}
+// ── File delete ───────────────────────────────────────────────────────────────
+async function delFile(file){if(!confirm('Delete "'+file.name+'"?'))return;const st=S.stores.find(s=>s.slot===file.slot);if(!st)return;try{await st.del(file.node);S.files=S.files.filter(x=>x.id!==file.id);S.sel.delete(file.id);closePrev();buildSidebar();render();setSt('ok','Deleted','');}catch(e){alert('Delete failed: '+e.message);}}
+async function delSelected(){const n=S.sel.size;if(!n)return;if(!confirm('Delete '+n+' file'+(n!==1?'s':'')+'?'))return;const ids=[...S.sel];let done=0;for(const id of ids){const f=S.files.find(x=>x.id===id);if(!f)continue;try{const st=S.stores.find(s=>s.slot===f.slot);if(st)await st.del(f.node);done++;}catch{}S.files=S.files.filter(x=>x.id!==id);}S.sel.clear();buildSidebar();render();setSt('ok','Deleted '+done,'');}
 
-// ── PREVIEW ───────────────────────────────────────────────────────────────────
+// ── Preview ───────────────────────────────────────────────────────────────────
 async function openPreview(file){
-  S.preview=file;
-  $('pName').textContent=file.name;$('pMeta').textContent=fmtSz(file.size)+' · '+fmtDt(file.ts);
-  $('pSlot').textContent=provIcon(file.slot)+' '+slotLabel(file.slot)+(file.path?' › '+file.path:'');
-  $('prevBody').innerHTML='<div class="state"><div class="state-ico">⏳</div></div>';
-  $('prevModal').classList.remove('hidden');
+  S.preview=file;$('pName').textContent=file.name;$('pMeta').textContent=fmtSz(file.size)+' · '+fmtDt(file.ts);$('pSlot').textContent=provIco(file.slot)+' '+slotLabel(file.slot)+(file.path?' › '+file.path:'');
+  $('prevBody').innerHTML='<div class="state"><div class="state-ico">⏳</div></div>';$('prevBody').style.display='';
+  show('prevModal');
   const st=S.stores.find(s=>s.slot===file.slot);
-  if(!st){$('prevBody').innerHTML='<div class="dl-card"><div class="dl-card-icon">⚠️</div><div class="dl-card-meta">Slot not connected</div></div>';return;}
+  if(!st){$('prevBody').innerHTML='<div class="dl-card"><div class="dl-card-ico">⚠️</div><div class="dl-card-meta">Slot not connected</div></div>';return;}
   try{
     const buf=await st.download(file.node);
-    const m=file.mime||mime(file.name);
+    const m=file.mime||fileMime(file.name);
     if(S.prevUrl)URL.revokeObjectURL(S.prevUrl);
     S.prevUrl=URL.createObjectURL(new Blob([buf],{type:m}));
     const t=ftype(file);
-    if(t==='image'){$('prevBody').innerHTML=`<img src="${S.prevUrl}" alt="${esc(file.name)}"/>`;}
-    else if(t==='video'){$('prevBody').innerHTML=`<video src="${S.prevUrl}" controls autoplay playsinline></video>`;}
-    else if(t==='audio'){$('prevBody').innerHTML=`<audio src="${S.prevUrl}" controls autoplay></audio>`;}
-    else if(t==='pdf'){$('prevBody').style.display='block';$('prevBody').innerHTML=`<embed src="${S.prevUrl}" type="application/pdf" style="width:100%;height:65vh;border:none;display:block"/>`;}
-    else if(t==='word'){
-      $('prevBody').style.display='block';
-      const r=await mammoth.convertToHtml({arrayBuffer:buf.buffer||buf.slice().buffer});
-      $('prevBody').innerHTML=`<div class="doc-wrap">${r.value}</div>`;
-    }
-    else if(t==='excel'){
-      const wb=XLSX.read(buf,{type:'array'});
-      const ws=wb.Sheets[wb.SheetNames[0]];
-      const html=XLSX.utils.sheet_to_html(ws);
-      $('prevBody').innerHTML=`<div class="xl-wrap">${html}</div>`;
-    }
-    else if(t==='ppt'){
-      $('prevBody').innerHTML=`<div class="dl-card"><div class="dl-card-icon">📑</div><div class="dl-card-name">${esc(file.name)}</div><div class="dl-card-meta">${fmtSz(file.size)}</div><div style="font-size:12px;color:var(--text2);max-width:280px;text-align:center">Presentations can't be previewed inline — download to open in PowerPoint or Google Slides.</div><button class="btn primary" onclick="document.getElementById('btnPrevDl').click()" style="margin-top:4px">⬇️ Download</button></div>`;
-    }
-    else if(t==='text'){
-      const text=new TextDecoder().decode(buf);
-      $('prevBody').innerHTML=`<pre>${esc(text.slice(0,80000))}${text.length>80000?'\n…(truncated)':''}</pre>`;
-    }
-    else{$('prevBody').innerHTML=`<div class="dl-card"><div class="dl-card-icon">${ficon(file)}</div><div class="dl-card-name">${esc(file.name)}</div><div class="dl-card-meta">${fmtSz(file.size)}</div><button class="btn primary" onclick="document.getElementById('btnPrevDl').click()" style="margin-top:4px">⬇️ Download</button></div>`;}
-  }catch(e){$('prevBody').innerHTML=`<div class="dl-card"><div class="dl-card-icon">❌</div><div class="dl-card-meta">${esc(e.message)}</div><button class="btn primary" onclick="document.getElementById('btnPrevDl').click()" style="margin-top:4px">Try Download</button></div>`;}
+    if(t==='image')$('prevBody').innerHTML=`<img src="${S.prevUrl}" alt="${esc(file.name)}"/>`;
+    else if(t==='video')$('prevBody').innerHTML=`<video src="${S.prevUrl}" controls autoplay playsinline></video>`;
+    else if(t==='audio')$('prevBody').innerHTML=`<audio src="${S.prevUrl}" controls autoplay></audio>`;
+    else if(t==='pdf'){$('prevBody').style.display='block';$('prevBody').innerHTML=`<embed src="${S.prevUrl}" type="application/pdf" style="width:100%;height:62vh;border:none;display:block"/>`;}
+    else if(t==='word'){$('prevBody').style.display='block';const r=await mammoth.convertToHtml({arrayBuffer:buf.buffer||buf.slice().buffer});$('prevBody').innerHTML=`<div class="doc-wrap">${r.value}</div>`;}
+    else if(t==='excel'){const wb=XLSX.read(buf,{type:'array'});const ws=wb.Sheets[wb.SheetNames[0]];$('prevBody').innerHTML=`<div class="xl-wrap">${XLSX.utils.sheet_to_html(ws)}</div>`;}
+    else if(t==='ppt')$('prevBody').innerHTML=`<div class="dl-card"><div class="dl-card-ico">📑</div><div class="dl-card-name">${esc(file.name)}</div><div class="dl-card-meta">${fmtSz(file.size)}</div><p style="font-size:12px;color:var(--tx2);max-width:260px;text-align:center">Presentations can't render inline — download to open in PowerPoint.</p><button class="btn primary" onclick="document.getElementById('btnPrevDl').click()" style="margin-top:6px">⬇️ Download</button></div>`;
+    else if(t==='text')$('prevBody').innerHTML=`<pre>${esc(new TextDecoder().decode(buf).slice(0,80000))}</pre>`;
+    else $('prevBody').innerHTML=`<div class="dl-card"><div class="dl-card-ico">${ficon(file)}</div><div class="dl-card-name">${esc(file.name)}</div><div class="dl-card-meta">${fmtSz(file.size)}</div><button class="btn primary" onclick="document.getElementById('btnPrevDl').click()" style="margin-top:6px">⬇️ Download</button></div>`;
+  }catch(e){$('prevBody').innerHTML=`<div class="dl-card"><div class="dl-card-ico">❌</div><div class="dl-card-meta">${esc(e.message)}</div><button class="btn primary" onclick="document.getElementById('btnPrevDl').click()" style="margin-top:6px">Try Download</button></div>`;}
 }
-function closePrev(){$('prevModal').classList.add('hidden');if(S.prevUrl){URL.revokeObjectURL(S.prevUrl);S.prevUrl=null;}$('prevBody').innerHTML='';$('prevBody').style.display='';$('renameRow').classList.add('hidden');S.preview=null;}
-async function dlFile(file){
-  if(!file)return;let url=S.prevUrl;
-  if(!url){const st=S.stores.find(s=>s.slot===file.slot);if(!st)return;const buf=await st.download(file.node);url=URL.createObjectURL(new Blob([buf],{type:file.mime||mime(file.name)}));}
-  const a=Object.assign(document.createElement('a'),{href:url,download:file.name||'download'});document.body.appendChild(a);a.click();a.remove();
-}
-$('btnPrevClose').addEventListener('click',closePrev);
+function closePrev(){hide('prevModal');if(S.prevUrl){URL.revokeObjectURL(S.prevUrl);S.prevUrl=null;}$('prevBody').innerHTML='';$('prevBody').style.display='';hide('renRow');S.preview=null;}
+async function dlFile(file){if(!file)return;let url=S.prevUrl;if(!url){const st=S.stores.find(s=>s.slot===file.slot);if(!st)return;const buf=await st.download(file.node);url=URL.createObjectURL(new Blob([buf],{type:file.mime||fileMime(file.name)}));}const a=Object.assign(document.createElement('a'),{href:url,download:file.name||'download'});document.body.appendChild(a);a.click();a.remove();}
+$('btnPrevX').addEventListener('click',closePrev);
 $('prevModal').addEventListener('click',e=>{if(e.target===$('prevModal'))closePrev();});
 $('btnPrevDl').addEventListener('click',()=>dlFile(S.preview));
 $('btnPrevDel').addEventListener('click',()=>{if(S.preview)delFile(S.preview);});
 $('btnPrevMove').addEventListener('click',()=>{if(S.preview)openMove([S.preview.id]);});
-$('btnPrevRename').addEventListener('click',startRename);
-$('btnRenCancel').addEventListener('click',()=>$('renameRow').classList.add('hidden'));
+$('btnPrevRen').addEventListener('click',startRename);
+$('btnRenX').addEventListener('click',()=>hide('renRow'));
 $('btnRenOk').addEventListener('click',doRename);
-$('renameIn').addEventListener('keydown',e=>{if(e.key==='Enter')doRename();if(e.key==='Escape')$('btnRenCancel').click();});
-function startRename(){if(!S.preview)return;$('renameRow').classList.remove('hidden');$('renameIn').value=S.preview.name;$('renameIn').focus();$('renameIn').select();}
-async function doRename(){
-  if(!S.preview)return;const name=$('renameIn').value.trim();
-  if(!name||name===S.preview.name){$('btnRenCancel').click();return;}
-  $('btnRenOk').disabled=true;$('btnRenOk').textContent='…';
-  try{const st=S.stores.find(s=>s.slot===S.preview.slot);if(st)await st.rename(S.preview.node,name);const f=S.files.find(x=>x.id===S.preview.id);if(f)f.name=name;S.preview.name=name;$('pName').textContent=name;$('renameRow').classList.add('hidden');render();setStatus('ok','Renamed','');}
-  catch(e){alert('Rename failed: '+e.message);}
-  finally{$('btnRenOk').disabled=false;$('btnRenOk').textContent='✓ Save';}
-}
+$('renIn').addEventListener('keydown',e=>{if(e.key==='Enter')doRename();if(e.key==='Escape')$('btnRenX').click();});
+function startRename(){if(!S.preview)return;show('renRow');$('renIn').value=S.preview.name;$('renIn').focus();$('renIn').select();}
+async function doRename(){if(!S.preview)return;const name=$('renIn').value.trim();if(!name||name===S.preview.name){$('btnRenX').click();return;}$('btnRenOk').disabled=true;$('btnRenOk').textContent='…';try{const st=S.stores.find(s=>s.slot===S.preview.slot);if(st)await st.rename(S.preview.node,name);const f=S.files.find(x=>x.id===S.preview.id);if(f)f.name=name;S.preview.name=name;$('pName').textContent=name;hide('renRow');render();setSt('ok','Renamed','');}catch(e){alert('Rename failed: '+e.message);}finally{$('btnRenOk').disabled=false;$('btnRenOk').textContent='✓';}}
 
-// ── MOVE ──────────────────────────────────────────────────────────────────────
-function openMove(ids){
-  S.moveIds=ids;S.moveTarget=null;
-  const files=S.files.filter(f=>ids.includes(f.id));
-  $('moveInfo').textContent=files.length+' file'+(files.length!==1?'s':'')+' · choose destination';
-  const counts={};for(const f of S.files)counts[f.slot]=(counts[f.slot]||0)+1;
-  $('moveSlots').innerHTML=S.stores.map(st=>{
-    const toMove=files.filter(f=>f.slot!==st.slot).length;
-    return`<div class="msc ${toMove===0?'dis':''}" data-ms="${st.slot}"><div class="msc-icon">${provIcon(st.slot)}</div><div><div class="msc-name">${esc(slotLabel(st.slot))}</div><div class="msc-meta">${st.identifier||''} · ${counts[st.slot]||0} files · +${toMove} to move</div></div></div>`;
-  }).join('');
-  $('moveSlots').querySelectorAll('.msc:not(.dis)').forEach(el=>el.addEventListener('click',()=>{S.moveTarget=Number(el.dataset.ms);$('moveSlots').querySelectorAll('.msc').forEach(c=>c.classList.remove('sel'));el.classList.add('sel');$('btnDoMove').disabled=false;}));
-  $('btnDoMove').disabled=true;$('moveModal').classList.remove('hidden');closePrev();
-}
-$('btnMoveClose').addEventListener('click',()=>$('moveModal').classList.add('hidden'));
-$('btnMoveCancel').addEventListener('click',()=>$('moveModal').classList.add('hidden'));
-$('moveModal').addEventListener('click',e=>{if(e.target===$('moveModal'))$('moveModal').classList.add('hidden');});
+// ── Move ─────────────────────────────────────────────────────────────────────
+function openMove(ids){S.moveIds=ids;S.moveTarget=null;const files=S.files.filter(f=>ids.includes(f.id));$('moveInfo').textContent=files.length+' file'+(files.length!==1?'s':'')+' selected';const cnt={};for(const f of S.files)cnt[f.slot]=(cnt[f.slot]||0)+1;$('moveSlots').innerHTML=S.stores.map(st=>{const toMove=files.filter(f=>f.slot!==st.slot).length;return`<div class="msc ${toMove===0?'dis':''}" data-ms="${st.slot}"><div class="msc-ico">${provIco(st.slot)}</div><div><div class="msc-name">${esc(slotLabel(st.slot))}</div><div class="msc-meta">${st.identifier||''} · ${cnt[st.slot]||0} files</div></div></div>`;}).join('');$('moveSlots').querySelectorAll('.msc:not(.dis)').forEach(el=>el.addEventListener('click',()=>{S.moveTarget=Number(el.dataset.ms);$('moveSlots').querySelectorAll('.msc').forEach(c=>c.classList.remove('on'));el.classList.add('on');$('btnDoMove').disabled=false;}));$('btnDoMove').disabled=true;show('moveModal');closePrev();}
+$('btnMoveX').addEventListener('click',()=>hide('moveModal'));$('btnMoveCancel').addEventListener('click',()=>hide('moveModal'));$('moveModal').addEventListener('click',e=>{if(e.target===$('moveModal'))hide('moveModal');});
 $('btnDoMove').addEventListener('click',async()=>{
-  if(S.moveTarget===null)return;$('moveModal').classList.add('hidden');
-  const tst=S.stores.find(s=>s.slot===S.moveTarget);if(!tst){alert('Target not available.');return;}
-  const files=S.files.filter(f=>S.moveIds.includes(f.id)&&f.slot!==S.moveTarget);
-  if(!files.length){setStatus('ok','Nothing to move','');return;}
+  if(S.moveTarget===null)return;hide('moveModal');const tst=S.stores.find(s=>s.slot===S.moveTarget);if(!tst){alert('Target not available.');return;}
+  const files=S.files.filter(f=>S.moveIds.includes(f.id)&&f.slot!==S.moveTarget);if(!files.length){setSt('ok','Nothing to move','');return;}
   showToast('Moving…','0/'+files.length,0);let done=0;
-  for(let i=0;i<files.length;i++){
-    const f=files[i];updToast('Moving '+(i+1)+'/'+files.length,f.name,(i/files.length)*100);
-    try{const sst=S.stores.find(s=>s.slot===f.slot);if(!sst)continue;const buf=await sst.download(f.node);const node=await tst.upload({id:'root'},f.name,f.size,buf);await sst.del(f.node);const idx=S.files.findIndex(x=>x.id===f.id);if(idx>=0)S.files[idx]={...f,slot:S.moveTarget,path:'',node,id:node.id||node.nodeId||'mv'+Date.now()};S.sel.delete(f.id);done++;}catch(e){console.error('Move failed',f.name,e);}
-  }
-  hideToast(1800);S.sel.clear();buildSidebar();render();setStatus('ok','Moved '+done+' to '+slotLabel(S.moveTarget),'');
+  for(let i=0;i<files.length;i++){const f=files[i];updToast('Moving '+(i+1)+'/'+files.length,f.name,(i/files.length)*100);try{const sst=S.stores.find(s=>s.slot===f.slot);if(!sst)continue;const buf=await sst.download(f.node);const node=await tst.upload({id:'root'},f.name,f.size,buf);await sst.del(f.node);const idx=S.files.findIndex(x=>x.id===f.id);if(idx>=0)S.files[idx]={...f,slot:S.moveTarget,path:'',node,id:node.id||node.nodeId||'mv'+Date.now()};S.sel.delete(f.id);done++;}catch(e){console.error('Move failed',f.name,e);}}
+  hideToast(1600);S.sel.clear();buildSidebar();render();setSt('ok','Moved '+done+' to '+slotLabel(S.moveTarget),'');
 });
 
-// ── UPLOAD ────────────────────────────────────────────────────────────────────
+// ── Upload ────────────────────────────────────────────────────────────────────
 async function runUpload(fileList,slotNum){
-  const files=[...fileList].filter(f=>f.size>0);if(!files.length)return;
-  const st=S.stores.find(s=>s.slot===slotNum);if(!st){alert('Slot not connected.');return;}
-  const parts=S.slot==slotNum&&S.path?S.path.split('/').filter(Boolean):[];
-  const parent=st.resolve(parts)||st._st?.root||{id:'root'};
-  const uploadPath=S.slot==slotNum&&S.path?S.path:'';
+  const files=[...fileList].filter(f=>f.size>0);if(!files.length)return;const st=S.stores.find(s=>s.slot===slotNum);if(!st){alert('Slot not connected.');return;}
+  const parts=S.slot==slotNum&&S.path?S.path.split('/').filter(Boolean):[];const parent=st.resolve(parts)||st._st?.root||{id:'root'};const upPath=S.slot==slotNum&&S.path?S.path:'';
   showToast('Uploading…','Preparing…',0);let done=0;
-  for(let i=0;i<files.length;i++){
-    const file=files[i];updToast('Uploading '+(i+1)+'/'+files.length,file.name,(i/files.length)*100);
-    setStatus('warn','Uploading '+(i+1)+'/'+files.length+'…',file.name);
-    try{const data=new Uint8Array(await file.arrayBuffer());const node=await st.upload(parent,file.name,file.size,data);S.files.push({id:node.id||node.nodeId||'up'+Date.now(),name:file.name,size:file.size,mime:file.type||mime(file.name),slot:slotNum,path:uploadPath,ts:Date.now(),node});done++;}
-    catch(e){alert('Upload failed for "'+file.name+'":\n'+e.message);}
-  }
-  hideToast(1800);buildSidebar();render();setStatus('ok','Uploaded '+done+' to '+provIcon(slotNum)+' '+slotLabel(slotNum),'');
+  for(let i=0;i<files.length;i++){const file=files[i];updToast('Uploading '+(i+1)+'/'+files.length,file.name,(i/files.length)*100);setSt('warn','Uploading '+(i+1)+'/'+files.length+'…',file.name);try{const data=new Uint8Array(await file.arrayBuffer());const node=await st.upload(parent,file.name,file.size,data);S.files.push({id:node.id||node.nodeId||'up'+Date.now(),name:file.name,size:file.size,mime:file.type||fileMime(file.name),slot:slotNum,path:upPath,ts:Date.now(),node});done++;}catch(e){alert('Upload failed for "'+file.name+'":\n'+e.message);}}
+  hideToast(1600);buildSidebar();render();setSt('ok','Uploaded '+done+' to '+provIco(slotNum)+' '+slotLabel(slotNum),'');
 }
-$('uploadInput').addEventListener('change',async function(){const slot=Number($('uploadSlot').value)||S.stores[0]?.slot;if(slot)await runUpload(this.files,slot);this.value='';});
-// Drag & drop
-let _dc=0;const main=$('main');
-main.addEventListener('dragenter',e=>{e.preventDefault();_dc++;$('dropOverlay').classList.add('vis');});
-main.addEventListener('dragleave',()=>{_dc--;if(_dc<=0){_dc=0;$('dropOverlay').classList.remove('vis');}});
-main.addEventListener('dragover',e=>e.preventDefault());
-main.addEventListener('drop',e=>{e.preventDefault();_dc=0;$('dropOverlay').classList.remove('vis');if(e.dataTransfer.files.length){const slot=Number($('uploadSlot').value)||S.stores[0]?.slot;if(slot)runUpload(e.dataTransfer.files,slot);}});
+$('upInput').addEventListener('change',async function(){const slot=Number($('upSlot').value)||S.stores[0]?.slot;if(slot)await runUpload(this.files,slot);this.value='';});
+const mainW=$('mainWrap');let _dc=0;
+mainW.addEventListener('dragenter',e=>{e.preventDefault();_dc++;$('dropOvl').classList.add('vis');});
+mainW.addEventListener('dragleave',()=>{_dc--;if(_dc<=0){_dc=0;$('dropOvl').classList.remove('vis');}});
+mainW.addEventListener('dragover',e=>e.preventDefault());
+mainW.addEventListener('drop',e=>{e.preventDefault();_dc=0;$('dropOvl').classList.remove('vis');if(e.dataTransfer.files.length){const slot=Number($('upSlot').value)||S.stores[0]?.slot;if(slot)runUpload(e.dataTransfer.files,slot);}});
 
-// ── TOAST ─────────────────────────────────────────────────────────────────────
+// ── Toast ─────────────────────────────────────────────────────────────────────
 let _tt=null;
-function showToast(t,s,p){clearTimeout(_tt);$('toastTitle').textContent=t;$('toastSub').textContent=s;$('toastFill').style.width=p+'%';$('toast').classList.remove('hidden');}
+function showToast(t,s,p){clearTimeout(_tt);$('tTitle').textContent=t;$('tSub').textContent=s;$('tFill').style.width=p+'%';show('toast');}
 function updToast(t,s,p){showToast(t,s,p);}
-function hideToast(d=0){if(d){$('toastFill').style.width='100%';_tt=setTimeout(()=>$('toast').classList.add('hidden'),d);}else $('toast').classList.add('hidden');}
+function hideToast(d=0){if(d){$('tFill').style.width='100%';_tt=setTimeout(()=>hide('toast'),d);}else hide('toast');}
 
-// ── TRASH ─────────────────────────────────────────────────────────────────────
-async function openTrash(slot){
-  S.trash=true;S.trashSlot=slot;S.slot=String(slot);
-  buildSidebar();buildBreadcrumb();
-  $('loadingState').classList.remove('hidden');hide('emptyState');$('fgGrid').innerHTML='';$('flBody').innerHTML='';
-  $('loadMsg').textContent='Loading trash for '+slotLabel(slot)+'…';
-  const st=S.stores.find(s=>s.slot===slot);
-  if(!st){$('loadingState').classList.add('hidden');return;}
-  try{S.trashItems=await fetchTrash(st);}catch(e){S.trashItems=[];console.error(e);}
-  $('loadingState').classList.add('hidden');renderTrash();
-}
-async function fetchTrash(st){
-  const p=st.provider;
-  if(p==='mega'){const items=[];for(const c of(st.trashNode?.children||[])){items.push({id:c.nodeId||c.handle,name:c.name,size:c.size||0,mime:mime(c.name),node:c,ts:c.timestamp?c.timestamp*1000:Date.now()});}return items;}
-  if(p==='gdrive'){const r=await st._gf('/drive/v3/files?q=trashed%3Dtrue&fields=files(id,name,mimeType,size,trashedTime)&pageSize=200');return(r.files||[]).map(f=>({id:f.id,name:f.name,size:parseInt(f.size)||0,mime:f.mimeType,node:f,ts:f.trashedTime?new Date(f.trashedTime).getTime():Date.now()}));}
-  if(p==='dropbox'){return 'no-api';}
-  if(p==='box'){const r=await st._bf('/folders/trash/items?fields=id,name,type,size,trashed_at&limit=200');return(r.entries||[]).map(e=>({id:e.id,name:e.name,size:e.size||0,mime:mime(e.name),node:e,ts:e.trashed_at?new Date(e.trashed_at).getTime():Date.now()}));}
-  return[];
-}
-function renderTrash(){
-  $('sb-count').textContent=Array.isArray(S.trashItems)?S.trashItems.length+' items in trash':'';
-  hide('fgWrap');hide('flWrap');buildBreadcrumb();
-  if(S.trashItems==='no-api'){show('emptyState');$('emptyIco').textContent='📦';$('emptyTitle').textContent='Trash unavailable';$('emptySub').innerHTML='Dropbox doesn\'t provide a trash API. <a href="https://www.dropbox.com/trash" target="_blank">Open Dropbox.com → Trash</a>';return;}
-  if(!S.trashItems.length){show('emptyState');$('emptyIco').textContent='🗑️';$('emptyTitle').textContent='Trash is empty';$('emptySub').textContent='Files deleted from this storage appear here.';return;}
-  hide('emptyState');
-  const wrap=document.createElement('div');wrap.className='trash-list';
-  S.trashItems.forEach(item=>{
-    const row=document.createElement('div');row.className='tr-row';
-    row.innerHTML=`<div class="tr-icon">${FICON[ftype(item)]||'📄'}</div><div class="tr-name" title="${esc(item.name)}">${esc(item.name)}</div><div class="tr-size">${fmtSz(item.size)}</div><div class="tr-date">${fmtDt(item.ts)}</div><div class="tr-acts"><button class="btn sm ghost" data-r="${esc(item.id)}">↩ Restore</button><button class="btn sm danger" data-p="${esc(item.id)}">✕ Forever</button></div>`;
-    row.querySelector('[data-r]').addEventListener('click',async btn=>{const el=row.querySelector('[data-r]');el.textContent='…';el.disabled=true;try{await restoreTrash(item,S.trashSlot);S.trashItems=S.trashItems.filter(x=>x.id!==item.id);renderTrash();setStatus('ok','"'+item.name+'" restored','');}catch(e){alert('Restore failed: '+e.message);el.textContent='↩ Restore';el.disabled=false;}});
-    row.querySelector('[data-p]').addEventListener('click',async()=>{if(!confirm('Permanently delete "'+item.name+'"?'))return;const el=row.querySelector('[data-p]');el.textContent='…';el.disabled=true;try{await permTrash(item,S.trashSlot);S.trashItems=S.trashItems.filter(x=>x.id!==item.id);renderTrash();setStatus('ok','Permanently deleted','');}catch(e){alert('Delete failed: '+e.message);el.textContent='✕ Forever';el.disabled=false;}});
-    wrap.appendChild(row);
-  });
-  $('fileArea').querySelectorAll('.trash-list').forEach(x=>x.remove());
-  $('fileArea').appendChild(wrap);
+// ── Trash ─────────────────────────────────────────────────────────────────────
+async function openTrash(slot){S.trash=true;S.trashSlot=slot;S.slot=String(slot);buildSidebar();buildBc();show('loadState');hide('emptyState');$('fgGrid').innerHTML='';$('flBody').innerHTML='';$('loadMsg').textContent='Loading trash…';const st=S.stores.find(s=>s.slot===slot);if(!st){hide('loadState');return;}try{S.trashItems=await fetchTrash(st);}catch(e){S.trashItems=[];console.error(e);}hide('loadState');renderTrash();}
+async function fetchTrash(st){const p=st.provider;if(p==='mega'){const items=[];for(const c of(st.trashNode?.children||[]))items.push({id:c.nodeId||c.handle,name:c.name,size:c.size||0,mime:fileMime(c.name),node:c,ts:c.timestamp?c.timestamp*1000:Date.now()});return items;}if(p==='gdrive'){const r=await st._gf('/drive/v3/files?q=trashed%3Dtrue&fields=files(id,name,mimeType,size,trashedTime)&pageSize=200');return(r.files||[]).map(f=>({id:f.id,name:f.name,size:parseInt(f.size)||0,mime:f.mimeType,node:f,ts:f.trashedTime?new Date(f.trashedTime).getTime():Date.now()}));}if(p==='dropbox')return'no-api';if(p==='box'){const r=await st._bf('/folders/trash/items?fields=id,name,type,size,trashed_at&limit=200');return(r.entries||[]).map(e=>({id:e.id,name:e.name,size:e.size||0,mime:fileMime(e.name),node:e,ts:e.trashed_at?new Date(e.trashed_at).getTime():Date.now()}));}return[];}
+function renderTrash(){$('sb-c').textContent=Array.isArray(S.trashItems)?S.trashItems.length+' items in trash':'';hide('fgWrap');hide('flWrap');buildBc();if(S.trashItems==='no-api'){show('emptyState');$('emptyIco').textContent='📦';$('emptyTitle').textContent='Trash unavailable';$('emptySub').innerHTML='Dropbox doesn\'t provide a trash API for personal accounts. <a href="https://www.dropbox.com/trash" target="_blank">Open Dropbox.com → Trash</a>';return;}if(!S.trashItems.length){show('emptyState');$('emptyIco').textContent='🗑️';$('emptyTitle').textContent='Trash is empty';$('emptySub').textContent='';return;}hide('emptyState');
+  const wrap=document.createElement('div');wrap.className='tr-list';
+  S.trashItems.forEach(item=>{const row=document.createElement('div');row.className='tr-row';row.innerHTML=`<div class="tr-ico">${FICO[ftype(item)]||'📄'}</div><div class="tr-name" title="${esc(item.name)}">${esc(item.name)}</div><div class="tr-size">${fmtSz(item.size)}</div><div class="tr-acts"><button class="btn ghost sm" data-r="${esc(item.id)}">↩</button><button class="btn danger sm" data-p="${esc(item.id)}">✕</button></div>`;
+    row.querySelector('[data-r]').addEventListener('click',async()=>{const b=row.querySelector('[data-r]');b.textContent='…';b.disabled=true;try{await restoreTrash(item,S.trashSlot);S.trashItems=S.trashItems.filter(x=>x.id!==item.id);renderTrash();setSt('ok','"'+item.name+'" restored','');}catch(e){alert('Restore failed: '+e.message);b.textContent='↩';b.disabled=false;}});
+    row.querySelector('[data-p]').addEventListener('click',async()=>{if(!confirm('Permanently delete "'+item.name+'"?'))return;const b=row.querySelector('[data-p]');b.textContent='…';b.disabled=true;try{await permTrash(item,S.trashSlot);S.trashItems=S.trashItems.filter(x=>x.id!==item.id);renderTrash();setSt('ok','Permanently deleted','');}catch(e){alert('Delete failed: '+e.message);b.textContent='✕';b.disabled=false;}});
+    wrap.appendChild(row);});
+  $('fileArea').querySelectorAll('.tr-list').forEach(x=>x.remove());$('fileArea').appendChild(wrap);
 }
 async function restoreTrash(item,slot){const st=S.stores.find(s=>s.slot===slot);if(!st)return;const p=st.provider;if(p==='mega')await item.node.moveTo(st._st.root);else if(p==='gdrive')await st._gf(`/drive/v3/files/${item.id}`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({trashed:false})});else if(p==='box'){const t=await st._tok();await fetch(`https://api.box.com/2.0/files/${item.id}`,{method:'POST',headers:{Authorization:'Bearer '+t,'Content-Type':'application/json'},body:JSON.stringify({})});}}
 async function permTrash(item,slot){const st=S.stores.find(s=>s.slot===slot);if(!st)return;const p=st.provider;if(p==='mega')await item.node.delete(true);else if(p==='gdrive')await st._gf(`/drive/v3/files/${item.id}`,{method:'DELETE'});else if(p==='box'){const t=await st._tok();await fetch(`https://api.box.com/2.0/files/${item.id}/trash`,{method:'DELETE',headers:{Authorization:'Bearer '+t}});}}
 
-// ── SETTINGS ──────────────────────────────────────────────────────────────────
-function openSettings(){$('addWrap').classList.remove('on');renderAccounts();buildSlotDropdown();$('settingsModal').classList.remove('hidden');}
+// ── Settings ──────────────────────────────────────────────────────────────────
+function openSettings(){hide('addWrap');renderAccounts();buildSlotDrop();show('settingsModal');}
 $('btnSettings').addEventListener('click',openSettings);
-$('btnSettingsClose').addEventListener('click',()=>$('settingsModal').classList.add('hidden'));
-$('settingsModal').addEventListener('click',e=>{if(e.target===$('settingsModal'))$('settingsModal').classList.add('hidden');});
+$('btnSettingsX').addEventListener('click',()=>hide('settingsModal'));
+$('settingsModal').addEventListener('click',e=>{if(e.target===$('settingsModal'))hide('settingsModal');});
 $('settingsModal').querySelectorAll('.stab').forEach(t=>t.addEventListener('click',()=>{$('settingsModal').querySelectorAll('.stab').forEach(x=>x.classList.remove('on'));$('settingsModal').querySelectorAll('.spanel').forEach(x=>x.classList.remove('on'));t.classList.add('on');$('panel'+t.dataset.p.charAt(0).toUpperCase()+t.dataset.p.slice(1)).classList.add('on');}));
 
 function renderAccounts(){
   const list=$('acctList');
-  if(!S.encAccts.length){list.innerHTML='<div style="padding:12px;color:var(--text2);font-size:13px">No accounts yet. Click "+ Add account" above.</div>';return;}
-  list.innerHTML=S.encAccts.map(a=>{
-    const prov=PROVIDERS[a.provider]||PROVIDERS.mega;
-    const tc=prov.tosLevel==='ok'?'tos-ok':prov.tosLevel==='warn'?'tos-warn':'tos-bad';
-    return`<div class="acct">
-      <div class="acct-head"><div class="acct-prov">${prov.icon}</div><div class="acct-info"><div class="acct-pname">${prov.name}</div><div class="acct-email">${esc(a.identifier)}</div></div><div class="acct-slot">S${a.slot}</div></div>
-      <div class="acct-foot"><div class="acct-tos ${tc}">⏰ ${prov
+  if(!S.encAccts.length){list.innerHTML='<div style="padding:10px;color:var(--tx2);font-size:13px">No accounts yet — click "+ Add account".</div>';return;}
+  list.innerHTML=S.encAccts.map(a=>{const prov=PROVIDERS[a.provider]||PROVIDERS.mega;const tc=prov.tosLevel==='ok'?'color:var(--gn)':prov.tosLevel==='warn'?'color:var(--yw)':'color:var(--rd)';return`<div class="acct"><div class="acct-hd"><div class="acct-pico">${prov.icon}</div><div><div class="acct-pname">${prov.name}</div><div class="acct-email">${esc(a.identifier)}</div></div><div class="acct-slot">S${a.slot}</div></div><div class="acct-ft"><div class="acct-tos" style="${tc}">⏰ ${prov.inactivity}</div>${a.provider==='mega'?`<button class="btn ghost sm" data-ed="${a.slot}">✏️ Edit</button>`:`<button class="btn ghost sm" data-ra="${a.slot}" data-rp="${a.provider}">🔄 Re-auth</button>`}<button class="btn danger sm" data-dl="${a.slot}">Remove</button></div>${a.provider==='mega'?`<div class="acct-edit" id="ae-${a.slot}"><div class="ff"><label class="ff-lbl">New MEGA password</label><div class="pw-wrap"><input class="ff-inp" type="password" id="epw-${a.slot}" placeholder="New password"/><button class="eye-btn" data-t="epw-${a.slot}">👁</button></div></div><div style="display:flex;gap:6px;align-items:center"><button class="btn primary sm" data-sv="${a.slot}">Save</button><button class="btn ghost sm" data-cx="${a.slot}">Cancel</button><span class="err-msg bad" id="eerr-${a.slot}"></span></div></div>`:''}</div>`;}).join('');
+  list.querySelectorAll('[data-ed]').forEach(b=>b.addEventListener('click',()=>{const el=$('ae-'+b.dataset.ed);if(el)el.classList.toggle('on');}));
+  list.querySelectorAll('[data-cx]').forEach(b=>b.addEventListener('click',()=>{const el=$('ae-'+b.dataset.cx);if(el)el.classList.remove('on');}));
+  list.querySelectorAll('[data-sv]').forEach(b=>b.addEventListener('click',()=>saveCreds(Number(b.dataset.sv))));
+  list.querySelectorAll('[data-dl]').forEach(b=>b.addEventListener('click',()=>delSlot(Number(b.dataset.dl))));
+  list.querySelectorAll('[data-ra]').forEach(b=>b.addEventListener('click',()=>reAuth(Number(b.dataset.ra),b.dataset.rp)));
+  list.querySelectorAll('.eye-btn').forEach(attachEye);
+}
+async function saveCreds(slot){const pw=$('epw-'+slot)?.value;const err=$('eerr-'+slot);if(err)err.textContent='';if(!pw){if(err)err.textContent='Enter a new password.';return;}try{const ident=S.encAccts.find(a=>a.slot===slot)?.identifier||'';const{ct,iv}=await aesEnc(S.key,JSON.stringify({megaEmail:ident,megaPassword:pw}));await api('updateStorage',{email:S.email,passwordHash:S.hash,slot,encryptedCredentials:ct,iv});const ea=S.encAccts.find(a=>a.slot===slot);if(ea){ea.encryptedCredentials=ct;ea.iv=iv;}const a=S.accts.find(a=>a.slot===slot);if(a)a.megaPassword=pw;$('ae-'+slot)?.classList.remove('on');setSt('ok','Credentials updated','');}catch(e){if(err)err.textContent=e.message;}}
+async function delSlot(slot){if(!confirm('Remove Slot '+slot+'? This does NOT delete the actual storage account.'))return;try{await api('deleteStorage',{email:S.email,passwordHash:S.hash,slot});S.encAccts=S.encAccts.filter(a=>a.slot!==slot);S.accts=S.accts.filter(a=>a.slot!==slot);S.stores=S.stores.filter(s=>s.slot!==slot);S.files=S.files.filter(f=>f.slot!==slot);S.folders=S.folders.filter(f=>f.slot!==slot);renderAccounts();buildSlotDrop();buildSidebar();buildUpSel();render();setSt('ok','Slot '+slot+' removed','');}catch(e){alert('Failed: '+e.message);}}
+async function reAuth(slot,provider){if(!confirm('Re-authorize '+slotLabel(slot)+'?'))return;try{await api('deleteStorage',{email:S.email,passwordHash:S.hash,slot});S.encAccts=S.encAccts.filter(a=>a.slot!==slot);S.accts=S.accts.filter(a=>a.slot!==slot);S.stores=S.stores.filter(s=>s.slot!==slot);S.files=S.files.filter(f=>f.slot!==slot);S.folders=S.folders.filter(f=>f.slot!==slot);$('slotSel').value=String(slot);if(provider==='gdrive')await oauthGoogle(slot);else if(provider==='box')await oauthBox(slot);else if(provider==='dropbox')await oauthDropbox(slot);}catch(e){alert('Re-auth failed: '+e.message);}}
+
+// ── Add account ───────────────────────────────────────────────────────────────
+let _selProv=null;
+$('btnAddAcct').addEventListener('click',()=>{$('addWrap').classList.toggle('on');if($('addWrap').classList.contains('on')){buildProvGrid();showAddStep(1);}});
+$('btnCancelAdd').addEventListener('click',()=>{$('addWrap').classList.remove('on');_selProv=null;});
+$('btnBackProv').addEventListener('click',()=>showAddStep(1));
+function showAddStep(n){$('addStep1').style.display=n===1?'':'none';$('addStep2').classList.toggle('on',n===2);}
+function buildSlotDrop(){const used=new Set(S.encAccts.map(a=>a.slot));$('slotSel').innerHTML=[1,2,3,4,5,6,7,8,9,10].filter(n=>!used.has(n)).map(n=>`<option value="${n}">Slot ${n}</option>`).join('')||'<option disabled>All 10 slots used</option>';}
+function buildProvGrid(){
+  $('provGrid').innerHTML=Object.values(PROVIDERS).map(p=>`<div class="prov-card" data-p="${p.id}"><div class="prov-ico">${p.icon}</div><div class="prov-name">${p.name}</div><div class="${p.tosLevel==='ok'?'prov-note':'prov-warn'}">${p.inactivity}</div></div>`).join('');
+  $('provGrid').querySelectorAll('.prov-card').forEach(card=>card.addEventListener('click',()=>{_selProv=card.dataset.p;$('provGrid').querySelectorAll('.prov-card').forEach(c=>c.classList.remove('on'));card.classList.add('on');const prov=PROVIDERS[_selProv];$('connTitle').textContent='Connect '+prov.icon+' '+prov.name;$('connInfo').innerHTML=prov.tos;$('megaFlds').style.display=_selProv==='mega'?'flex':'none';$('oauthFlds').style.display=_selProv!=='mega'?'flex':'none';$('btnSaveMega').style.display=_selProv==='mega'?'':'none';$('addErr2').textContent='';showAddStep(2);}));
+}
+$('btnDoOAuth').addEventListener('click',async()=>{const slot=Number($('slotSel').value);if(!slot){$('addErr1').textContent='Select a slot.';return;}if(_selProv==='gdrive')await oauthGoogle(slot);else if(_selProv==='box')await oauthBox(slot);else if(_selProv==='dropbox')await oauthDropbox(slot);});
+$('btnSaveMega').addEventListener('click',async()=>{
+  const slot=Number($('slotSel').value),memail=$('addMegaEmail').value.trim(),mpw=$('addMegaPw').value;
+  $('addErr2').textContent='';if(!memail||!mpw){$('addErr2').textContent='All fields required.';return;}
+  $('btnSaveMega').disabled=true;$('btnSaveMega').textContent='Saving…';
+  try{const{ct,iv}=await aesEnc(S.key,JSON.stringify({megaEmail:memail,megaPassword:mpw}));await api('addStorage',{email:S.email,passwordHash:S.hash,slot,provider:'mega',identifier:memail,encryptedCredentials:ct,iv});S.encAccts.push({slot,provider:'mega',identifier:memail,encryptedCredentials:ct,iv});S.accts.push({slot,provider:'mega',identifier:memail,megaEmail:memail,megaPassword:mpw});$('addMegaEmail').value='';$('addMegaPw').value='';$('addWrap').classList.remove('on');_selProv=null;renderAccounts();buildSlotDrop();setSt('warn','Connecting MEGA slot '+slot+'…','');try{const store=await connectOne(S.accts.find(a=>a.slot===slot));if(store){S.stores.push(store);const{files,folders}=await store.list();S.files.push(...files);S.folders.push(...folders);}buildSidebar();buildUpSel();render();setSt('ok','MEGA Slot '+slot+' connected','');}catch(e){setSt('warn','Slot saved but connection failed',e.message);}
+  }catch(e){$('addErr2').textContent=e.message;}finally{$('btnSaveMega').disabled=false;$('btnSaveMega').textContent='Save';}
+});
+
+// ── Change password ───────────────────────────────────────────────────────────
+$('btnChangePw').addEventListener('click',async()=>{
+  const old=$('cpwOld').value,n1=$('cpwNew1').value,n2=$('cpwNew2').value;const el=$('cpwMsg');el.className='err-msg bad';el.textContent='';
+  if(!old||!n1||!n2){el.textContent='All fields required.';return;}if(n1.length<8){el.textContent='Min 8 characters.';return;}if(n1!==n2){el.textContent='Passwords do not match.';return;}
+  const oldHash=await mkHash(old,S.salt);if(oldHash!==S.hash){el.textContent='Current password incorrect.';return;}
+  $('btnChangePw').disabled=true;$('btnChangePw').textContent='Updating…';
+  try{const ns=rnd(16),nh=await mkHash(n1,ns),nk=await mkKey(n1,ns);const reenc=[];for(const a of S.accts){const creds=JSON.stringify({megaEmail:a.identifier,megaPassword:a.megaPassword||a.password,...(a.accessToken?{accessToken:a.accessToken,refreshToken:a.refreshToken,expiresAt:a.expiresAt,identifier:a.identifier}:{})});const{ct,iv}=await aesEnc(nk,creds);reenc.push({slot:a.slot,provider:a.provider||'mega',identifier:a.identifier,encryptedCredentials:ct,iv});}await api('changePassword',{email:S.email,oldPasswordHash:oldHash,newPasswordHash:nh,newSalt:ns,accounts:reenc});S.salt=ns;S.key=nk;S.hash=nh;S.pw=n1;S.encAccts=reenc;['cpwOld','cpwNew1','cpwNew2'].forEach(id=>$(id).value='');el.className='err-msg ok';el.textContent='✓ Password updated.';setSt('ok','Password updated','');}
+  catch(e){el.textContent=e.message;}finally{$('btnChangePw').disabled=false;$('btnChangePw').textContent='Update password';}
+});
+
+// ── PW strength & eye ─────────────────────────────────────────────────────────
+function pwStr(pw){let s=0;if(pw.length>=8)s++;if(pw.length>=12)s++;if(/[A-Z]/.test(pw))s++;if(/[0-9]/.test(pw))s++;if(/[^A-Za-z0-9]/.test(pw))s++;return s;}
+function setBar(id,pw){const b=$(id);if(!b)return;if(!pw){b.style.width='0';return;}const s=pwStr(pw);b.style.width=(s/5*100)+'%';b.style.background=['#f85149','#e3b341','#f0883e','#3fb950','#2ea043'][Math.min(s-1,4)];}
+$('inReg1').addEventListener('input',e=>setBar('regPwBar',e.target.value));
+$('cpwNew1').addEventListener('input',e=>setBar('cpwBar',e.target.value));
+function attachEye(btn){btn.addEventListener('click',()=>{const inp=$(btn.dataset.t);if(!inp)return;inp.type=inp.type==='password'?'text':'password';btn.textContent=inp.type==='password'?'👁':'🙈';});}
+document.querySelectorAll('.eye-btn').forEach(attachEye);
+
+// ── Keyboard ──────────────────────────────────────────────────────────────────
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeCtx();['prevModal','moveModal','settingsModal'].forEach(id=>$(id)?.
