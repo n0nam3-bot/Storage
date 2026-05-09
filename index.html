@@ -459,18 +459,6 @@ tr:hover .fl-chk,.fl tr.sel .fl-chk{border-color:var(--bl)}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
 <script>
-// ── Safe storage helpers (never throw) ───────────────────────────────────────
-const LS={
-  get:(k,d='')=>{try{return localStorage.getItem(k)||d;}catch{return d;}},
-  set:(k,v)=>{try{localStorage.setItem(k,v);}catch{}},
-  del:(k)=>{try{localStorage.removeItem(k);}catch{}}
-};
-const SS={
-  get:(k,d='')=>{try{return sessionStorage.getItem(k)||d;}catch{return d;}},
-  set:(k,v)=>{try{sessionStorage.setItem(k,v);}catch{}},
-  del:(k)=>{try{sessionStorage.removeItem(k);}catch{}}
-};
-
 // ── Popup callback detection ──────────────────────────────────────────────────
 (function(){
   var p=new URLSearchParams(location.search);
@@ -483,6 +471,18 @@ const SS={
 </script>
 
 <script type="module">
+// ── Safe storage helpers ──────────────────────────────────────────────────────
+const LS={
+  get:(k,d='')=>{try{return localStorage.getItem(k)||d;}catch{return d;}},
+  set:(k,v)=>{try{localStorage.setItem(k,v);}catch{}},
+  del:(k)=>{try{localStorage.removeItem(k);}catch{}}
+};
+const SS={
+  get:(k,d='')=>{try{return sessionStorage.getItem(k)||d;}catch{return d;}},
+  set:(k,v)=>{try{sessionStorage.setItem(k,v);}catch{}},
+  del:(k)=>{try{sessionStorage.removeItem(k);}catch{}}
+};
+
 const BACKEND='https://script.google.com/macros/s/AKfycbzict1PB8A-nDDI0Rq44heHJcLoHwYLTUO7ckNcoeeHMdA5tm1dxmTgsUkW4CttOCWugQ/exec';
 
 const PROVIDERS={
@@ -1034,4 +1034,4 @@ function attachEye(btn){btn.addEventListener('click',()=>{const inp=$(btn.datase
 document.querySelectorAll('.eye-btn').forEach(attachEye);
 
 // ── Keyboard ──────────────────────────────────────────────────────────────────
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeCtx();['prevModal','moveModal','settingsModal'].forEach(id=>$(id)?.
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeCtx();['prevModal','moveModal','settingsModal'].forEach(id=>$(id)?
