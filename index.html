@@ -30,7 +30,7 @@ input::placeholder{color:var(--tx3)}
 input:focus,select:focus{border-color:var(--bl);box-shadow:0 0 0 3px rgba(47,129,247,.18)}
 select option{background:var(--s2)}
 
-/* ─ Buttons ─ */
+/* - Buttons - */
 .btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:var(--r);font-size:13px;font-weight:500;border:1px solid var(--bd2);background:var(--s2);color:var(--tx);cursor:pointer;transition:.15s;white-space:nowrap}
 .btn:hover{background:var(--s3);border-color:var(--bd2)}
 .btn.primary{background:var(--bl);color:#fff;border-color:var(--bl)}
@@ -42,7 +42,7 @@ select option{background:var(--s2)}
 .btn.sm{padding:5px 10px;font-size:12px}
 .btn.full{width:100%;justify-content:center;padding:10px}
 
-/* ─ Auth ─ */
+/* - Auth - */
 #authWrap{height:100vh;display:flex;align-items:center;justify-content:center;background:var(--bg)}
 .auth-card{background:var(--s1);border:1px solid var(--bd);border-radius:14px;padding:30px;width:370px;box-shadow:var(--shadow)}
 .auth-logo{display:flex;align-items:center;gap:10px;margin-bottom:22px}
@@ -65,10 +65,10 @@ select option{background:var(--s2)}
 .auth-err.info{color:var(--tx2)}
 .auth-hint{font-size:11px;color:var(--tx3);line-height:1.5;padding:9px 11px;background:var(--s2);border:1px solid var(--bd);border-radius:var(--r)}
 
-/* ─ App shell ─ */
+/* - App shell - */
 #appWrap{height:100vh;display:flex;flex-direction:column;overflow:hidden}
 
-/* ─ Topbar ─ */
+/* - Topbar - */
 #topbar{height:54px;background:var(--s1);border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:10px;padding:0 14px;flex-shrink:0;z-index:40}
 .tb-logo{display:flex;align-items:center;gap:8px;width:210px;flex-shrink:0}
 .tb-logo-ico{width:26px;height:26px;background:var(--bl);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px}
@@ -83,10 +83,10 @@ select option{background:var(--s2)}
 .tb-avatar{width:30px;height:30px;border-radius:50%;background:var(--bl);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:600;font-size:13px;cursor:pointer;transition:.12s}
 .tb-avatar:hover{opacity:.85}
 
-/* ─ Body ─ */
+/* - Body - */
 #bodyWrap{flex:1;display:flex;overflow:hidden}
 
-/* ─ Sidebar ─ */
+/* - Sidebar - */
 #sidebar{width:210px;flex-shrink:0;background:var(--s1);border-right:1px solid var(--bd);padding:10px 0;overflow-y:auto;display:flex;flex-direction:column}
 .sb-upload{margin:0 10px 10px;padding:9px 14px;border-radius:var(--r);border:1px solid var(--bd2);background:var(--s2);display:flex;align-items:center;gap:8px;font-size:13px;font-weight:500;color:var(--tx);cursor:pointer;transition:.15s}
 .sb-upload:hover{background:var(--s3)}
@@ -104,7 +104,7 @@ select option{background:var(--s2)}
 .sb-trash.on{background:var(--rd-dim);color:var(--rd);border-color:rgba(248,81,73,.2)}
 .sb-divider{height:1px;background:var(--bd);margin:8px 0}
 
-/* ─ Main ─ */
+/* - Main - */
 #mainWrap{flex:1;display:flex;flex-direction:column;overflow:hidden;position:relative;background:var(--bg)}
 #toolbar{background:var(--s1);border-bottom:1px solid var(--bd);padding:8px 14px;display:flex;align-items:center;gap:7px;flex-shrink:0}
 #breadcrumb{background:var(--s1);border-bottom:1px solid var(--bd);padding:6px 14px;display:flex;align-items:center;gap:2px;font-size:13px;flex-shrink:0;flex-wrap:wrap}
@@ -167,7 +167,7 @@ tr:hover .fl-chk,.fl tr.sel .fl-chk{border-color:var(--bl)}
 #sb-s{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 #sb-c{margin-left:auto;white-space:nowrap}
 
-/* ─ Modals ─ */
+/* - Modals - */
 .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:100;display:flex;align-items:center;justify-content:center;padding:14px}
 .modal{background:var(--s1);border:1px solid var(--bd);border-radius:12px;max-height:92vh;display:flex;flex-direction:column;box-shadow:var(--shadow);overflow:hidden}
 .modal-hd{padding:13px 16px;border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:10px;flex-shrink:0}
@@ -303,7 +303,7 @@ tr:hover .fl-chk,.fl tr.sel .fl-chk{border-color:var(--bl)}
       </div>
       <button id="btnReg" class="btn primary full">Create account</button>
       <div id="errReg" class="auth-err bad"></div>
-      <div class="auth-hint">Password is hashed in your browser — the server never sees it.</div>
+      <div class="auth-hint">Password is hashed in your browser - the server never sees it.</div>
     </div>
 
     <div id="stepLogin" class="auth-form h">
@@ -371,7 +371,7 @@ tr:hover .fl-chk,.fl tr.sel .fl-chk{border-color:var(--bl)}
 <div id="prevModal" class="modal-bg h">
   <div class="modal" style="width:min(820px,100%)">
     <div class="modal-hd">
-      <div style="flex:1;min-width:0"><div class="modal-hd-title" id="pName">—</div><div style="font-size:11px;color:var(--tx2);margin-top:1px" id="pMeta"></div></div>
+      <div style="flex:1;min-width:0"><div class="modal-hd-title" id="pName">-</div><div style="font-size:11px;color:var(--tx2);margin-top:1px" id="pMeta"></div></div>
       <button class="btn ghost sm" id="btnPrevDl">⬇️</button>
       <div class="x-btn" id="btnPrevX">✕</div>
     </div>
@@ -459,7 +459,7 @@ tr:hover .fl-chk,.fl tr.sel .fl-chk{border-color:var(--bl)}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
 <script>
-// ── Popup callback detection ──────────────────────────────────────────────────
+// -- Popup callback detection
 (function(){
   var p=new URLSearchParams(location.search);
   var code=p.get('code'),err=p.get('error');
@@ -471,7 +471,7 @@ tr:hover .fl-chk,.fl tr.sel .fl-chk{border-color:var(--bl)}
 </script>
 
 <script type="module">
-// ── Safe storage helpers ──────────────────────────────────────────────────────
+// -- Safe storage helpers
 const LS={
   get:(k,d='')=>{try{return localStorage.getItem(k)||d;}catch{return d;}},
   set:(k,v)=>{try{localStorage.setItem(k,v);}catch{}},
@@ -486,10 +486,10 @@ const SS={
 const BACKEND='https://script.google.com/macros/s/AKfycbzict1PB8A-nDDI0Rq44heHJcLoHwYLTUO7ckNcoeeHMdA5tm1dxmTgsUkW4CttOCWugQ/exec';
 
 const PROVIDERS={
-  mega:{id:'mega',name:'MEGA',icon:'🔷',auth:'password',multi:false,inactivity:'3 months (free)',tosLevel:'bad',tos:'⛔ 1 account per person only. Free data deleted after 3 months inactivity — using this vault resets the clock.'},
+  mega:{id:'mega',name:'MEGA',icon:'🔷',auth:'password',multi:false,inactivity:'3 months (free)',tosLevel:'bad',tos:'⛔ 1 account per person only. Free data deleted after 3 months inactivity - using this vault resets the clock.'},
   gdrive:{id:'gdrive',name:'Google Drive',icon:'🟢',auth:'google',multi:true,inactivity:'2 years',tosLevel:'ok',tos:'✅ Multiple Google accounts fine. 15 GB free per account.'},
   box:{id:'box',name:'Box',icon:'🗃️',auth:'box',multi:true,inactivity:'No stated policy',tosLevel:'ok',tos:'✅ Box allows multiple accounts. 10 GB free.<br><br><strong>Required:</strong> In Box Developer Console → your app → Configuration → CORS Domains → add <code>https://n0nam3-bot.github.io</code>'},
-  dropbox:{id:'dropbox',name:'Dropbox',icon:'📦',auth:'dropbox',multi:false,inactivity:'12 months (free)',tosLevel:'warn',tos:'⚠️ 1 Dropbox per person. Inactivity limit 12 months — vault usage resets it. 2 GB free.',authUrl:'https://www.dropbox.com/oauth2/authorize',tokenUrl:'https://api.dropboxapi.com/oauth2/token',scopes:['files.metadata.read','files.metadata.write','files.content.read','files.content.write','account_info.read']},
+  dropbox:{id:'dropbox',name:'Dropbox',icon:'📦',auth:'dropbox',multi:false,inactivity:'12 months (free)',tosLevel:'warn',tos:'⚠️ 1 Dropbox per person. Inactivity limit 12 months - vault usage resets it. 2 GB free.',authUrl:'https://www.dropbox.com/oauth2/authorize',tokenUrl:'https://api.dropboxapi.com/oauth2/token',scopes:['files.metadata.read','files.metadata.write','files.content.read','files.content.write','account_info.read']},
 };
 
 const S={
@@ -504,7 +504,7 @@ const S={
   cfg:{},popup:null,popupHandler:null,
 };
 
-// ── Crypto ────────────────────────────────────────────────────────────────────
+// -- Crypto
 const h2u=h=>{const a=new Uint8Array(h.length/2);for(let i=0;i<a.length;i++)a[i]=parseInt(h.slice(i*2,i*2+2),16);return a;};
 const u2h=b=>[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('');
 const rnd=n=>u2h(crypto.getRandomValues(new Uint8Array(n)));
@@ -516,7 +516,7 @@ const mkHash=(pw,salt)=>sha256(pw+salt);
 const mkCV=()=>{const a=crypto.getRandomValues(new Uint8Array(48));return btoa(String.fromCharCode(...a)).replace(/\+/g,'-').replace(/\//g,'_').replace(/=/g,'').slice(0,128);};
 async function mkCC(v){const h=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(v));return btoa(String.fromCharCode(...new Uint8Array(h))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=/g,'');}
 
-// ── API ───────────────────────────────────────────────────────────────────────
+// -- API
 async function api(action,payload={}){
   const url=new URL(BACKEND);
   url.searchParams.set('action',action);
@@ -525,19 +525,19 @@ async function api(action,payload={}){
   try{res=await fetch(url.toString(),{redirect:'follow'});text=await res.text();}
   catch(e){throw new Error('Network error: '+e.message);}
   text=text.trim().replace(/^\uFEFF/,'');
-  let d;try{d=JSON.parse(text);}catch{throw new Error('Server error — redeploy Apps Script as "Anyone".');}
+  let d;try{d=JSON.parse(text);}catch{throw new Error('Server error - redeploy Apps Script as "Anyone".');}
   if(d.ok===false)throw new Error(d.error||'Server error');
   return d;
 }
 
-// ── Helpers ───────────────────────────────────────────────────────────────────
+// -- Helpers
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 const norm=s=>String(s??'').trim().toLowerCase();
 const show=id=>$(id)&&$(id).classList.remove('h');
 const hide=id=>$(id)&&$(id).classList.add('h');
-function fmtSz(b){if(!b||b<0)return'—';const u=['B','KB','MB','GB','TB'];let i=0,n=b;while(n>=1024&&i<4){n/=1024;i++;}return n.toFixed(i?1:0)+' '+u[i];}
-function fmtDt(ts){if(!ts)return'—';return new Date(ts).toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'});}
+function fmtSz(b){if(!b||b<0)return'-';const u=['B','KB','MB','GB','TB'];let i=0,n=b;while(n>=1024&&i<4){n/=1024;i++;}return n.toFixed(i?1:0)+' '+u[i];}
+function fmtDt(ts){if(!ts)return'-';return new Date(ts).toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'});}
 function fileMime(n=''){const e=(n||'').split('.').pop().toLowerCase();const map={jpg:'image/jpeg',jpeg:'image/jpeg',png:'image/png',gif:'image/gif',webp:'image/webp',svg:'image/svg+xml',mp4:'video/mp4',mov:'video/mp4',webm:'video/webm',mp3:'audio/mpeg',ogg:'audio/ogg',wav:'audio/wav',flac:'audio/flac',aac:'audio/aac',m4a:'audio/mp4',pdf:'application/pdf',doc:'application/msword',docx:'application/vnd.openxmlformats-officedocument.wordprocessingml.document',xls:'application/vnd.ms-excel',xlsx:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',ppt:'application/vnd.ms-powerpoint',pptx:'application/vnd.openxmlformats-officedocument.presentationml.presentation'};return map[e]||'text/plain';}
 function ftype(f){const m=(f.mime||'').toLowerCase(),e=(f.name||'').split('.').pop().toLowerCase();if(m.startsWith('image/')||['jpg','jpeg','png','gif','webp','avif','bmp','heic','svg'].includes(e))return'image';if(m.startsWith('video/')||['mp4','mov','webm','mkv','avi','m4v'].includes(e))return'video';if(m.startsWith('audio/')||['mp3','ogg','wav','flac','aac','m4a','opus'].includes(e))return'audio';if(e==='pdf'||m==='application/pdf')return'pdf';if(['doc','docx'].includes(e)||m.includes('word'))return'word';if(['xls','xlsx'].includes(e)||m.includes('excel')||m.includes('spreadsheet'))return'excel';if(['ppt','pptx'].includes(e)||m.includes('powerpoint')||m.includes('presentation'))return'ppt';if(['txt','md','csv','json','xml','html','htm','js','ts','jsx','tsx','css','scss','py','rb','sh','yaml','yml','log','sql','php'].includes(e)||m.startsWith('text/'))return'text';if(m.includes('google-apps.document'))return'word';if(m.includes('google-apps.spreadsheet'))return'excel';if(m.includes('google-apps.presentation'))return'ppt';return'file';}
 const FICO={image:'🖼️',video:'🎬',audio:'🎵',pdf:'📕',word:'📝',excel:'📊',ppt:'📑',text:'📄',file:'📄',folder:'📁'};
@@ -548,7 +548,7 @@ function slotLabel(slot){const a=S.encAccts.find(x=>x.slot===slot);if(!a)return'
 function setSt(k,t,s=''){$('sdot').className='sdot '+k;$('sb-t').textContent=t;$('sb-s').textContent=s;}
 function updTok(slot,tokens){const t=JSON.parse(SS.get('vt','{}'));t[slot]={...(t[slot]||{}),...tokens};SS.set('vt',JSON.stringify(t));const a=S.accts.find(x=>x.slot===slot);if(a)Object.assign(a,tokens);}
 
-// ── Auth ──────────────────────────────────────────────────────────────────────
+// -- Auth
 let _email='',_salt='';
 const showStep=id=>['stepEmail','stepReg','stepLogin'].forEach(x=>$(x).classList.toggle('h',x!==id));
 
@@ -603,7 +603,7 @@ async function finishLogin(email,pw,salt,encAccts){
   try{S.cfg=await api('getConfig',{});}catch{}
   const resume=JSON.parse(LS.get('oauthResume','null'));
   if(resume&&resume.code&&resume.slot&&resume.provider&&S.key){LS.del('oauthResume');try{await finishOAuth(resume.code,resume.slot,resume.provider);}catch(e){console.warn('OAuth resume failed:',e);}}
-  if(!S.accts.length){setSt('warn','No storage configured','Open ⚙️ Settings to add accounts');show('loadState');$('loadMsg').textContent='No storage slots yet — open Settings to add your first account.';buildSidebar();}
+  if(!S.accts.length){setSt('warn','No storage configured','Open ⚙️ Settings to add accounts');show('loadState');$('loadMsg').textContent='No storage slots yet - open Settings to add your first account.';buildSidebar();}
   else{await connectAll();}
 }
 
@@ -629,10 +629,10 @@ $('btnReg').addEventListener('click',doReg);
 $('btnLogin').addEventListener('click',doLogin);
 $('btnAvatar').addEventListener('click',()=>{if(confirm('Sign out?'))signOut();});
 
-// ── Config ────────────────────────────────────────────────────────────────────
+// -- Config
 const cid=p=>({gdrive:S.cfg.googleClientId,box:S.cfg.boxClientId,dropbox:S.cfg.dropboxClientId}[p]||'');
 
-// ── MEGA ──────────────────────────────────────────────────────────────────────
+// -- MEGA
 async function connectMega(a){
   let Stor;
   try{const m=await import('https://unpkg.com/megajs/dist/main.browser-es.mjs');Stor=m.Storage;}
@@ -653,7 +653,7 @@ async function connectMega(a){
   };
 }
 
-// ── Dropbox ───────────────────────────────────────────────────────────────────
+// -- Dropbox
 async function connectDropbox(a){
   let{accessToken,refreshToken,expiresAt}=a;
   async function tok(){if(Date.now()>expiresAt-60000){const r=await fetch('https://api.dropboxapi.com/oauth2/token',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({grant_type:'refresh_token',refresh_token:refreshToken,client_id:cid('dropbox')})});const d=await r.json();if(d.error)throw new Error('Dropbox refresh: '+d.error_description);accessToken=d.access_token;expiresAt=Date.now()+(d.expires_in||14400)*1000;updTok(a.slot,{accessToken,expiresAt});}return accessToken;}
@@ -674,7 +674,7 @@ async function connectDropbox(a){
   };
 }
 
-// ── Google Drive ──────────────────────────────────────────────────────────────
+// -- Google Drive
 async function connectGoogle(a){
   let{accessToken,refreshToken,expiresAt}=a;
   async function tok(){if(Date.now()>expiresAt-60000){const r=await api('grefresh',{refreshToken});accessToken=r.accessToken;expiresAt=r.expiresAt;updTok(a.slot,{accessToken,expiresAt});}return accessToken;}
@@ -696,7 +696,7 @@ async function connectGoogle(a){
   };
 }
 
-// ── Box ───────────────────────────────────────────────────────────────────────
+// -- Box
 async function connectBox(a){
   let{accessToken,refreshToken,expiresAt}=a;
   async function tok(){if(Date.now()>expiresAt-60000){const r=await api('brefresh',{refreshToken});accessToken=r.accessToken;if(r.refreshToken)refreshToken=r.refreshToken;expiresAt=r.expiresAt;updTok(a.slot,{accessToken,refreshToken,expiresAt});}return accessToken;}
@@ -719,7 +719,7 @@ async function connectBox(a){
 
 async function connectOne(a){switch(a.provider){case'dropbox':return connectDropbox(a);case'gdrive':return connectGoogle(a);case'box':return connectBox(a);default:return connectMega(a);}}
 
-// ── Connect all ───────────────────────────────────────────────────────────────
+// -- Connect all
 async function connectAll(){
   setSt('warn','Connecting…','');
   show('loadState');hide('emptyState');$('fgGrid').innerHTML='';$('flBody').innerHTML='';
@@ -734,13 +734,13 @@ async function connectAll(){
   setSt(failed.length?'warn':'ok',S.files.length+' files · '+S.stores.length+' slot(s)',failed.length?failed.length+' failed':'');
 }
 
-// ── OAuth ─────────────────────────────────────────────────────────────────────
+// -- OAuth
 function openPopup(url,slot,provider){
   if(S.popup&&!S.popup.closed)S.popup.close();
   if(S.popupHandler)window.removeEventListener('message',S.popupHandler);
   const w=520,h=640,left=Math.round(screenX+(outerWidth-w)/2),top=Math.round(screenY+(outerHeight-h)/2);
   S.popup=window.open(url,'vault_oauth',`width=${w},height=${h},left=${left},top=${top},scrollbars=yes`);
-  if(!S.popup){alert('Popup blocked — allow popups for this site, then try again.');return;}
+  if(!S.popup){alert('Popup blocked - allow popups for this site, then try again.');return;}
   setSt('warn','Waiting for authorization…','Authorize in the popup, then return here.');
   S.popupHandler=async e=>{
     if(e.origin!==location.origin||e.data?.type!=='vault_oauth')return;
@@ -781,7 +781,7 @@ async function oauthGoogle(slot){const k=cid('gdrive');if(!k){alert('GOOGLE_CLIE
 async function oauthBox(slot){const k=cid('box');if(!k){alert('BOX_CLIENT_ID not set in Script Properties.');return;}const redir=location.href.split('?')[0].split('#')[0];LS.set('oauthPending',JSON.stringify({cv:'',slot,provider:'box',redir}));openPopup('https://account.box.com/api/oauth2/authorize?'+new URLSearchParams({client_id:k,response_type:'code',redirect_uri:redir,state:'box'}),slot,'box');}
 async function oauthDropbox(slot){const k=cid('dropbox');if(!k){alert('DROPBOX_CLIENT_ID not set in Script Properties.');return;}const cv=mkCV(),cc=await mkCC(cv);const redir=location.href.split('?')[0].split('#')[0];LS.set('oauthPending',JSON.stringify({cv,slot,provider:'dropbox',redir}));const prov=PROVIDERS.dropbox;const p=new URLSearchParams({client_id:k,response_type:'code',redirect_uri:redir,scope:prov.scopes.join(' '),state:'dropbox',code_challenge:cc,code_challenge_method:'S256',token_access_type:'offline'});openPopup(prov.authUrl+'?'+p,slot,'dropbox');}
 
-// ── Sidebar ───────────────────────────────────────────────────────────────────
+// -- Sidebar
 function buildSidebar(){
   const cnt={};for(const f of S.files)cnt[f.slot]=(cnt[f.slot]||0)+1;
   $('sbAllCnt').textContent=S.files.length;
@@ -802,7 +802,7 @@ function buildSidebar(){
 }
 function buildUpSel(){const sel=$('upSlot');sel.innerHTML=S.stores.map(s=>`<option value="${s.slot}">${provIco(s.slot)} ${esc(slotLabel(s.slot))}</option>`).join('');sel.style.display=S.stores.length>1?'':'none';}
 
-// ── Breadcrumb ────────────────────────────────────────────────────────────────
+// -- Breadcrumb
 function buildBc(){
   const bc=$('breadcrumb');
   if(S.trash){bc.classList.remove('h');bc.innerHTML=`<div class="bc" id="bcHome">🏠 My Drive</div><span class="bc-sep">›</span><div class="bc" id="bcSlotB">${provIco(S.trashSlot)} ${esc(slotLabel(S.trashSlot))}</div><span class="bc-sep">›</span><div class="bc cur">🗑 Trash</div>`;$('bcHome').onclick=()=>{S.slot='all';S.path=null;S.trash=false;S.trashSlot=null;buildSidebar();render();};$('bcSlotB').onclick=()=>{S.slot=String(S.trashSlot);S.path='';S.trash=false;S.trashSlot=null;buildSidebar();render();};return;}
@@ -817,7 +817,7 @@ function buildBc(){
   bc.querySelectorAll('[data-bp]').forEach(el=>el.addEventListener('click',()=>{S.path=el.dataset.bp;buildBc();render();}));
 }
 
-// ── Render ────────────────────────────────────────────────────────────────────
+// -- Render
 function render(){
   if(S.trash){renderTrash();return;}
   S.q=norm($('searchIn').value);
@@ -845,7 +845,7 @@ function renderGrid(folders,files){
 }
 function renderList(folders,files){
   hide('fgWrap');show('flWrap');
-  $('flBody').innerHTML=folders.map(f=>`<tr data-fid="${esc(f.id)}"><td><div class="fl-chk"></div></td><td><span>${FICO.folder}</span></td><td class="nm">${esc(f.name)}</td><td>—</td><td>—</td><td>${provIco(f.slot)} ${esc(slotLabel(f.slot))}</td></tr>`).join('')+
+  $('flBody').innerHTML=folders.map(f=>`<tr data-fid="${esc(f.id)}"><td><div class="fl-chk"></div></td><td><span>${FICO.folder}</span></td><td class="nm">${esc(f.name)}</td><td>-</td><td>-</td><td>${provIco(f.slot)} ${esc(slotLabel(f.slot))}</td></tr>`).join('')+
   files.map(f=>{const s=S.sel.has(f.id);return`<tr data-id="${esc(f.id)}" class="${s?'sel':''}"><td><div class="fl-chk${s?' sel':''}">${s?'✓':''}</div></td><td><span>${ficon(f)}</span></td><td class="nm">${esc(f.name)}</td><td>${fmtSz(f.size)}</td><td>${fmtDt(f.ts)}</td><td>${provIco(f.slot)} ${esc(slotLabel(f.slot))}</td></tr>`;}).join('');
   wire($('flBody'));
 }
@@ -868,7 +868,7 @@ $('btnNewFolder').addEventListener('click',newFolder);
 $('btnDelSel').addEventListener('click',delSelected);
 $('btnMoveSel').addEventListener('click',()=>openMove([...S.sel]));
 
-// ── Context menu ─────────────────────────────────────────────────────────────
+// -- Context menu
 let _ctx=null;
 function closeCtx(){if(_ctx){_ctx.remove();_ctx=null;}}
 function ctxMenu(file,folder,x,y){
@@ -880,16 +880,16 @@ function ctxMenu(file,folder,x,y){
   document.body.appendChild(_ctx);setTimeout(()=>document.addEventListener('click',closeCtx,{once:true}),0);
 }
 
-// ── Folders ───────────────────────────────────────────────────────────────────
+// -- Folders
 async function newFolder(){if(S.slot==='all'){alert('Select a storage slot first.');return;}const st=S.stores.find(s=>s.slot==S.slot);if(!st){alert('Slot not connected.');return;}const name=prompt('Folder name:');if(!name?.trim())return;try{const parts=S.path?S.path.split('/').filter(Boolean):[];const parent=st.resolve(parts)||st._st?.root||{id:'root'};const node=await st.mkdir(parent,name.trim());S.folders.push({id:node.id||node.nodeId||'d'+Date.now(),name:name.trim(),slot:Number(S.slot),path:S.path||'',node});buildSidebar();render();setSt('ok','Folder created','');}catch(e){alert('Failed: '+e.message);}}
 async function renameFolder(folder){const name=prompt('New name:',folder.name);if(!name?.trim()||name.trim()===folder.name)return;const st=S.stores.find(s=>s.slot===folder.slot);if(!st)return;try{await(st.renameDir||st.rename)(folder.node,name.trim());const oldFull=(folder.path?folder.path+'/':'')+folder.name;const newFull=(folder.path?folder.path+'/':'')+name.trim();const f=S.folders.find(x=>x.id===folder.id);if(f)f.name=name.trim();S.files.forEach(x=>{if(x.path===oldFull)x.path=newFull;else if(x.path.startsWith(oldFull+'/'))x.path=newFull+x.path.slice(oldFull.length);});S.folders.forEach(x=>{if(x.path===oldFull)x.path=newFull;else if(x.path.startsWith(oldFull+'/'))x.path=newFull+x.path.slice(oldFull.length);});if(S.path===oldFull)S.path=newFull;render();setSt('ok','Renamed','');}catch(e){alert('Rename failed: '+e.message);}}
 async function deleteFolder(folder){if(!confirm('Delete folder "'+folder.name+'" and all contents?'))return;const st=S.stores.find(s=>s.slot===folder.slot);if(!st)return;try{await(st.delDir||st.del)(folder.node);const full=(folder.path?folder.path+'/':'')+folder.name;S.files=S.files.filter(x=>x.path!==full&&!x.path.startsWith(full+'/'));S.folders=S.folders.filter(x=>x.id!==folder.id&&x.path!==full&&!x.path.startsWith(full+'/'));if(S.path===full||S.path?.startsWith(full+'/'))S.path=folder.path||'';buildSidebar();render();setSt('ok','Deleted','');}catch(e){alert('Delete failed: '+e.message);}}
 
-// ── File delete ───────────────────────────────────────────────────────────────
+// -- File delete
 async function delFile(file){if(!confirm('Delete "'+file.name+'"?'))return;const st=S.stores.find(s=>s.slot===file.slot);if(!st)return;try{await st.del(file.node);S.files=S.files.filter(x=>x.id!==file.id);S.sel.delete(file.id);closePrev();buildSidebar();render();setSt('ok','Deleted','');}catch(e){alert('Delete failed: '+e.message);}}
 async function delSelected(){const n=S.sel.size;if(!n)return;if(!confirm('Delete '+n+' file'+(n!==1?'s':'')+'?'))return;const ids=[...S.sel];let done=0;for(const id of ids){const f=S.files.find(x=>x.id===id);if(!f)continue;try{const st=S.stores.find(s=>s.slot===f.slot);if(st)await st.del(f.node);done++;}catch{}S.files=S.files.filter(x=>x.id!==id);}S.sel.clear();buildSidebar();render();setSt('ok','Deleted '+done,'');}
 
-// ── Preview ───────────────────────────────────────────────────────────────────
+// -- Preview
 async function openPreview(file){
   S.preview=file;$('pName').textContent=file.name;$('pMeta').textContent=fmtSz(file.size)+' · '+fmtDt(file.ts);$('pSlot').textContent=provIco(file.slot)+' '+slotLabel(file.slot)+(file.path?' › '+file.path:'');
   $('prevBody').innerHTML='<div class="state"><div class="state-ico">⏳</div></div>';$('prevBody').style.display='';
@@ -908,7 +908,7 @@ async function openPreview(file){
     else if(t==='pdf'){$('prevBody').style.display='block';$('prevBody').innerHTML=`<embed src="${S.prevUrl}" type="application/pdf" style="width:100%;height:62vh;border:none;display:block"/>`;}
     else if(t==='word'){$('prevBody').style.display='block';const r=await mammoth.convertToHtml({arrayBuffer:buf.buffer||buf.slice().buffer});$('prevBody').innerHTML=`<div class="doc-wrap">${r.value}</div>`;}
     else if(t==='excel'){const wb=XLSX.read(buf,{type:'array'});const ws=wb.Sheets[wb.SheetNames[0]];$('prevBody').innerHTML=`<div class="xl-wrap">${XLSX.utils.sheet_to_html(ws)}</div>`;}
-    else if(t==='ppt')$('prevBody').innerHTML=`<div class="dl-card"><div class="dl-card-ico">📑</div><div class="dl-card-name">${esc(file.name)}</div><div class="dl-card-meta">${fmtSz(file.size)}</div><p style="font-size:12px;color:var(--tx2);max-width:260px;text-align:center">Presentations can't render inline — download to open in PowerPoint.</p><button class="btn primary" onclick="document.getElementById('btnPrevDl').click()" style="margin-top:6px">⬇️ Download</button></div>`;
+    else if(t==='ppt')$('prevBody').innerHTML=`<div class="dl-card"><div class="dl-card-ico">📑</div><div class="dl-card-name">${esc(file.name)}</div><div class="dl-card-meta">${fmtSz(file.size)}</div><p style="font-size:12px;color:var(--tx2);max-width:260px;text-align:center">Presentations can't render inline - download to open in PowerPoint.</p><button class="btn primary" onclick="document.getElementById('btnPrevDl').click()" style="margin-top:6px">⬇️ Download</button></div>`;
     else if(t==='text')$('prevBody').innerHTML=`<pre>${esc(new TextDecoder().decode(buf).slice(0,80000))}</pre>`;
     else $('prevBody').innerHTML=`<div class="dl-card"><div class="dl-card-ico">${ficon(file)}</div><div class="dl-card-name">${esc(file.name)}</div><div class="dl-card-meta">${fmtSz(file.size)}</div><button class="btn primary" onclick="document.getElementById('btnPrevDl').click()" style="margin-top:6px">⬇️ Download</button></div>`;
   }catch(e){$('prevBody').innerHTML=`<div class="dl-card"><div class="dl-card-ico">❌</div><div class="dl-card-meta">${esc(e.message)}</div><button class="btn primary" onclick="document.getElementById('btnPrevDl').click()" style="margin-top:6px">Try Download</button></div>`;}
@@ -927,7 +927,7 @@ $('renIn').addEventListener('keydown',e=>{if(e.key==='Enter')doRename();if(e.key
 function startRename(){if(!S.preview)return;show('renRow');$('renIn').value=S.preview.name;$('renIn').focus();$('renIn').select();}
 async function doRename(){if(!S.preview)return;const name=$('renIn').value.trim();if(!name||name===S.preview.name){$('btnRenX').click();return;}$('btnRenOk').disabled=true;$('btnRenOk').textContent='…';try{const st=S.stores.find(s=>s.slot===S.preview.slot);if(st)await st.rename(S.preview.node,name);const f=S.files.find(x=>x.id===S.preview.id);if(f)f.name=name;S.preview.name=name;$('pName').textContent=name;hide('renRow');render();setSt('ok','Renamed','');}catch(e){alert('Rename failed: '+e.message);}finally{$('btnRenOk').disabled=false;$('btnRenOk').textContent='✓';}}
 
-// ── Move ─────────────────────────────────────────────────────────────────────
+// -- Move
 function openMove(ids){S.moveIds=ids;S.moveTarget=null;const files=S.files.filter(f=>ids.includes(f.id));$('moveInfo').textContent=files.length+' file'+(files.length!==1?'s':'')+' selected';const cnt={};for(const f of S.files)cnt[f.slot]=(cnt[f.slot]||0)+1;$('moveSlots').innerHTML=S.stores.map(st=>{const toMove=files.filter(f=>f.slot!==st.slot).length;return`<div class="msc ${toMove===0?'dis':''}" data-ms="${st.slot}"><div class="msc-ico">${provIco(st.slot)}</div><div><div class="msc-name">${esc(slotLabel(st.slot))}</div><div class="msc-meta">${st.identifier||''} · ${cnt[st.slot]||0} files</div></div></div>`;}).join('');$('moveSlots').querySelectorAll('.msc:not(.dis)').forEach(el=>el.addEventListener('click',()=>{S.moveTarget=Number(el.dataset.ms);$('moveSlots').querySelectorAll('.msc').forEach(c=>c.classList.remove('on'));el.classList.add('on');$('btnDoMove').disabled=false;}));$('btnDoMove').disabled=true;show('moveModal');closePrev();}
 $('btnMoveX').addEventListener('click',()=>hide('moveModal'));$('btnMoveCancel').addEventListener('click',()=>hide('moveModal'));$('moveModal').addEventListener('click',e=>{if(e.target===$('moveModal'))hide('moveModal');});
 $('btnDoMove').addEventListener('click',async()=>{
@@ -938,7 +938,7 @@ $('btnDoMove').addEventListener('click',async()=>{
   hideToast(1600);S.sel.clear();buildSidebar();render();setSt('ok','Moved '+done+' to '+slotLabel(S.moveTarget),'');
 });
 
-// ── Upload ────────────────────────────────────────────────────────────────────
+// -- Upload
 async function runUpload(fileList,slotNum){
   const files=[...fileList].filter(f=>f.size>0);if(!files.length)return;const st=S.stores.find(s=>s.slot===slotNum);if(!st){alert('Slot not connected.');return;}
   const parts=S.slot==slotNum&&S.path?S.path.split('/').filter(Boolean):[];const parent=st.resolve(parts)||st._st?.root||{id:'root'};const upPath=S.slot==slotNum&&S.path?S.path:'';
@@ -953,13 +953,13 @@ mainW.addEventListener('dragleave',()=>{_dc--;if(_dc<=0){_dc=0;$('dropOvl').clas
 mainW.addEventListener('dragover',e=>e.preventDefault());
 mainW.addEventListener('drop',e=>{e.preventDefault();_dc=0;$('dropOvl').classList.remove('vis');if(e.dataTransfer.files.length){const slot=Number($('upSlot').value)||S.stores[0]?.slot;if(slot)runUpload(e.dataTransfer.files,slot);}});
 
-// ── Toast ─────────────────────────────────────────────────────────────────────
+// -- Toast
 let _tt=null;
 function showToast(t,s,p){clearTimeout(_tt);$('tTitle').textContent=t;$('tSub').textContent=s;$('tFill').style.width=p+'%';show('toast');}
 function updToast(t,s,p){showToast(t,s,p);}
 function hideToast(d=0){if(d){$('tFill').style.width='100%';_tt=setTimeout(()=>hide('toast'),d);}else hide('toast');}
 
-// ── Trash ─────────────────────────────────────────────────────────────────────
+// -- Trash
 async function openTrash(slot){S.trash=true;S.trashSlot=slot;S.slot=String(slot);buildSidebar();buildBc();show('loadState');hide('emptyState');$('fgGrid').innerHTML='';$('flBody').innerHTML='';$('loadMsg').textContent='Loading trash…';const st=S.stores.find(s=>s.slot===slot);if(!st){hide('loadState');return;}try{S.trashItems=await fetchTrash(st);}catch(e){S.trashItems=[];console.error(e);}hide('loadState');renderTrash();}
 async function fetchTrash(st){const p=st.provider;if(p==='mega'){const items=[];for(const c of(st.trashNode?.children||[]))items.push({id:c.nodeId||c.handle,name:c.name,size:c.size||0,mime:fileMime(c.name),node:c,ts:c.timestamp?c.timestamp*1000:Date.now()});return items;}if(p==='gdrive'){const r=await st._gf('/drive/v3/files?q=trashed%3Dtrue&fields=files(id,name,mimeType,size,trashedTime)&pageSize=200');return(r.files||[]).map(f=>({id:f.id,name:f.name,size:parseInt(f.size)||0,mime:f.mimeType,node:f,ts:f.trashedTime?new Date(f.trashedTime).getTime():Date.now()}));}if(p==='dropbox')return'no-api';if(p==='box'){const r=await st._bf('/folders/trash/items?fields=id,name,type,size,trashed_at&limit=200');return(r.entries||[]).map(e=>({id:e.id,name:e.name,size:e.size||0,mime:fileMime(e.name),node:e,ts:e.trashed_at?new Date(e.trashed_at).getTime():Date.now()}));}return[];}
 function renderTrash(){$('sb-c').textContent=Array.isArray(S.trashItems)?S.trashItems.length+' items in trash':'';hide('fgWrap');hide('flWrap');buildBc();if(S.trashItems==='no-api'){show('emptyState');$('emptyIco').textContent='📦';$('emptyTitle').textContent='Trash unavailable';$('emptySub').innerHTML='Dropbox doesn\'t provide a trash API for personal accounts. <a href="https://www.dropbox.com/trash" target="_blank">Open Dropbox.com → Trash</a>';return;}if(!S.trashItems.length){show('emptyState');$('emptyIco').textContent='🗑️';$('emptyTitle').textContent='Trash is empty';$('emptySub').textContent='';return;}hide('emptyState');
@@ -973,7 +973,7 @@ function renderTrash(){$('sb-c').textContent=Array.isArray(S.trashItems)?S.trash
 async function restoreTrash(item,slot){const st=S.stores.find(s=>s.slot===slot);if(!st)return;const p=st.provider;if(p==='mega')await item.node.moveTo(st._st.root);else if(p==='gdrive')await st._gf(`/drive/v3/files/${item.id}`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({trashed:false})});else if(p==='box'){const t=await st._tok();await fetch(`https://api.box.com/2.0/files/${item.id}`,{method:'POST',headers:{Authorization:'Bearer '+t,'Content-Type':'application/json'},body:JSON.stringify({})});}}
 async function permTrash(item,slot){const st=S.stores.find(s=>s.slot===slot);if(!st)return;const p=st.provider;if(p==='mega')await item.node.delete(true);else if(p==='gdrive')await st._gf(`/drive/v3/files/${item.id}`,{method:'DELETE'});else if(p==='box'){const t=await st._tok();await fetch(`https://api.box.com/2.0/files/${item.id}/trash`,{method:'DELETE',headers:{Authorization:'Bearer '+t}});}}
 
-// ── Settings ──────────────────────────────────────────────────────────────────
+// -- Settings
 function openSettings(){hide('addWrap');renderAccounts();buildSlotDrop();show('settingsModal');}
 $('btnSettings').addEventListener('click',openSettings);
 $('btnSettingsX').addEventListener('click',()=>hide('settingsModal'));
@@ -982,7 +982,7 @@ $('settingsModal').querySelectorAll('.stab').forEach(t=>t.addEventListener('clic
 
 function renderAccounts(){
   const list=$('acctList');
-  if(!S.encAccts.length){list.innerHTML='<div style="padding:10px;color:var(--tx2);font-size:13px">No accounts yet — click "+ Add account".</div>';return;}
+  if(!S.encAccts.length){list.innerHTML='<div style="padding:10px;color:var(--tx2);font-size:13px">No accounts yet - click "+ Add account".</div>';return;}
   list.innerHTML=S.encAccts.map(a=>{const prov=PROVIDERS[a.provider]||PROVIDERS.mega;const tc=prov.tosLevel==='ok'?'color:var(--gn)':prov.tosLevel==='warn'?'color:var(--yw)':'color:var(--rd)';return`<div class="acct"><div class="acct-hd"><div class="acct-pico">${prov.icon}</div><div><div class="acct-pname">${prov.name}</div><div class="acct-email">${esc(a.identifier)}</div></div><div class="acct-slot">S${a.slot}</div></div><div class="acct-ft"><div class="acct-tos" style="${tc}">⏰ ${prov.inactivity}</div>${a.provider==='mega'?`<button class="btn ghost sm" data-ed="${a.slot}">✏️ Edit</button>`:`<button class="btn ghost sm" data-ra="${a.slot}" data-rp="${a.provider}">🔄 Re-auth</button>`}<button class="btn danger sm" data-dl="${a.slot}">Remove</button></div>${a.provider==='mega'?`<div class="acct-edit" id="ae-${a.slot}"><div class="ff"><label class="ff-lbl">New MEGA password</label><div class="pw-wrap"><input class="ff-inp" type="password" id="epw-${a.slot}" placeholder="New password"/><button class="eye-btn" data-t="epw-${a.slot}">👁</button></div></div><div style="display:flex;gap:6px;align-items:center"><button class="btn primary sm" data-sv="${a.slot}">Save</button><button class="btn ghost sm" data-cx="${a.slot}">Cancel</button><span class="err-msg bad" id="eerr-${a.slot}"></span></div></div>`:''}</div>`;}).join('');
   list.querySelectorAll('[data-ed]').forEach(b=>b.addEventListener('click',()=>{const el=$('ae-'+b.dataset.ed);if(el)el.classList.toggle('on');}));
   list.querySelectorAll('[data-cx]').forEach(b=>b.addEventListener('click',()=>{const el=$('ae-'+b.dataset.cx);if(el)el.classList.remove('on');}));
@@ -995,7 +995,7 @@ async function saveCreds(slot){const pw=$('epw-'+slot)?.value;const err=$('eerr-
 async function delSlot(slot){if(!confirm('Remove Slot '+slot+'? This does NOT delete the actual storage account.'))return;try{await api('deleteStorage',{email:S.email,passwordHash:S.hash,slot});S.encAccts=S.encAccts.filter(a=>a.slot!==slot);S.accts=S.accts.filter(a=>a.slot!==slot);S.stores=S.stores.filter(s=>s.slot!==slot);S.files=S.files.filter(f=>f.slot!==slot);S.folders=S.folders.filter(f=>f.slot!==slot);renderAccounts();buildSlotDrop();buildSidebar();buildUpSel();render();setSt('ok','Slot '+slot+' removed','');}catch(e){alert('Failed: '+e.message);}}
 async function reAuth(slot,provider){if(!confirm('Re-authorize '+slotLabel(slot)+'?'))return;try{await api('deleteStorage',{email:S.email,passwordHash:S.hash,slot});S.encAccts=S.encAccts.filter(a=>a.slot!==slot);S.accts=S.accts.filter(a=>a.slot!==slot);S.stores=S.stores.filter(s=>s.slot!==slot);S.files=S.files.filter(f=>f.slot!==slot);S.folders=S.folders.filter(f=>f.slot!==slot);$('slotSel').value=String(slot);if(provider==='gdrive')await oauthGoogle(slot);else if(provider==='box')await oauthBox(slot);else if(provider==='dropbox')await oauthDropbox(slot);}catch(e){alert('Re-auth failed: '+e.message);}}
 
-// ── Add account ───────────────────────────────────────────────────────────────
+// -- Add account
 let _selProv=null;
 $('btnAddAcct').addEventListener('click',()=>{$('addWrap').classList.toggle('on');if($('addWrap').classList.contains('on')){buildProvGrid();showAddStep(1);}});
 $('btnCancelAdd').addEventListener('click',()=>{$('addWrap').classList.remove('on');_selProv=null;});
@@ -1015,7 +1015,7 @@ $('btnSaveMega').addEventListener('click',async()=>{
   }catch(e){$('addErr2').textContent=e.message;}finally{$('btnSaveMega').disabled=false;$('btnSaveMega').textContent='Save';}
 });
 
-// ── Change password ───────────────────────────────────────────────────────────
+// -- Change password
 $('btnChangePw').addEventListener('click',async()=>{
   const old=$('cpwOld').value,n1=$('cpwNew1').value,n2=$('cpwNew2').value;const el=$('cpwMsg');el.className='err-msg bad';el.textContent='';
   if(!old||!n1||!n2){el.textContent='All fields required.';return;}if(n1.length<8){el.textContent='Min 8 characters.';return;}if(n1!==n2){el.textContent='Passwords do not match.';return;}
@@ -1025,7 +1025,7 @@ $('btnChangePw').addEventListener('click',async()=>{
   catch(e){el.textContent=e.message;}finally{$('btnChangePw').disabled=false;$('btnChangePw').textContent='Update password';}
 });
 
-// ── PW strength & eye ─────────────────────────────────────────────────────────
+// -- PW strength & eye
 function pwStr(pw){let s=0;if(pw.length>=8)s++;if(pw.length>=12)s++;if(/[A-Z]/.test(pw))s++;if(/[0-9]/.test(pw))s++;if(/[^A-Za-z0-9]/.test(pw))s++;return s;}
 function setBar(id,pw){const b=$(id);if(!b)return;if(!pw){b.style.width='0';return;}const s=pwStr(pw);b.style.width=(s/5*100)+'%';b.style.background=['#f85149','#e3b341','#f0883e','#3fb950','#2ea043'][Math.min(s-1,4)];}
 $('inReg1').addEventListener('input',e=>setBar('regPwBar',e.target.value));
@@ -1033,5 +1033,11 @@ $('cpwNew1').addEventListener('input',e=>setBar('cpwBar',e.target.value));
 function attachEye(btn){btn.addEventListener('click',()=>{const inp=$(btn.dataset.t);if(!inp)return;inp.type=inp.type==='password'?'text':'password';btn.textContent=inp.type==='password'?'👁':'🙈';});}
 document.querySelectorAll('.eye-btn').forEach(attachEye);
 
-// ── Keyboard ──────────────────────────────────────────────────────────────────
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeCtx();['prevModal','moveModal','settingsModal'].forEach(id=>$(id)?
+// -- Keyboard
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeCtx();['prevModal','moveModal','settingsModal'].forEach(id=>$(id)?.classList.add('h'));}if((e.ctrlKey||e.metaKey)&&e.key==='a'&&!$('appWrap').classList.contains('h')){e.preventDefault();S.files.filter(f=>S.slot==='all'||f.slot==S.slot).forEach(f=>S.sel.add(f.id));render();}});
+
+// -- Init
+applyView();
+</script>
+</body>
+</html>
