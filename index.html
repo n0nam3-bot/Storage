@@ -269,6 +269,128 @@ tr:hover .fl-chk,.fl tr.sel .fl-chk{border-color:var(--bl)}
 .tr-name{flex:1;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .tr-size{font-size:11px;color:var(--tx3);width:65px;text-align:right;flex-shrink:0}
 .tr-acts{display:flex;gap:4px;flex-shrink:0}
+
+/* ====== RESPONSIVE / MOBILE ====== */
+
+/* Hamburger button (mobile only) */
+#menuBtn{display:none;width:36px;height:36px;border-radius:var(--r);align-items:center;justify-content:center;font-size:20px;color:var(--tx2);cursor:pointer;flex-shrink:0}
+#menuBtn:hover{background:var(--s2)}
+
+/* Sidebar overlay backdrop */
+#sideOverlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:49}
+
+/* File grid responsive columns */
+.fg{grid-template-columns:repeat(auto-fill,minmax(160px,1fr))}
+
+/* Modals - full screen on small screens */
+@media(max-width:600px){
+  /* Topbar */
+  #topbar{padding:0 10px;gap:7px}
+  .tb-logo-txt{display:none}
+  .tb-search{padding:6px 10px}
+  .tb-search input{font-size:13px}
+  .tb-actions{gap:3px}
+  .tb-ico-btn{width:34px;height:34px;font-size:15px}
+  .tb-avatar{width:28px;height:28px;font-size:12px}
+  #menuBtn{display:flex}
+
+  /* Sidebar becomes slide-in drawer */
+  #sidebar{
+    position:fixed;left:-220px;top:0;bottom:0;z-index:50;
+    transition:left .22s ease;box-shadow:var(--shadow);
+    width:220px;padding-top:54px;
+  }
+  #sidebar.open{left:0}
+  #sideOverlay.open{display:block}
+
+  /* Body takes full width */
+  #bodyWrap{display:block}
+
+  /* File grid: 2 columns on mobile */
+  .fg{grid-template-columns:repeat(2,1fr);gap:3px;padding:4px}
+  .fc-name{font-size:11px}
+  .fc-meta{font-size:10px}
+  .fc-thumb{font-size:26px}
+
+  /* Toolbar compact */
+  #toolbar{padding:6px 8px;gap:5px}
+  .btn.sm{padding:6px 10px;font-size:12px}
+  #btnNewFolder span:last-child{display:none}
+
+  /* Breadcrumb compact */
+  #breadcrumb{padding:5px 10px;font-size:12px}
+  .bc{padding:2px 5px}
+
+  /* Status bar */
+  #statusbar{padding:0 8px;gap:5px;font-size:10px}
+  #sb-s{display:none}
+
+  /* Modals full-screen */
+  .modal-bg{padding:0;align-items:flex-end}
+  .modal{border-radius:14px 14px 0 0;width:100%!important;max-height:92vh}
+  .modal-hd{padding:12px 14px}
+  .modal-body{padding:12px}
+  .modal-ft{padding:10px 14px}
+
+  /* Preview modal full height */
+  #prevModal .modal{max-height:96vh}
+  .prev-body{max-height:55vh}
+  .prev-body embed,.prev-body iframe{height:55vh}
+  .prev-body pre{height:55vh}
+  .prev-body .doc-wrap{height:55vh}
+  .prev-body .xl-wrap{height:55vh}
+
+  /* Auth card */
+  .auth-card{width:calc(100vw - 28px);padding:24px 18px}
+
+  /* Settings */
+  .stabs{padding:0 10px}
+  .stab{padding:9px 10px;font-size:12px}
+  .spanel{padding:12px}
+  .prov-grid{grid-template-columns:repeat(3,1fr)}
+  .fgrid{grid-template-columns:1fr}
+
+  /* List view columns - hide some on mobile */
+  .fl-head th:nth-child(5),
+  .fl tbody td:nth-child(5){display:none}
+  .fl-head th:nth-child(6),
+  .fl tbody td:nth-child(6){display:none}
+
+  /* Touch-friendly rows */
+  .fl tbody tr td{padding:10px 8px}
+  .sb-item{padding:9px 10px;min-height:40px}
+  .sb-trash{padding:8px 10px 8px 32px;min-height:36px}
+
+  /* Upload area */
+  .sb-upload{padding:10px 12px}
+
+  /* Move modal */
+  .msc{padding:12px}
+}
+
+@media(min-width:601px) and (max-width:900px){
+  /* Tablet */
+  #sidebar{width:180px}
+  .fg{grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:3px}
+  #topbar{padding:0 12px}
+  .modal-bg{padding:12px}
+}
+
+@media(min-width:901px){
+  /* Desktop - ensure sidebar always visible */
+  #menuBtn{display:none!important}
+  #sidebar{position:relative!important;left:auto!important;transition:none!important}
+  #sideOverlay{display:none!important}
+}
+
+/* Touch: larger tap targets */
+@media(hover:none){
+  .btn{min-height:38px}
+  .btn.sm{min-height:34px}
+  .sb-item{min-height:38px}
+  .fc{-webkit-tap-highlight-color:transparent}
+}
+
 </style>
 </head>
 <body>
@@ -321,7 +443,7 @@ tr:hover .fl-chk,.fl tr.sel .fl-chk{border-color:var(--bl)}
 <!-- APP -->
 <div id="appWrap" class="h">
   <div id="topbar">
-    <div class="tb-logo"><div class="tb-logo-ico">🗄</div><div class="tb-logo-txt">Storage Vault</div></div>
+    <div class="tb-logo"><div id="menuBtn" onclick="toggleSidebar()">☰</div><div class="tb-logo-ico">🗄</div><div class="tb-logo-txt">Storage Vault</div></div>
     <div class="tb-search"><span class="tb-search-ico">🔍</span><input id="searchIn" type="search" placeholder="Search files"/></div>
     <div class="tb-actions">
       <div class="tb-ico-btn" id="btnSettings" title="Settings">⚙️</div>
@@ -330,6 +452,7 @@ tr:hover .fl-chk,.fl tr.sel .fl-chk{border-color:var(--bl)}
     </div>
   </div>
 
+  <div id="sideOverlay" onclick="toggleSidebar()"></div>
   <div id="bodyWrap">
     <div id="sidebar">
       <label class="sb-upload"><span>＋</span><span>Upload files</span><input id="upInput" type="file" multiple style="display:none"/></label>
@@ -796,9 +919,9 @@ function buildSidebar(){
   }
   for(const a of failed)html+=`<div class="sb-item err" data-sl="${a.slot}"><span class="sb-item-ico">${PROVIDERS[a.provider]?.icon||'❓'}</span><span class="sb-item-lbl">${esc(slotLabel(a.slot))} ⚠</span></div>`;
   $('sbSlots').innerHTML=html;
-  $('sbSlots').querySelectorAll('[data-sl]').forEach(el=>el.addEventListener('click',()=>{S.slot=el.dataset.sl;S.path=null;S.trash=false;S.trashSlot=null;buildSidebar();render();}));
-  $('sbSlots').querySelectorAll('[data-ts]').forEach(el=>el.addEventListener('click',()=>openTrash(Number(el.dataset.ts))));
-  $('sbAll').onclick=()=>{S.slot='all';S.path=null;S.trash=false;S.trashSlot=null;buildSidebar();render();};
+  $('sbSlots').querySelectorAll('[data-sl]').forEach(el=>el.addEventListener('click',()=>{S.slot=el.dataset.sl;S.path=null;S.trash=false;S.trashSlot=null;buildSidebar();render();closeSidebarMobile();}));
+  $('sbSlots').querySelectorAll('[data-ts]').forEach(el=>el.addEventListener('click',()=>{openTrash(Number(el.dataset.ts));closeSidebarMobile();}));
+  $('sbAll').onclick=()=>{S.slot='all';S.path=null;S.trash=false;S.trashSlot=null;buildSidebar();render();closeSidebarMobile();};
 }
 function buildUpSel(){const sel=$('upSlot');sel.innerHTML=S.stores.map(s=>`<option value="${s.slot}">${provIco(s.slot)} ${esc(slotLabel(s.slot))}</option>`).join('');sel.style.display=S.stores.length>1?'':'none';}
 
@@ -1021,23 +1144,4 @@ $('btnChangePw').addEventListener('click',async()=>{
   if(!old||!n1||!n2){el.textContent='All fields required.';return;}if(n1.length<8){el.textContent='Min 8 characters.';return;}if(n1!==n2){el.textContent='Passwords do not match.';return;}
   const oldHash=await mkHash(old,S.salt);if(oldHash!==S.hash){el.textContent='Current password incorrect.';return;}
   $('btnChangePw').disabled=true;$('btnChangePw').textContent='Updating…';
-  try{const ns=rnd(16),nh=await mkHash(n1,ns),nk=await mkKey(n1,ns);const reenc=[];for(const a of S.accts){const creds=JSON.stringify({megaEmail:a.identifier,megaPassword:a.megaPassword||a.password,...(a.accessToken?{accessToken:a.accessToken,refreshToken:a.refreshToken,expiresAt:a.expiresAt,identifier:a.identifier}:{})});const{ct,iv}=await aesEnc(nk,creds);reenc.push({slot:a.slot,provider:a.provider||'mega',identifier:a.identifier,encryptedCredentials:ct,iv});}await api('changePassword',{email:S.email,oldPasswordHash:oldHash,newPasswordHash:nh,newSalt:ns,accounts:reenc});S.salt=ns;S.key=nk;S.hash=nh;S.pw=n1;S.encAccts=reenc;['cpwOld','cpwNew1','cpwNew2'].forEach(id=>$(id).value='');el.className='err-msg ok';el.textContent='✓ Password updated.';setSt('ok','Password updated','');}
-  catch(e){el.textContent=e.message;}finally{$('btnChangePw').disabled=false;$('btnChangePw').textContent='Update password';}
-});
-
-// -- PW strength & eye
-function pwStr(pw){let s=0;if(pw.length>=8)s++;if(pw.length>=12)s++;if(/[A-Z]/.test(pw))s++;if(/[0-9]/.test(pw))s++;if(/[^A-Za-z0-9]/.test(pw))s++;return s;}
-function setBar(id,pw){const b=$(id);if(!b)return;if(!pw){b.style.width='0';return;}const s=pwStr(pw);b.style.width=(s/5*100)+'%';b.style.background=['#f85149','#e3b341','#f0883e','#3fb950','#2ea043'][Math.min(s-1,4)];}
-$('inReg1').addEventListener('input',e=>setBar('regPwBar',e.target.value));
-$('cpwNew1').addEventListener('input',e=>setBar('cpwBar',e.target.value));
-function attachEye(btn){btn.addEventListener('click',()=>{const inp=$(btn.dataset.t);if(!inp)return;inp.type=inp.type==='password'?'text':'password';btn.textContent=inp.type==='password'?'👁':'🙈';});}
-document.querySelectorAll('.eye-btn').forEach(attachEye);
-
-// -- Keyboard
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeCtx();['prevModal','moveModal','settingsModal'].forEach(id=>$(id)?.classList.add('h'));}if((e.ctrlKey||e.metaKey)&&e.key==='a'&&!$('appWrap').classList.contains('h')){e.preventDefault();S.files.filter(f=>S.slot==='all'||f.slot==S.slot).forEach(f=>S.sel.add(f.id));render();}});
-
-// -- Init
-applyView();
-</script>
-</body>
-</html>
+  try{const ns=rnd(16),nh=await mkHash(n1,ns),nk=await mkKey(n1,ns);
