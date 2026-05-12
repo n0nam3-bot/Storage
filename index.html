@@ -294,14 +294,15 @@ tr:hover .fl-chk,.fl tr.sel .fl-chk{border-color:var(--bl)}
   .tb-avatar{width:28px;height:28px;font-size:12px}
   #menuBtn{display:flex}
 
-  /* Sidebar becomes slide-in drawer */
+  /* Sidebar becomes slide-in drawer (CSS-only toggle) */
   #sidebar{
     position:fixed;left:-220px;top:0;bottom:0;z-index:50;
     transition:left .22s ease;box-shadow:var(--shadow);
     width:220px;padding-top:54px;
   }
-  #sidebar.open{left:0}
-  #sideOverlay.open{display:block}
+  #sideToggle:checked ~ * #sidebar,
+  #sideToggle:checked + * + #bodyWrap #sidebar{left:0}
+  #sideToggle:checked ~ #sideOverlay{display:block}
 
   /* Body takes full width */
   #bodyWrap{display:block}
@@ -443,7 +444,7 @@ tr:hover .fl-chk,.fl tr.sel .fl-chk{border-color:var(--bl)}
 <!-- APP -->
 <div id="appWrap" class="h">
   <div id="topbar">
-    <div class="tb-logo"><div id="menuBtn" onclick="toggleSidebar()">☰</div><div class="tb-logo-ico">🗄</div><div class="tb-logo-txt">Storage Vault</div></div>
+    <div class="tb-logo"><label id="menuBtn" for="sideToggle">☰</label><div class="tb-logo-ico">🗄</div><div class="tb-logo-txt">Storage Vault</div></div>
     <div class="tb-search"><span class="tb-search-ico">🔍</span><input id="searchIn" type="search" placeholder="Search files"/></div>
     <div class="tb-actions">
       <div class="tb-ico-btn" id="btnSettings" title="Settings">⚙️</div>
@@ -452,7 +453,7 @@ tr:hover .fl-chk,.fl tr.sel .fl-chk{border-color:var(--bl)}
     </div>
   </div>
 
-  <div id="sideOverlay" onclick="toggleSidebar()"></div>
+  <input type="checkbox" id="sideToggle" style="display:none"/><div id="sideOverlay"><label for="sideToggle" style="display:block;width:100%;height:100%"></label></div>
   <div id="bodyWrap">
     <div id="sidebar">
       <label class="sb-upload"><span>＋</span><span>Upload files</span><input id="upInput" type="file" multiple style="display:none"/></label>
@@ -919,9 +920,9 @@ function buildSidebar(){
   }
   for(const a of failed)html+=`<div class="sb-item err" data-sl="${a.slot}"><span class="sb-item-ico">${PROVIDERS[a.provider]?.icon||'❓'}</span><span class="sb-item-lbl">${esc(slotLabel(a.slot))} ⚠</span></div>`;
   $('sbSlots').innerHTML=html;
-  $('sbSlots').querySelectorAll('[data-sl]').forEach(el=>el.addEventListener('click',()=>{S.slot=el.dataset.sl;S.path=null;S.trash=false;S.trashSlot=null;buildSidebar();render();closeSidebarMobile();}));
-  $('sbSlots').querySelectorAll('[data-ts]').forEach(el=>el.addEventListener('click',()=>{openTrash(Number(el.dataset.ts));closeSidebarMobile();}));
-  $('sbAll').onclick=()=>{S.slot='all';S.path=null;S.trash=false;S.trashSlot=null;buildSidebar();render();closeSidebarMobile();};
+  $('sbSlots').querySelectorAll('[data-sl]').forEach(el=>el.addEventListener('click',()=>{S.slot=el.dataset.sl;S.path=null;S.trash=false;S.trashSlot=null;buildSidebar();render();}));
+  $('sbSlots').querySelectorAll('[data-ts]').forEach(el=>el.addEventListener('click',()=>{openTrash(Number(el.dataset.ts));}));
+  $('sbAll').onclick=()=>{S.slot='all';S.path=null;S.trash=false;S.trashSlot=null;buildSidebar();render();};
 }
 function buildUpSel(){const sel=$('upSlot');sel.innerHTML=S.stores.map(s=>`<option value="${s.slot}">${provIco(s.slot)} ${esc(slotLabel(s.slot))}</option>`).join('');sel.style.display=S.stores.length>1?'':'none';}
 
@@ -1142,6 +1143,4 @@ $('btnSaveMega').addEventListener('click',async()=>{
 $('btnChangePw').addEventListener('click',async()=>{
   const old=$('cpwOld').value,n1=$('cpwNew1').value,n2=$('cpwNew2').value;const el=$('cpwMsg');el.className='err-msg bad';el.textContent='';
   if(!old||!n1||!n2){el.textContent='All fields required.';return;}if(n1.length<8){el.textContent='Min 8 characters.';return;}if(n1!==n2){el.textContent='Passwords do not match.';return;}
-  const oldHash=await mkHash(old,S.salt);if(oldHash!==S.hash){el.textContent='Current password incorrect.';return;}
-  $('btnChangePw').disabled=true;$('btnChangePw').textContent='Updating…';
-  try{const ns=rnd(16),nh=await mkHash(n1,ns),nk=await mkKey(n1,ns);
+  const oldHash=await mkHash(old,S.salt);if(oldHash!==S.hash){el.textContent='Current password incorrect.';return
